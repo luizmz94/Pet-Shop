@@ -1,0 +1,82 @@
+<mvc:View
+	controllerName="petshop.zppetshopcustomer.controller.CustomerView"
+	xmlns:mvc="sap.ui.core.mvc"
+	displayBlock="true"
+	xmlns="sap.m"
+	xmlns:smartFilterBar="sap.ui.comp.smartfilterbar"
+	xmlns:smartTable="sap.ui.comp.smarttable"
+>
+	<Shell id="shell">
+		<App id="app">
+			<pages>
+				<Page
+					id="page"
+					title="{i18n>title}"
+				>
+					<content>
+						<VBox fitContainer="true">
+							<smartFilterBar:SmartFilterBar
+								id="smartFilterBar"
+								entitySet="CustomersSet"
+								persistencyKey="SmartFilter_Explored"
+								showClearButton="true"
+							>
+								<smartFilterBar:controlConfiguration>
+									<smartFilterBar:ControlConfiguration
+										key="Cpf"
+										visibleInAdvancedArea="true"
+									/>
+									<smartFilterBar:ControlConfiguration
+										key="Name"
+										visibleInAdvancedArea="true"
+									/>
+									<smartFilterBar:ControlConfiguration
+										key="Address"
+										visibleInAdvancedArea="true"
+									/>
+								</smartFilterBar:controlConfiguration>
+								<smartFilterBar:layoutData>
+									<FlexItemData shrinkFactor="0"/>
+								</smartFilterBar:layoutData>
+							</smartFilterBar:SmartFilterBar>
+							<smartTable:SmartTable
+								id="LineItemsSmartTable"
+								entitySet="CustomersSet"
+								smartFilterId="smartFilterBar"
+								tableType="ResponsiveTable"
+								useExportToExcel="true"
+								beforeExport="onBeforeExport"
+								useVariantManagement="false"
+								useTablePersonalisation="false"
+								initiallyVisibleFields="Cpf,Name,Address,Telephone"
+								header="{i18n>header}"
+								showRowCount="true"
+								persistencyKey="SmartTableAnalytical_Explored"
+								enableAutoBinding="true"
+								showFullScreenButton="true"
+								class="sapUiResponsiveContentPadding"
+							>
+								<smartTable:customToolbar>
+									<OverflowToolbar design="Transparent">
+										<ToolbarSpacer/>
+										<OverflowToolbarButton
+											icon="sap-icon://create"
+											tooltip="{i18n>create}"
+											press="onCreate"
+										/>
+									</OverflowToolbar>
+								</smartTable:customToolbar>
+								<smartTable:layoutData>
+									<FlexItemData
+										growFactor="1"
+										baseSize="0%"
+									/>
+								</smartTable:layoutData>
+							</smartTable:SmartTable>
+						</VBox>
+					</content>
+				</Page>
+			</pages>
+		</App>
+	</Shell>
+</mvc:View>
