@@ -60,7 +60,8 @@
 									<OverflowToolbar design="Transparent">
 										<ToolbarSpacer/>
 										<OverflowToolbarButton
-											icon="sap-icon://create"
+											icon="sap-icon://add"
+											text="{i18n>create}"
 											tooltip="{i18n>create}"
 											press="onCreate"
 										/>

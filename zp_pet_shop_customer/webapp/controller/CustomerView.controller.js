@@ -17,27 +17,31 @@ sap.ui.define(
           mExcelSettings.worker = false;
         },
         onCreate: function () {
-          var oView = this.getView();
-          // create dialog lazily
-          if (!this.byId("openDialog")) {
-            // load asynchronous XML fragment
-            Fragment.load({
-              id: oView.getId(),
-              name: "petshop.zppetshopcustomer.view.Register",
-              controller: this,
-            }).then(function (oDialog) {
-              // connect dialog to the root view
-              //of this component (models, lifecycle)
-              oView.addDependent(oDialog);
-              oDialog.open();
-            });
-          } else {
-            this.byId("openDialog").open();
+          if (!this.newCustomerDialog) {
+            this.newCustomerDialog = sap.ui.xmlfragment(
+              "petshop.zppetshopcustomer.view.Register",
+              this
+            );
+            var oModel = new sap.ui.model.json.JSONModel();
+            this.newCustomerDialog.setModel(oModel);
           }
+          this.getView().addDependent(this.newCustomerDialog);
+          this.newCustomerDialog.open();
         },
 
-        closeDialog: function () {
-          this.byId("openDialog").close();
+        handleSaveBtnPress: function (oEvent) {
+          var modelCustomer = this.getView().getModel("Customer");
+          var oModel = this.getView().getModel();
+
+          oModel.create("/CustomersSet", modelCustomer.getData(), {
+            success: function (oData, oResponse) {},
+
+            error: function (oError) {},
+          });
+        },
+
+        handleCancelBtnPress: function () {
+          this.newCustomerDialog.close();
         },
       }
     );

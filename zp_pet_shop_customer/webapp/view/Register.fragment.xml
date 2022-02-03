@@ -2,104 +2,53 @@
 	xmlns="sap.m"
 	xmlns:c="sap.ui.core"
 	xmlns:f="sap.ui.layout.form"
-	xmlns:l="sap.ui.layout"
-	xmlns:core="sap.ui.core"
+	
 >
-	<Dialog id="openDialog">
+	<Dialog
+		id="openDialog"
+		title="{i18n>registerCustomer}"
+	>
 		<beginButton>
 			<Button
-				text="Ok"
-				press=".closeDialog"
+				text="{i18n>save}"
+				type="Accept"
+				press="handleSaveBtnPress"
 			/>
 		</beginButton>
+		<endButton>
+			<Button
+				text="{i18n>cancel}"
+				type="Reject"
+				press="handleCancelBtnPress"
+			/>
+		</endButton>
 		<f:SimpleForm
 			id="RegisterForm"
 			editable="true"
-			layout="ResponsiveGridLayout"
-			labelSpanXL="4"
-			labelSpanL="3"
-			labelSpanM="4"
-			labelSpanS="12"
-			adjustLabelSpan="false"
-			emptySpanXL="0"
-			emptySpanL="4"
-			emptySpanM="0"
-			emptySpanS="0"
-			columnsXL="2"
-			columnsL="1"
-			columnsM="1"
-			singleContainerFullSize="false"
-			ariaLabelledBy="Title1"
 		>
-			<f:toolbar>
-				<Toolbar id="TB1">
-					<Title
-						id="Title1"
-						text="{i18n>header}"
-					/>
-					<ToolbarSpacer/>
-				</Toolbar>
-			</f:toolbar>
 			<f:content>
-				<Toolbar ariaLabelledBy="Title2">
-					<Title
-						id="Title2"
-						text="{i18n>customerData}"
-					/>
-					<ToolbarSpacer/>
-					<Button icon="sap-icon://settings"/>
-				</Toolbar>
-				<Label text="Name"/>
-				<Input value="{SupplierName}"/>
-				<Label text="Street/No."/>
-				<Input value="{Street}"/>
-				<Input value="{HouseNumber}">
-					<layoutData>
-						<l:GridData span="XL2 L1 M3 S4"/>
-					</layoutData>
-				</Input>
-				<Label text="ZIP Code/City"/>
-				<Input value="{ZIPCode}">
-					<layoutData>
-						<l:GridData span="XL2 L1 M3 S4"/>
-					</layoutData>
-				</Input>
-				<Input value="{City}"/>
-				<Label text="Country"/>
-				<Select
-					id="country"
-					selectedKey="{Country}"
-				>
-					<items>
-						<core:Item
-							text="England"
-							key="England"
-						/>
-						<core:Item
-							text="Germany"
-							key="Germany"
-						/>
-						<core:Item
-							text="USA"
-							key="USA"
-						/>
-					</items>
-				</Select>
-				<Toolbar ariaLabelledBy="Title3">
-					<Title
-						id="Title3"
-						text="Online"
-					/>
-					<ToolbarSpacer/>
-					<Button icon="sap-icon://settings"/>
-				</Toolbar>
-				<Label text="Web"/>
-				<Input
-					value="{Url}"
-					type="Url"
+				<Label text="{/#Customers/Cpf/@sap:label}"/>
+				<MaskInput
+					value="{Customer>/Cpf}"
+					mask="999.999.999/99"
+					placeholder="{i18n>enterCPF}"
 				/>
-				<Label text="Twitter"/>
-				<Input value="{Twitter}"/>
+				<Label text="{/#Customers/Name/@sap:label}"/>
+				<Input
+					value="{Customer>/Name}"
+					placeholder="{i18n>enterName}"
+				/>
+				<Label text="{/#Customers/Address/@sap:label}"/>
+				<Input
+					value="{Customer>/Address}"
+					placeholder="{i18n>enterAddress}"
+				/>
+				<Label text="{/#Customers/Telephone/@sap:label}"/>
+				<MaskInput
+					value="{Customer>/Telephone}"
+					mask="(99) 9 9999 9999"
+					placeholder="{i18n>enterTelephone}"
+				/>
 			</f:content>
 		</f:SimpleForm>
 	</Dialog>
