@@ -34,7 +34,10 @@ sap.ui.define(
           var oModel = this.getView().getModel();
 
           oModel.create("/CustomersSet", modelCustomer.getData(), {
-            success: function (oData, oResponse) {},
+            success: function (oData, oResponse) {
+              var oSapMessage = JSON.parse(oResponse.headers["sap-message"]);
+              MessageToast.show(oSapMessage.message);
+            },
 
             error: function (oError) {},
           });

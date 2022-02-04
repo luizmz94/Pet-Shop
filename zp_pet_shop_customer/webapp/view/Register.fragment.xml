@@ -30,7 +30,7 @@
 				<Label text="{/#Customers/Cpf/@sap:label}"/>
 				<MaskInput
 					value="{Customer>/Cpf}"
-					mask="999.999.999/99"
+					mask="999.999.999-99"
 					placeholder="{i18n>enterCPF}"
 				/>
 				<Label text="{/#Customers/Name/@sap:label}"/>
