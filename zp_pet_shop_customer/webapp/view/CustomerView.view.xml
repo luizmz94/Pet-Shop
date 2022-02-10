@@ -60,20 +60,7 @@
 								
 							>
 
-							<Table 
-							mode="SingleSelect" 
-							alternateRowColors="true"
-							>
 
-							</Table>
-
-								<!-- layout data used to make the table growing but the filter bar fixed -->
-								<smartTable:layoutData>
-									<FlexItemData
-										growFactor="1"
-										baseSize="0%"
-									/>
-								</smartTable:layoutData>
 								<smartTable:customToolbar>
 									<OverflowToolbar design="Transparent">
 										<ToolbarSpacer/>

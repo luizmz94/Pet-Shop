@@ -25,6 +25,8 @@ sap.ui.define(
         },
         onCreate: function () {
           var oView = this.getView();
+          // var modelCustomer = this.getView().getModel("Customer");
+          // this.clearModel(modelCustomer);
           if (!this.byId("openDialog")) {
             Fragment.load({
               id: oView.getId(),
@@ -47,8 +49,10 @@ sap.ui.define(
             success: function (oData, oResponse) {
               if (oResponse.statusCode == "201") {
                 var msg = this.geti18nText("created");
-                MessageBox.success(msg, { onClose: this.doMessageboxAction() });
+                // MessageBox.success(msg, { onClose: this.doMessageboxAction() });
+                MessageBox.success(msg);
                 this.clearModel(modelCustomer);
+                this.handleCancelBtnPress();
               }
             }.bind(this),
 
@@ -107,11 +111,8 @@ sap.ui.define(
           oModel.setDeferredGroups(["group1"]);
 
           var oTable = this.getView().byId("LineItemsSmartTable").getTable();
-          // var oItems = oTable.getSelectedIndices();
-          debugger;
-          var path= oEvent.getParameter('listItem').getBindingContext().getPath();
-          var selectedRow = this.byId('LineItemsSmartTable').getModel().getProperty(path);
-debugger;
+          var oItems = oTable.getSelectedIndices();
+
           for (var i = 0; i < oItems.length; i++) {
             var j = oItems[i];
             var cpfKey = oTable.getContextByIndex(j).getProperty("Cpf");
@@ -123,7 +124,9 @@ debugger;
                 // debugger;
               },
               error: function (oError) {
-                // debugger;
+                var oSapMessage = JSON.parse(oError.responseText);
+                var msg = oSapMessage.error.message.value;
+                MessageBox.error(msg);
               },
             });
           }

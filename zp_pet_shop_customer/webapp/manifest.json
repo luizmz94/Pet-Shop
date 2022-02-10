@@ -17,8 +17,7 @@
           "annotations": [],
           "localUri": "localService/metadata.xml",
           "odataVersion": "2.0",
-          "sequentializeRequests": true,
-          "useBatch": true
+          "useBatch": false
         }
       }
     }
@@ -61,7 +60,9 @@
       "": {
         "dataSource": "mainService",
         "preload": true,
-        "settings": {}
+        "settings": {
+          "useBatch": false
+        }
       }
     },
     "resources": {
