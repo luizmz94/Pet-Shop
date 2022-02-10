@@ -43,19 +43,37 @@
 								id="LineItemsSmartTable"
 								entitySet="CustomersSet"
 								smartFilterId="smartFilterBar"
-								tableType="ResponsiveTable"
+								tableType="Table"
 								useExportToExcel="true"
 								beforeExport="onBeforeExport"
 								useVariantManagement="false"
 								useTablePersonalisation="false"
-								initiallyVisibleFields="Cpf,Name,Address,Telephone"
 								header="{i18n>header}"
 								showRowCount="true"
 								persistencyKey="SmartTableAnalytical_Explored"
 								enableAutoBinding="true"
 								showFullScreenButton="true"
 								class="sapUiResponsiveContentPadding"
+								enableAutoColumnWidth="true"
+								initiallyVisibleFields="Cpf,Name,Address,Telephone"
+								
+								
 							>
+
+							<Table 
+							mode="SingleSelect" 
+							alternateRowColors="true"
+							>
+
+							</Table>
+
+								<!-- layout data used to make the table growing but the filter bar fixed -->
+								<smartTable:layoutData>
+									<FlexItemData
+										growFactor="1"
+										baseSize="0%"
+									/>
+								</smartTable:layoutData>
 								<smartTable:customToolbar>
 									<OverflowToolbar design="Transparent">
 										<ToolbarSpacer/>
@@ -65,6 +83,18 @@
 											tooltip="{i18n>create}"
 											press="onCreate"
 										/>
+										<OverflowToolbarButton
+											icon="sap-icon://less"
+											text="{i18n>delete}"
+											tooltip="{i18n>delete}"
+											press="onDelete"
+										/>
+										<OverflowToolbarButton
+										icon="sap-icon://edit"
+										text="{i18n>edit}"
+										tooltip="{i18n>edit}"
+										press="onEdit"
+									/>
 									</OverflowToolbar>
 								</smartTable:customToolbar>
 								<smartTable:layoutData>
