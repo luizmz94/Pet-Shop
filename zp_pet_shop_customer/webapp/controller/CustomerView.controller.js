@@ -24,9 +24,8 @@ sap.ui.define(
           mExcelSettings.worker = false;
         },
         onCreate: function () {
+          this.gbEditing = false;
           var oView = this.getView();
-          // var modelCustomer = this.getView().getModel("Customer");
-          // this.clearModel(modelCustomer);
           if (!this.byId("openDialog")) {
             Fragment.load({
               id: oView.getId(),
@@ -42,26 +41,48 @@ sap.ui.define(
         },
 
         handleSaveBtnPress: function (oEvent) {
-          var modelCustomer = this.getView().getModel("Customer");
+          var oModelCustomer = this.getView().getModel("Customer");
           var oModel = this.getView().getModel();
 
-          oModel.create("/CustomersSet", modelCustomer.getData(), {
-            success: function (oData, oResponse) {
-              if (oResponse.statusCode == "201") {
-                var msg = this.geti18nText("created");
-                // MessageBox.success(msg, { onClose: this.doMessageboxAction() });
-                MessageBox.success(msg);
-                this.clearModel(modelCustomer);
-                this.handleCancelBtnPress();
-              }
-            }.bind(this),
+          if (!this.gbEditing) {
+            oModel.create("/CustomersSet", oModelCustomer.getData(), {
+              success: function (oData, oResponse) {
+                if (oResponse.statusCode == "201") {
+                  var msg = this.geti18nText("created");
+                  // MessageBox.success(msg, { onClose: this.doMessageboxAction() });
+                  MessageBox.success(msg);
+                  this.clearModel(oModelCustomer);
+                  this.handleCancelBtnPress();
+                }
+              }.bind(this),
 
-            error: function (oError) {
-              var oSapMessage = JSON.parse(oError.responseText);
-              var msg = oSapMessage.error.message.value;
-              MessageBox.error(msg);
-            },
-          });
+              error: function (oError) {
+                var oSapMessage = JSON.parse(oError.responseText);
+                var msg = oSapMessage.error.message.value;
+                MessageBox.error(msg);
+              },
+            });
+          } else {
+            var oCurrentCustomer = oModelCustomer.getData();
+            var sUpdate = oModel.createKey("/CustomersSet", {
+              Cpf: oCurrentCustomer.Cpf,
+            });
+            oModel.update(sUpdate, oCurrentCustomer, {
+              method: "PUT",
+              success: function (data, oResponse) {
+                var msg = this.geti18nText("updated");
+                MessageBox.success(msg);
+                this.clearModel(oModelCustomer);
+                this.handleCancelBtnPress();
+                oModel.refresh();
+              }.bind(this),
+              error: function (oError) {
+                var oSapMessage = JSON.parse(oError.responseText);
+                var msg = oSapMessage.error.message.value;
+                MessageBox.error(msg);
+              }.bind(this),
+            });
+          }
         },
 
         handleCancelBtnPress: function () {
@@ -87,42 +108,14 @@ sap.ui.define(
           });
         },
 
-        doMessageboxAction: function () {
-          return new Promise(
-            function (resolve, reject) {
-              sap.m.MessageBox.confirm("Text", {
-                actions: [
-                  sap.m.MessageBox.Action.YES,
-                  sap.m.MessageBox.Action.NO,
-                ],
-                onClose: function (oAction) {
-                  if (oAction === sap.m.MessageBox.Action.NO) {
-                    this.handleCancelBtnPress();
-                  }
-                }.bind(this),
-              });
-            }.bind(this)
-          );
-        },
-
         onDelete(oEvent) {
-          var that = this;
           var oModel = this.getView().getModel();
-          oModel.setDeferredGroups(["group1"]);
-
           var oTable = this.getView().byId("LineItemsSmartTable").getTable();
-          var oItems = oTable.getSelectedIndices();
+          var oItems = oTable._aSelectedPaths;
 
-          for (var i = 0; i < oItems.length; i++) {
-            var j = oItems[i];
-            var cpfKey = oTable.getContextByIndex(j).getProperty("Cpf");
-
-            var sDelete = oModel.createKey("/CustomersSet", { Cpf: cpfKey });
-
-            oModel.remove(sDelete, {
-              success: function (oData, oResponse) {
-                // debugger;
-              },
+          for (var item in oItems) {
+            oModel.remove(oItems[item], {
+              success: function (oData, oResponse) {},
               error: function (oError) {
                 var oSapMessage = JSON.parse(oError.responseText);
                 var msg = oSapMessage.error.message.value;
@@ -132,33 +125,48 @@ sap.ui.define(
           }
         },
 
-        onEdit(oEvent) {
-
-
+        handleEditStudent(oEvent) {
+          var oView = this.getView();
+          var oCurrentCustomer = oEvent
+            .getSource()
+            .getBindingContext()
+            .getObject();
+          var modelCustomer = oView.getModel("Customer");
+          modelCustomer.setData(oCurrentCustomer);
+          if (!this.byId("openDialog")) {
+            Fragment.load({
+              id: oView.getId(),
+              name: "petshop.zppetshopcustomer.view.Register",
+              controller: this,
+            }).then(function (oDialog) {
+              oView.addDependent(oDialog);
+              oDialog.open();
+            });
+          } else {
+            this.byId("openDialog").open();
+          }
+          this.gbEditing = true;
         },
 
-        //     oModel.remove(sDelete , {
-        //       groupId: "group1",
-        //       changeSetId: "changeSetId1",
-        //       success: that.successCallback,
-        //       error: that.errorCallback
-        //  });
-        //   }
-        //   oModel.submitChanges({
-        //     groupId: "group1"
-        // });
+        handleDeleteStudent(oEvent) {
+          var oModel = this.getView().getModel();
+          var oCurrentCustomer = oEvent
+            .getSource()
+            .getBindingContext()
+            .getObject();
 
-        onDataReceived: function () {
-          var oTable = this.byId("LineItemsSmartTable");
-          var i = 0;
-          oTable
-            .getTable()
-            .getColumns()
-            .forEach(function (oLine) {
-              oLine.setWidth("100%");
-              oLine.getParent().autoResizeColumn(i);
-              i++;
-            });
+          var sDelete = oModel.createKey("/CustomersSet", {
+            Cpf: oCurrentCustomer.Cpf,
+          });
+
+          oModel.remove(sDelete, {
+            success: function (oData, oResponse) {},
+            error: function (oError) {
+              var oSapMessage = JSON.parse(oError.responseText);
+              var msg = oSapMessage.error.message.value;
+              MessageBox.error(msg);
+            },
+          });
         },
       }
     );
