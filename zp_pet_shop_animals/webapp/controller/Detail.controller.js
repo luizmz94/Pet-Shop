@@ -18,7 +18,6 @@ sap.ui.define([
 		/* =========================================================== */
 
 		onInit : function () {
-			debugger;
 			// Model used to manipulate control states. The chosen values make sure,
 			// detail page is busy indication immediately so there is no break in
 			// between the busy indication for loading the view's meta data
@@ -88,13 +87,11 @@ sap.ui.define([
 		 */
 		_onObjectMatched : function (oEvent) {
 			var sObjectId =  oEvent.getParameter("arguments").objectId;
-			this.getModel("Customers").setProperty("/layout", "TwoColumnsMidExpanded");
+			this.getModel("device").setProperty("/layout", "TwoColumnsMidExpanded");
 			this.getModel().metadataLoaded().then( function() {
-				debugger;
 				var sObjectPath = this.getModel().createKey("CustomersSet", {
 					Cpf :  sObjectId
 				});
-				debugger;
 				this._bindView("/" + sObjectPath);
 			}.bind(this));
 		},
@@ -107,7 +104,6 @@ sap.ui.define([
 		 * @private
 		 */
 		_bindView : function (sObjectPath) {
-			debugger;
 			// Set busy indicator during view binding
 			var oViewModel = this.getModel("detailView");
 
@@ -129,7 +125,6 @@ sap.ui.define([
 		},
 
 		_onBindingChange : function () {
-			debugger;
 			var oView = this.getView(),
 				oElementBinding = oView.getElementBinding();
 
@@ -141,7 +136,6 @@ sap.ui.define([
 				this.getOwnerComponent().oListSelector.clearMasterListSelection();
 				return;
 			}
-debugger;
 			var sPath = oElementBinding.getPath(),
 				oResourceBundle = this.getResourceBundle(),
 				oObject = oView.getModel().getObject(sPath),
@@ -158,7 +152,6 @@ debugger;
 		},
 
 		_onMetadataLoaded : function () {
-			debugger;
 			// Store original busy indicator delay for the detail view
 			var iOriginalViewBusyDelay = this.getView().getBusyIndicatorDelay(),
 				oViewModel = this.getModel("detailView"),

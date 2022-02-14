@@ -7,8 +7,9 @@ sap.ui.define([
 	"sap/m/GroupHeaderListItem",
 	"sap/ui/Device",
 	"sap/ui/core/Fragment",
-	"../model/formatter"
-], function (BaseController, JSONModel, Filter, Sorter, FilterOperator, GroupHeaderListItem, Device, Fragment, formatter) {
+	"../model/formatter", 
+	"sap/m/MessageBox",
+], function (BaseController, JSONModel, Filter, Sorter, FilterOperator, GroupHeaderListItem, Device, Fragment, formatter, MessageBox) {
 	"use strict";
 
 	return BaseController.extend("petshop.zppetshopanimals.controller.Master", {
@@ -227,7 +228,6 @@ sap.ui.define([
 		 * @public
 		 */
 		onSelectionChange : function (oEvent) {
-			debugger;
 			var oList = oEvent.getSource(),
 				bSelected = oEvent.getParameter("selected");
 
@@ -302,7 +302,6 @@ sap.ui.define([
 		_showDetail : function (oItem) {
 			var bReplace = !Device.system.phone;
 			// set the layout property of FCL control to show two columns
-			debugger;
 			this.getModel("appView").setProperty("/layout", "TwoColumnsMidExpanded");
 			this.getRouter().navTo("object", {
 				objectId : oItem.getBindingContext().getProperty("Cpf")
@@ -349,7 +348,103 @@ sap.ui.define([
 			var oViewModel = this.getModel("masterView");
 			oViewModel.setProperty("/isFilterBarVisible", (this._oListFilterState.aFilter.length > 0));
 			oViewModel.setProperty("/filterBarLabel", this.getResourceBundle().getText("masterFilterBarText", [sFilterBarText]));
-		}
+		}, 
+
+		_onCreate: function () {
+			this.gbEditing = false;
+			var oView = this.getView();
+			if (!this.byId("openDialog")) {
+			  Fragment.load({
+				id: oView.getId(),
+				name: "petshop.zppetshopanimals.view.Register",
+				controller: this,
+			  }).then(function (oDialog) {
+				oView.addDependent(oDialog);
+				oDialog.open();
+			  });
+			} else {
+			  this.byId("openDialog").open();
+			}
+		  },
+
+		  handleSaveBtnPress: function (oEvent) {
+			  debugger;
+			var oModelCustomer = this.getView().getModel("Customer");
+			var oModel = this.getView().getModel();
+  
+			if (!this.gbEditing) {
+			  oModel.create("/CustomersSet", oModelCustomer.getData(), {
+				success: function (oData, oResponse) {
+				  if (oResponse.statusCode == "201") {
+					var msg = this.getResourceBundle().getText("created");
+					// MessageBox.success(msg, { onClose: this.doMessageboxAction() });
+					MessageBox.success(msg);
+					this.clearModel(oModelCustomer);
+					this.handleCancelBtnPress();
+				  }
+				}.bind(this),
+  
+				error: function (oError) {
+				  var oSapMessage = JSON.parse(oError.responseText);
+				  var msg = oSapMessage.error.message.value;
+				  MessageBox.error(msg);
+				},
+			  });
+			} else {
+			  var oCurrentCustomer = oModelCustomer.getData();
+			  var sUpdate = oModel.createKey("/CustomersSet", {
+				Cpf: oCurrentCustomer.Cpf,
+			  });
+			  oModel.update(sUpdate, oCurrentCustomer, {
+				method: "PUT",
+				success: function (data, oResponse) {
+				  var msg = this.getResourceBundle().getText("updated");
+				  MessageBox.success(msg);
+				  this.clearModel(oModelCustomer);
+				  this.handleCancelBtnPress();
+				  oModel.refresh();
+				}.bind(this),
+				error: function (oError) {
+				  var oSapMessage = JSON.parse(oError.responseText);
+				  var msg = oSapMessage.error.message.value;
+				  MessageBox.error(msg);
+				}.bind(this),
+			  });
+			}
+		  },
+  
+		  handleCancelBtnPress: function () {
+			this.byId("openDialog").close();
+			var modelCustomer = this.getView().getModel("Customer");
+			this.clearModel(modelCustomer);
+		  },
+
+		  clearModel: function (oModel) {
+			oModel.setData({
+			  Cpf: "",
+			  Name: "",
+			  Address: "",
+			  Telephone: "",
+			});
+		  },
+
+		  _onDelete(oEvent) {
+			  debugger;
+			var oModel = this.getView().getModel();
+			var oTable = this.getView().byId("list").getTable();
+			var oItems = oTable._aSelectedPaths;
+  
+			for (var item in oItems) {
+			  oModel.remove(oItems[item], {
+				success: function (oData, oResponse) {},
+				error: function (oError) {
+				  var oSapMessage = JSON.parse(oError.responseText);
+				  var msg = oSapMessage.error.message.value;
+				  MessageBox.error(msg);
+				},
+			  });
+			}
+		  },
 
 	});
 

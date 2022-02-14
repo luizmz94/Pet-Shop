@@ -2,7 +2,7 @@
 	"_version": "1.32.0",
 
 	"sap.app": {
-		"id": "sap.ui.demo.masterdetail",
+		"id": "petshop.zppetshopanimals",
 		"type": "application",
 		"i18n": "i18n/i18n.properties",
 		"title": "{{appTitle}}",

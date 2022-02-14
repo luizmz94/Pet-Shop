@@ -66,19 +66,19 @@
 						<ToolbarSpacer/>
 						<Button
 							id="sortButton"
-							press=".onOpenViewSettings"
-							icon="sap-icon://sort"
+							press="_onCreate"
+							icon="sap-icon://add"
 							type="Transparent"/>
 						<Button
 							id="filterButton"
-							press=".onOpenViewSettings"
-							icon="sap-icon://filter"
+							press="_onDelete"
+							icon="sap-icon://less"
 							type="Transparent"/>
-						<Button
+						<!-- <Button
 							id="groupButton"
 							press=".onOpenViewSettings"
 							icon="sap-icon://group-2"
-							type="Transparent"/>
+							type="Transparent"/> -->
 					</OverflowToolbar>
 				</headerToolbar>
 				<items>
