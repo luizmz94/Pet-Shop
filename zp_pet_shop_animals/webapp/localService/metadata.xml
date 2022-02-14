@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="1.0" xmlns:edmx="http://schemas.microsoft.com/ado/2007/06/edmx" xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata" xmlns:sap="http://www.sap.com/Protocols/SAPData">
+    <edmx:DataServices m:DataServiceVersion="2.0">
+        <Schema Namespace="ZP_ZL_PET_SHOP_SRV" xml:lang="pt" sap:schema-version="1" xmlns="http://schemas.microsoft.com/ado/2008/09/edm">
+            <EntityType Name="Customers" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="Cpf"/>
+                </Key>
+                <Property Name="Cpf" Type="Edm.String" Nullable="false" MaxLength="14" sap:unicode="false" sap:label="CPF"/>
+                <Property Name="Name" Type="Edm.String" MaxLength="80" sap:unicode="false" sap:label="Nome completo"/>
+                <Property Name="Telephone" Type="Edm.String" MaxLength="30" sap:unicode="false" sap:label="Telefone"/>
+                <Property Name="Address" Type="Edm.String" MaxLength="55" sap:unicode="false" sap:label="Endereço"/>
+            </EntityType>
+            <EntityType Name="Animals" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="Id"/>
+                </Key>
+                <Property Name="Id" Type="Edm.String" Nullable="false" MaxLength="4" sap:unicode="false" sap:label="ID do Animal" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Name" Type="Edm.String" Nullable="false" MaxLength="35" sap:unicode="false" sap:label="Animal domést." sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Species" Type="Edm.String" Nullable="false" MaxLength="30" sap:unicode="false" sap:label="Espécie" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Race" Type="Edm.String" Nullable="false" MaxLength="30" sap:unicode="false" sap:label="Raça" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Age" Type="Edm.String" Nullable="false" MaxLength="3" sap:unicode="false" sap:label="Idade" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="CustomerId" Type="Edm.String" Nullable="false" MaxLength="14" sap:unicode="false" sap:label="CPF" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+            </EntityType>
+            <EntityContainer Name="ZP_ZL_PET_SHOP_SRV_Entities" m:IsDefaultEntityContainer="true" sap:supported-formats="atom json xlsx">
+                <EntitySet Name="CustomersSet" EntityType="ZP_ZL_PET_SHOP_SRV.Customers" sap:searchable="true" sap:pageable="false" sap:content-version="1"/>
+                <EntitySet Name="AnimalsSet" EntityType="ZP_ZL_PET_SHOP_SRV.Animals" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:pageable="false" sap:content-version="1"/>
+            </EntityContainer>
+            <atom:link rel="self" href="http://vm31.4hub.cloud:53100/sap/opu/odata/sap/ZP_ZL_PET_SHOP_SRV/$metadata" xmlns:atom="http://www.w3.org/2005/Atom"/>
+            <atom:link rel="latest-version" href="http://vm31.4hub.cloud:53100/sap/opu/odata/sap/ZP_ZL_PET_SHOP_SRV/$metadata" xmlns:atom="http://www.w3.org/2005/Atom"/>
+        </Schema>
+    </edmx:DataServices>
+</edmx:Edmx>
