@@ -65,15 +65,16 @@
 						</SearchField>
 						<ToolbarSpacer/>
 						<Button
-							id="sortButton"
+							id="createButton"
 							press="_onCreate"
 							icon="sap-icon://add"
 							type="Transparent"/>
 						<Button
-							id="filterButton"
+							id="lessButton"
 							press="_onDelete"
 							icon="sap-icon://less"
-							type="Transparent"/>
+							type="Transparent"
+							visible="false"/>
 						<!-- <Button
 							id="groupButton"
 							press=".onOpenViewSettings"
