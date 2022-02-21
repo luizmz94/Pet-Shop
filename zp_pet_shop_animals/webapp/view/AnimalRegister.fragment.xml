@@ -1,0 +1,53 @@
+<c:FragmentDefinition
+	xmlns="sap.m"
+	xmlns:c="sap.ui.core"
+	xmlns:f="sap.ui.layout.form"
+	
+>
+	<Dialog
+		id="openDialog"
+		title="{i18n>registerAnimal}"
+	>
+		<beginButton>
+			<Button
+				text="{i18n>save}"
+				type="Accept"
+				press="handleSaveBtnPress"
+			/>
+		</beginButton>
+		<endButton>
+			<Button
+				text="{i18n>cancel}"
+				type="Reject"
+				press="handleCancelBtnPress"
+			/>
+		</endButton>
+		<f:SimpleForm
+			id="AnimalRegisterForm"
+			editable="true"
+		>
+			<f:content>
+				<Label text="{/#Animals/Name/@sap:label}"/>
+				<Input
+					value="{Animal>/Name}"
+					placeholder="{i18n>enterNameAnimal}"
+				/>
+				<Label text="{/#Animals/Species/@sap:label}"/>
+				<Input
+					value="{Animal>/Species}"
+					placeholder="{i18n>enterSpecies}"
+				/>
+				<Label text="{/#Animals/Race/@sap:label}"/>
+				<Input
+					value="{Animal>/Race}"
+					placeholder="{i18n>enterRace}"
+				/>
+				<Label text="{/#Animals/Age/@sap:label}"/>
+				<Input
+				value="{Animal>/Age}"
+				placeholder="{i18n>enterAge}"
+			/>
+			</f:content>
+		</f:SimpleForm>
+	</Dialog>
+</c:FragmentDefinition>

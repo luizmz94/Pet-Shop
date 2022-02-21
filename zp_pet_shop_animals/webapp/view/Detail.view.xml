@@ -2,20 +2,22 @@
 	controllerName="petshop.zppetshopanimals.controller.Detail"
 	xmlns="sap.m"
 	xmlns:semantic="sap.f.semantic"
-	xmlns:mvc="sap.ui.core.mvc">
-
+	xmlns:mvc="sap.ui.core.mvc"
+>
 	<semantic:SemanticPage
 		id="detailPage"
 		busy="{detailView>/busy}"
-		busyIndicatorDelay="{detailView>/delay}">
+		busyIndicatorDelay="{detailView>/delay}"
+	>
 		<semantic:titleHeading>
 			<Title
 				text="{Name}"
-				level="H2"/>
+				level="H2"
+			/>
 		</semantic:titleHeading>
 		<semantic:headerContent>
 			<ObjectAttribute title="{/#Animals/Cpf/@sap:label}"/>
-				<Text text = "{Cpf}" />
+			<Text text="{Cpf}"/>
 			<!-- <ObjectNumber
 				id="objectHeaderNumber"
 				number="{
@@ -32,14 +34,30 @@
 				items="{GetAnimals}"
 				updateFinished=".onListUpdateFinished"
 				noDataText="{i18n>detailLineItemTableNoDataText}"
-				busyIndicatorDelay="{detailView>/lineItemTableDelay}">
+				busyIndicatorDelay="{detailView>/lineItemTableDelay}"
+			>
 				<headerToolbar>
 					<Toolbar>
 						<Title
 							id="lineItemsTitle"
 							text="{detailView>/lineItemListTitle}"
 							titleStyle="H3"
-							level="H3"/>
+							level="H3"
+						/>
+						<ToolbarSpacer/>
+						<OverflowToolbarButton
+							tooltip="Add"
+							type="Transparent"
+							text="Add"
+							icon="sap-icon://add"
+							press="_onCreate"
+						/>
+						<OverflowToolbarButton
+							tooltip="Less"
+							type="Transparent"
+							text="Less"
+							icon="sap-icon://less"
+						/>
 					</Toolbar>
 				</headerToolbar>
 				<columns>
@@ -70,11 +88,12 @@
 						<cells>
 							<ObjectIdentifier
 								title="{Id}"
-								text="{LineItemID}"/>
-								<Text text="{Name}"/>
-								<Text text="{Species}"/>
-								<Text text="{Race}"/>
-								<Text text="{Age}"/>
+								text="{LineItemID}"
+							/>
+							<Text text="{Name}"/>
+							<Text text="{Species}"/>
+							<Text text="{Race}"/>
+							<Text text="{Age}"/>
 							<!-- <ObjectNumber
 								number="{
 									path: 'UnitNumber',
@@ -87,31 +106,25 @@
 			</Table>
 		</semantic:content>
 		<!--Semantic ShareMenu Buttons-->
-		<semantic:sendEmailAction>
-			<semantic:SendEmailAction
-				id="shareEmail"
-				press=".onSendEmailPress"/>
-		</semantic:sendEmailAction>
-
 		<semantic:closeAction>
 			<semantic:CloseAction
-					id="closeColumn"
-					press=".onCloseDetailPress"/>
+				id="closeColumn"
+				press=".onCloseDetailPress"
+			/>
 		</semantic:closeAction>
-
 		<semantic:fullScreenAction>
 			<semantic:FullScreenAction
-					id="enterFullScreen"
-					visible="{= !${device>/system/phone} &amp;&amp; !${appView>/actionButtonsInfo/midColumn/fullScreen}}"
-					press=".toggleFullScreen"/>
+				id="enterFullScreen"
+				visible="{= !${device>/system/phone} &amp;&amp; !${appView>/actionButtonsInfo/midColumn/fullScreen}}"
+				press=".toggleFullScreen"
+			/>
 		</semantic:fullScreenAction>
 		<semantic:exitFullScreenAction>
 			<semantic:ExitFullScreenAction
-					id="exitFullScreen"
-					visible="{= !${device>/system/phone} &amp;&amp; ${appView>/actionButtonsInfo/midColumn/fullScreen}}"
-					press=".toggleFullScreen"/>
+				id="exitFullScreen"
+				visible="{= !${device>/system/phone} &amp;&amp; ${appView>/actionButtonsInfo/midColumn/fullScreen}}"
+				press=".toggleFullScreen"
+			/>
 		</semantic:exitFullScreenAction>
-
 	</semantic:SemanticPage>
-
 </mvc:View>

@@ -2,8 +2,10 @@ sap.ui.define([
 	"./BaseController",
 	"sap/ui/model/json/JSONModel",
 	"../model/formatter",
-	"sap/m/library"
-], function (BaseController, JSONModel, formatter, mobileLibrary) {
+	"sap/m/library", 
+	"sap/ui/core/Fragment",
+	"sap/m/MessageBox",
+], function (BaseController, JSONModel, formatter, mobileLibrary, Fragment, MessageBox) {
 	"use strict";
 
 	// shortcut for sap.m.URLHelper
@@ -87,6 +89,7 @@ sap.ui.define([
 		 */
 		_onObjectMatched : function (oEvent) {
 			var sObjectId =  oEvent.getParameter("arguments").objectId;
+			this.sCustomerCpf = sObjectId;
 			this.getModel("device").setProperty("/layout", "TwoColumnsMidExpanded");
 			this.getModel().metadataLoaded().then( function() {
 				var sObjectPath = this.getModel().createKey("CustomersSet", {
@@ -179,6 +182,7 @@ sap.ui.define([
 		 */
 		onCloseDetailPress: function () {
 			this.getModel("appView").setProperty("/actionButtonsInfo/midColumn/fullScreen", false);
+			this.getModel("appView").setProperty("/lessButton/visible", false);
 			// No item should be selected on master after detail page is closed
 			this.getOwnerComponent().oListSelector.clearMasterListSelection();
 			this.getRouter().navTo("master");
@@ -198,7 +202,92 @@ sap.ui.define([
 				// reset to previous layout
 				this.getModel("appView").setProperty("/layout",  this.getModel("appView").getProperty("/previousLayout"));
 			}
-		}
+		}, 
+
+		_onCreate: function () {
+			this.gbEditing = false;
+			var oView = this.getView();
+			if (!this.byId("openDialog")) {
+			  Fragment.load({
+				id: oView.getId(),
+				name: "petshop.zppetshopanimals.view.AnimalRegister",
+				controller: this,
+			  }).then(function (oDialog) {
+				oView.addDependent(oDialog);
+				oDialog.open();
+			  });
+			} else {
+			  this.byId("openDialog").open();
+			}
+		  },
+
+
+		  handleSaveBtnPress: function (oEvent) {
+			var oModelAnimal = this.getView().getModel("Animal");
+			var oModel = this.getView().getModel();
+			var oCurrentAnimal = oModelAnimal.getData();
+			oCurrentAnimal.Cpf = this.sCustomerCpf;
+
+			// faltou o ID do animal
+
+			if (!this.gbEditing) {
+			  oModel.create("/AnimalsSet", oModelAnimal.getData(), {
+				success: function (oData, oResponse) {
+				  if (oResponse.statusCode == "201") {
+					var msg = this.getResourceBundle().getText("created");
+					// MessageBox.success(msg, { onClose: this.doMessageboxAction() });
+					MessageBox.success(msg);
+					this.clearModel(oModelAnimal);
+					this.handleCancelBtnPress();
+				  }
+				}.bind(this),
+	
+				error: function (oError) {
+				  var oSapMessage = JSON.parse(oError.responseText);
+				  var msg = oSapMessage.error.message.value;
+				  MessageBox.error(msg);
+				},
+			  });
+			} else {
+			  oCurrentAnimal = oModelAnimal.getData();
+			  var sUpdate = oModel.createKey("/AnimalsSet", {
+				Id: oModelAnimal.Id,
+			  });
+			  oModel.update(sUpdate, oCurrentAnimal, {
+				method: "PUT",
+				success: function (data, oResponse) {
+				  var msg = this.getResourceBundle().getText("updated");
+				  MessageBox.success(msg);
+				  this.clearModel(oCurrentAnimal);
+				  this.handleCancelBtnPress();
+				  oModel.refresh();
+				}.bind(this),
+				error: function (oError) {
+				  var oSapMessage = JSON.parse(oError.responseText);
+				  var msg = oSapMessage.error.message.value;
+				  MessageBox.error(msg);
+				}.bind(this),
+			  });
+			}
+		  },
+	
+		  handleCancelBtnPress: function () {
+			this.byId("openDialog").close();
+			var oModelAnimal = this.getView().getModel("Animal");
+			this.clearModel(oModelAnimal);
+		  },
+	
+		  clearModel: function (oModel) {
+			oModel.setData({
+				Id: "",
+				Name: "",
+				Species: "",
+				Race: "",
+				Age:"",
+				Cpf:""
+			});
+		  },
+
 	});
 
 });

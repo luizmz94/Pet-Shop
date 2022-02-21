@@ -20,7 +20,8 @@ sap.ui.define([
 					midColumn : {
 						fullScreen : false
 					}
-				}
+				},
+				lessButton : { visible : false }
 			});
 			this.setModel(oViewModel, "appView");
 

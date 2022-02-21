@@ -19,7 +19,7 @@ sap.ui.define([
 			  Species: "",
 			  Race: "",
 			  Age:"",
-			  CustomerId:""
+			  Cpf:""
 			});
 			return oModel;
 		  },

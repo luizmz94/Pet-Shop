@@ -45,6 +45,8 @@ sap.ui.define(
           // taken care of by the master list itself.
           iOriginalBusyDelay = oList.getBusyIndicatorDelay();
 
+        // this.getModel("appView").setProperty("/lessButton/visible", false);
+
         this._oGroupFunctions = {
           UnitNumber: function (oContext) {
             var iNumber = oContext.getProperty("UnitNumber"),
@@ -248,8 +250,10 @@ sap.ui.define(
        * @public
        */
       onSelectionChange: function (oEvent) {
-		var oLessButton = this.getView().byId("lessButton");
-		oLessButton.setVisible(true);
+        // var oLessButton = this.getView().byId("lessButton");
+        // oLessButton.setVisible(true);
+
+        this.getModel("appView").setProperty("/lessButton/visible", true);
 
         var oList = oEvent.getSource(),
           bSelected = oEvent.getParameter("selected");
@@ -419,7 +423,6 @@ sap.ui.define(
       },
 
       handleSaveBtnPress: function (oEvent) {
-        debugger;
         var oModelCustomer = this.getView().getModel("Customer");
         var oModel = this.getView().getModel();
 
@@ -480,7 +483,6 @@ sap.ui.define(
       },
 
       _onDelete(oEvent) {
-        debugger;
 
         var oModel = this.getView().getModel();
         var sDelete = oModel.createKey("/CustomersSet", {
