@@ -1,6 +1,8 @@
 <mvc:View
 	controllerName="petshop.zppetshopanimals.controller.Detail"
 	xmlns="sap.m"
+	xmlns:m="sap.m"
+	xmlns:layout="sap.ui.layout"
 	xmlns:semantic="sap.f.semantic"
 	xmlns:mvc="sap.ui.core.mvc"
 >
@@ -16,18 +18,30 @@
 			/>
 		</semantic:titleHeading>
 		<semantic:headerContent>
-			<ObjectAttribute title="{/#Animals/Cpf/@sap:label}"/>
-			<Text text="{Cpf}"/>
-			<!-- <ObjectNumber
-				id="objectHeaderNumber"
-				number="{
-					path: 'UnitNumber',
-					formatter: '.formatter.currencyValue'
-				}"
-				unit="{UnitOfMeasure}"
+			<layout:HorizontalLayout allowWrapping="true">
+				<ObjectAttribute
+					title="{/#Customers/Cpf/@sap:label}"
+					text="{Cpf}"
+				/>
+				<ObjectAttribute
+					title="{/#Customers/Telephone/@sap:label}"
+					text="{Telephone}"
+				/>
+				<ObjectAttribute
+					title="{/#Customers/Address/@sap:label}"
+					text="{Address}"
+				/>
+			</layout:HorizontalLayout>
+			<!-- <m:Button
+				text="Edit"
+				type="Emphasized"
+			/>
+			<m:Button
+				type="Transparent"
+				text="Delete"
 			/> -->
 		</semantic:headerContent>
-		<semantic:content >
+		<semantic:content>
 			<Table
 				id="lineItemsList"
 				width="auto"
@@ -51,14 +65,14 @@
 							type="Transparent"
 							text="Add"
 							icon="sap-icon://add"
-							press="_onCreate"
+							press="_onCreateAnimal"
 						/>
 						<OverflowToolbarButton
 							tooltip="Less"
 							type="Transparent"
 							text="Less"
 							icon="sap-icon://less"
-							press="_onDelete"
+							press="_onDeleteAnimal"
 						/>
 					</Toolbar>
 				</headerToolbar>
@@ -106,8 +120,7 @@
 									style: 'medium'
 								}
 							}
-							
-							"/>
+								"/>
 							<!-- <ObjectNumber
 								number="{
 									path: 'UnitNumber',
@@ -140,5 +153,18 @@
 				press=".toggleFullScreen"
 			/>
 		</semantic:exitFullScreenAction>
+
+
+		<semantic:titleMainAction>
+			<semantic:TitleMainAction text="{i18n>edit}"/>
+		</semantic:titleMainAction>
+
+		<semantic:deleteAction>
+			<semantic:DeleteAction 
+			press="_onDeleteCustomer"
+			/>
+		</semantic:deleteAction>
+
+
 	</semantic:SemanticPage>
 </mvc:View>

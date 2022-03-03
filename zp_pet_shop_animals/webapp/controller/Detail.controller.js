@@ -256,7 +256,7 @@ sap.ui.define(
         }
       },
 
-      _onCreate: function () {
+      _onCreateAnimal: function () {
         this.gbEditing = false;
         var oView = this.getView();
         if (!this.byId("openDialog")) {
@@ -273,23 +273,41 @@ sap.ui.define(
         }
       },
 
-      _onDelete: function () {
+      _onDeleteAnimal: function () {
         var oModel = this.getView().getModel();
         var oTable = this.getView().byId("lineItemsList");
         var oItems = oTable.getSelectedContextPaths();
 
         for (var item in oItems) {
           oModel.remove(oItems[item], {
-            success: function (oData, oResponse) {
-            },
+            success: function (oData, oResponse) {},
             error: function (oError) {
               var oSapMessage = JSON.parse(oError.responseText);
               var msg = oSapMessage.error.message.value;
               MessageBox.error(msg);
             },
           });
-        };
-		oTable.removeSelections();
+        }
+        oTable.removeSelections();
+      },
+
+      _onDeleteCustomer(oEvent) {
+        debugger;
+        var oModel = this.getView().getModel();
+        var sDelete = oModel.createKey("/CustomersSet", {
+          Cpf: this.sCustomerCpf,
+        });
+
+        oModel.remove(sDelete, {
+          success: function (oData, oResponse) {
+            this.onCloseDetailPress();
+          }.bind(this),
+          error: function (oError) {
+            var oSapMessage = JSON.parse(oError.responseText);
+            var msg = oSapMessage.error.message.value;
+            MessageBox.error(msg);
+          }.bind(this),
+        });
       },
 
       handleSaveBtnPress: function (oEvent) {
