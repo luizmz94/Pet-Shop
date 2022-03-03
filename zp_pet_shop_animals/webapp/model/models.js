@@ -18,7 +18,7 @@ sap.ui.define([
 			  Name: "",
 			  Species: "",
 			  Race: "",
-			  Age:"",
+			  Age:0,
 			  Cpf:""
 			});
 			return oModel;

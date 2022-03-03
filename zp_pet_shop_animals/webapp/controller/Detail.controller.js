@@ -274,7 +274,6 @@ sap.ui.define(
       },
 
       _onDelete: function () {
-        debugger;
         var oModel = this.getView().getModel();
         var oTable = this.getView().byId("lineItemsList");
         var oItems = oTable.getSelectedContextPaths();
@@ -282,10 +281,8 @@ sap.ui.define(
         for (var item in oItems) {
           oModel.remove(oItems[item], {
             success: function (oData, oResponse) {
-              debugger;
             },
             error: function (oError) {
-              debugger;
               var oSapMessage = JSON.parse(oError.responseText);
               var msg = oSapMessage.error.message.value;
               MessageBox.error(msg);
