@@ -1,7 +1,6 @@
 <mvc:View
 	controllerName="petshop.zppetshopanimals.controller.Detail"
 	xmlns="sap.m"
-	xmlns:m="sap.m"
 	xmlns:layout="sap.ui.layout"
 	xmlns:semantic="sap.f.semantic"
 	xmlns:mvc="sap.ui.core.mvc"
@@ -19,37 +18,39 @@
 		</semantic:titleHeading>
 		<semantic:headerContent>
 			<layout:HorizontalLayout allowWrapping="true">
-				<ObjectAttribute
-					title="{/#Customers/Cpf/@sap:label}"
-					text="{Cpf}"
-				/>
-				<ObjectAttribute
-					title="{/#Customers/Telephone/@sap:label}"
-					text="{Telephone}"
-				/>
-				<ObjectAttribute
-					title="{/#Customers/Address/@sap:label}"
-					text="{Address}"
-				/>
+				<layout:VerticalLayout class="sapUiMediumMarginEnd">
+					<ObjectAttribute
+						title="{/#Customers/Cpf/@sap:label}"
+						text="{Cpf}"
+					/>
+					<ObjectAttribute
+						title="{/#Customers/Telephone/@sap:label}"
+						text="{Telephone}"
+					/>
+					<ObjectAttribute
+						title="{/#Customers/Address/@sap:label}"
+						text="{Address}"
+					/>
+				</layout:VerticalLayout>
 			</layout:HorizontalLayout>
-			<!-- <m:Button
-				text="Edit"
-				type="Emphasized"
-			/>
-			<m:Button
-				type="Transparent"
-				text="Delete"
-			/> -->
 		</semantic:headerContent>
 		<semantic:content>
 			<Table
 				id="lineItemsList"
 				width="auto"
-				items="{GetAnimals}"
+				items="{
+					path: 'GetAnimals',
+					sorter: {
+						path: 'Id',
+						descending: false
+					}
+				}"
 				updateFinished=".onListUpdateFinished"
-				noDataText="{i18n>detailLineItemTableNoDataText}"
+				noDataText="{detailView>/tableNoDataText}"
 				busyIndicatorDelay="{detailView>/lineItemTableDelay}"
 				mode="MultiSelect"
+				growing="true"
+				growingScrollToLoad="true"
 			>
 				<headerToolbar>
 					<Toolbar>
@@ -60,6 +61,20 @@
 							level="H3"
 						/>
 						<ToolbarSpacer/>
+						<SearchField
+							id="searchField"
+							tooltip="{i18n>searchByName}"
+							placeholder="{i18n>searchByName}"
+							enableSuggestions="true"
+							search=".onSearch"
+						>
+							<layoutData>
+								<OverflowToolbarLayoutData
+									maxWidth="269px"
+									priority="NeverOverflow"
+								/>
+							</layoutData>
+						</SearchField>
 						<OverflowToolbarButton
 							tooltip="Add"
 							type="Transparent"
@@ -95,15 +110,9 @@
 					<Column>
 						<Text text="{/#Animals/Createdon/@sap:label}"/>
 					</Column>
-					<!-- <Column
-						minScreenWidth="Tablet"
-						demandPopin="true"
-						hAlign="End">
-						<Text text="{i18n>detailLineItemTableUnitNumberColumn}"/>
-					</Column> -->
 				</columns>
 				<items>
-					<ColumnListItem>
+					<ColumnListItem press="onPress" type="Navigation">
 						<cells>
 							<ObjectIdentifier
 								title="{Id}"
@@ -121,12 +130,6 @@
 								}
 							}
 								"/>
-							<!-- <ObjectNumber
-								number="{
-									path: 'UnitNumber',
-									formatter: '.formatter.currencyValue'
-								}"
-								unit="{UnitOfMeasure}"/> -->
 						</cells>
 					</ColumnListItem>
 				</items>
@@ -153,18 +156,14 @@
 				press=".toggleFullScreen"
 			/>
 		</semantic:exitFullScreenAction>
-
-
 		<semantic:titleMainAction>
-			<semantic:TitleMainAction text="{i18n>edit}"/>
-		</semantic:titleMainAction>
-
-		<semantic:deleteAction>
-			<semantic:DeleteAction 
-			press="_onDeleteCustomer"
+			<semantic:TitleMainAction
+				text="{i18n>edit}"
+				press="_onEditCustomer"
 			/>
+		</semantic:titleMainAction>
+		<semantic:deleteAction>
+			<semantic:DeleteAction press="_onDeleteCustomer"/>
 		</semantic:deleteAction>
-
-
 	</semantic:SemanticPage>
 </mvc:View>

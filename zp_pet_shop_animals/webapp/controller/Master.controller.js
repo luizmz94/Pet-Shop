@@ -406,6 +406,8 @@ sap.ui.define(
       },
 
       _onCreate: function () {
+        this.getModel("appView").setProperty("/keys/cpf/blocked", false);
+        
         this.gbEditing = false;
         var oView = this.getView();
         if (!this.byId("openDialog")) {
@@ -422,7 +424,7 @@ sap.ui.define(
         }
       },
 
-      handleSaveBtnPress: function (oEvent) {
+      handleSaveBtnPressCustomer: function (oEvent) {
         var oModelCustomer = this.getView().getModel("Customer");
         var oModel = this.getView().getModel();
 
@@ -434,7 +436,7 @@ sap.ui.define(
                 // MessageBox.success(msg, { onClose: this.doMessageboxAction() });
                 MessageBox.success(msg);
                 this.clearModel(oModelCustomer);
-                this.handleCancelBtnPress();
+                this.handleCancelBtnPressCustomer();
               }
             }.bind(this),
 
@@ -455,7 +457,7 @@ sap.ui.define(
               var msg = this.getResourceBundle().getText("updated");
               MessageBox.success(msg);
               this.clearModel(oModelCustomer);
-              this.handleCancelBtnPress();
+              this.handleCancelBtnPressCustomer();
               oModel.refresh();
             }.bind(this),
             error: function (oError) {
@@ -467,7 +469,7 @@ sap.ui.define(
         }
       },
 
-      handleCancelBtnPress: function () {
+      handleCancelBtnPressCustomer: function () {
         this.byId("openDialog").close();
         var modelCustomer = this.getView().getModel("Customer");
         this.clearModel(modelCustomer);

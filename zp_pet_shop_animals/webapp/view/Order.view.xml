@@ -1,0 +1,24 @@
+<mvc:View
+	controllerName=""
+	xmlns:mvc="sap.ui.core.mvc"
+	xmlns="sap.m"
+	xmlns:c="sap.ui.core"
+	displayBlock="true"
+	height="100%"
+	busyIndicatorDelay="0"
+>
+
+<App>
+    <pages>
+        <Page showNavButton="true" navButtonPress="onNavBack">
+            <content>
+                <VBox>
+                    <Text id="myTestId" text="Name"></Text>
+                    <Text id="TestId" text="Branch"></Text>
+                </VBox>
+            </content>
+        </Page>
+    </pages>
+</App>
+
+</mvc:View>

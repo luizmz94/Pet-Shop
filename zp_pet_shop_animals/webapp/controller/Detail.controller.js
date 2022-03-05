@@ -6,6 +6,8 @@ sap.ui.define(
     "sap/m/library",
     "sap/ui/core/Fragment",
     "sap/m/MessageBox",
+    "sap/ui/model/Filter",
+    "sap/ui/model/FilterOperator",
   ],
   function (
     BaseController,
@@ -13,7 +15,9 @@ sap.ui.define(
     formatter,
     mobileLibrary,
     Fragment,
-    MessageBox
+    MessageBox,
+    Filter,
+    FilterOperator
   ) {
     "use strict";
 
@@ -37,7 +41,12 @@ sap.ui.define(
           lineItemListTitle: this.getResourceBundle().getText(
             "detailLineItemTableHeading"
           ),
+          tableNoDataText: this.getResourceBundle().getText(
+            "detailLineItemTableNoDataText"
+          ),
         });
+
+        this.oSF = this.getView().byId("searchField");
 
         this.getRouter()
           .getRoute("object")
@@ -212,6 +221,47 @@ sap.ui.define(
         oViewModel.setProperty("/delay", iOriginalViewBusyDelay);
       },
 
+      onSearch: function (oEvent) {
+        debugger;
+        if (oEvent.getParameters().refreshButtonPressed) {
+          // Search field's 'refresh' button has been pressed.
+          // This is visible if you select any master list item.
+          // In this case no new search is triggered, we only
+          // refresh the list binding.
+          this.onRefresh();
+        } else {
+          var aTableSearchState = [];
+          var sQuery = oEvent.getParameter("query");
+
+          if (sQuery && sQuery.length > 0) {
+            aTableSearchState = [
+              new Filter("Name", FilterOperator.Contains, sQuery),
+            ];
+          }
+          this._applySearch(aTableSearchState);
+        }
+      },
+
+      _applySearch: function (aTableSearchState) {
+        debugger;
+        var oTable = this.byId("lineItemsList"),
+          oViewModel = this.getModel("detailView");
+        oTable.getBinding("items").filter(aTableSearchState, "Application");
+        // changes the noDataText of the list in case there are no filter results
+        if (aTableSearchState.length !== 0) {
+          oViewModel.setProperty(
+            "/tableNoDataText",
+            this.getResourceBundle().getText("detailLineItemTableNoDataText")
+          );
+        }
+      },
+
+      onRefresh: function () {
+        var oTable = this.byId("lineItemsList");
+        oTable.getBinding("items").refresh();
+      },
+
+
       /**
        * Set the full screen mode to false and navigate to master page
        */
@@ -291,8 +341,86 @@ sap.ui.define(
         oTable.removeSelections();
       },
 
+      _onEditCustomer(oEvent) {
+        this.getModel("appView").setProperty("/keys/cpf/blocked", true);
+
+        var oView = this.getView();
+
+        var oCurrentCustomer = oEvent
+          .getSource()
+          .getBindingContext()
+          .getObject();
+
+        var oModelCustomer = oView.getModel("Customer");
+        oModelCustomer.setData(oCurrentCustomer);
+
+        if (!this.byId("openDialog")) {
+          Fragment.load({
+            id: oView.getId(),
+            name: "petshop.zppetshopanimals.view.Register",
+            controller: this,
+          }).then(function (oDialog) {
+            oView.addDependent(oDialog);
+            oDialog.open();
+          });
+        } else {
+          this.byId("openDialog").open();
+        }
+        this.gbEditing = true;
+      },
+
+      handleSaveBtnPressCustomer: function (oEvent) {
+        var oModelCustomer = this.getView().getModel("Customer");
+        var oModel = this.getView().getModel();
+
+        if (!this.gbEditing) {
+          oModel.create("/CustomersSet", oModelCustomer.getData(), {
+            success: function (oData, oResponse) {
+              if (oResponse.statusCode == "201") {
+                var msg = this.getResourceBundle().getText("created");
+                // MessageBox.success(msg, { onClose: this.doMessageboxAction() });
+                MessageBox.success(msg);
+                this.clearModel(oModelCustomer);
+                this.handleCancelBtnPressCustomer();
+              }
+            }.bind(this),
+
+            error: function (oError) {
+              var oSapMessage = JSON.parse(oError.responseText);
+              var msg = oSapMessage.error.message.value;
+              MessageBox.error(msg);
+            },
+          });
+        } else {
+          var oCurrentCustomer = oModelCustomer.getData();
+          var sUpdate = oModel.createKey("/CustomersSet", {
+            Cpf: oCurrentCustomer.Cpf,
+          });
+          oModel.update(sUpdate, oCurrentCustomer, {
+            method: "PUT",
+            success: function (data, oResponse) {
+              var msg = this.getResourceBundle().getText("updated");
+              MessageBox.success(msg);
+              this.clearModel(oModelCustomer);
+              this.handleCancelBtnPressCustomer();
+              oModel.refresh();
+            }.bind(this),
+            error: function (oError) {
+              var oSapMessage = JSON.parse(oError.responseText);
+              var msg = oSapMessage.error.message.value;
+              MessageBox.error(msg);
+            }.bind(this),
+          });
+        }
+      },
+
+      handleCancelBtnPressCustomer: function () {
+        this.byId("openDialog").close();
+        var modelCustomer = this.getView().getModel("Customer");
+        this.clearModel(modelCustomer);
+      },
+
       _onDeleteCustomer(oEvent) {
-        debugger;
         var oModel = this.getView().getModel();
         var sDelete = oModel.createKey("/CustomersSet", {
           Cpf: this.sCustomerCpf,
@@ -376,6 +504,25 @@ sap.ui.define(
           Cpf: "",
         });
       },
+
+
+      onPress: function(oEvent) {
+        var oItem = oEvent.getSource();
+        var sPath = oItem.getBindingContext().getPath("Name");
+        var sPath1 = oItem.getBindingContext().getPath("Branch");
+        var oTable = this.getView().byId("abc");
+        var modelData = oTable.getModel();
+        var data = modelData.getProperty(sPath);
+        var data1 = modelData.getProperty(sPath1);
+  
+        var oRouter = sap.ui.core.UIComponent.getRouterFor(this);
+        oRouter.navTo("page2", {
+          invoicePath: data,
+          invoicePath1: data1
+        });
+      },
+
+
     });
   }
 );

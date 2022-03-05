@@ -12,14 +12,14 @@
 			<Button
 				text="{i18n>save}"
 				type="Accept"
-				press="handleSaveBtnPress"
+				press="handleSaveBtnPressCustomer"
 			/>
 		</beginButton>
 		<endButton>
 			<Button
 				text="{i18n>cancel}"
 				type="Reject"
-				press="handleCancelBtnPress"
+				press="handleCancelBtnPressCustomer"
 			/>
 		</endButton>
 		<f:SimpleForm
@@ -32,6 +32,7 @@
 					value="{Customer>/Cpf}"
 					mask="999.999.999-99"
 					placeholder="{i18n>enterCPF}"
+					blocked="{appView>/keys/cpf/blocked}"
 				/>
 				<Label text="{/#Customers/Name/@sap:label}"/>
 				<Input

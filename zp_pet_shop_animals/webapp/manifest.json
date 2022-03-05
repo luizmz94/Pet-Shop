@@ -27,6 +27,7 @@
 	},
 
 	"sap.ui": {
+		"fullWidth": true, 
 		"technology": "UI5",
 		"icons": {
 			"icon": "sap-icon://detail-view",
@@ -107,7 +108,15 @@
 						"master",
 						"object"
 					]
+				},
+				{
+
+					"pattern": "page2/{invoicePath}/{invoicePath1}",
+					"name": "page2",
+					"target": "page2",
+					"controlAggregation": "pages"
 				}
+				
 			],
 
 			"targets": {
