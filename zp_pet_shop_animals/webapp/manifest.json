@@ -110,10 +110,10 @@
 					]
 				},
 				{
-
-					"pattern": "page2/{invoicePath}/{invoicePath1}",
-					"name": "page2",
-					"target": "page2",
+					"pattern": "Order/{invoicePath}/{invoicePath1}",
+					"name": "order",
+					"target": [ 
+						"order"],
 					"controlAggregation": "pages"
 				}
 				
@@ -129,6 +129,10 @@
 					"viewName": "Detail",
 					"viewId": "detail",
 					"viewLevel": 1,
+					"controlAggregation": "midColumnPages"
+				},
+				"order": {
+					"viewName": "Order",
 					"controlAggregation": "midColumnPages"
 				},
 				"detailObjectNotFound": {

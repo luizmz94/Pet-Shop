@@ -36,7 +36,7 @@
 		</semantic:headerContent>
 		<semantic:content>
 			<Table
-				id="lineItemsList"
+				id="tableAnimals"
 				width="auto"
 				items="{
 					path: 'GetAnimals',

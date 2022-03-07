@@ -89,7 +89,7 @@ sap.ui.define(
           oViewModel = this.getModel("detailView");
 
         // only update the counter if the length is final
-        if (this.byId("lineItemsList").getBinding("items").isLengthFinal()) {
+        if (this.byId("tableAnimals").getBinding("items").isLengthFinal()) {
           if (iTotalItems) {
             sTitle = this.getResourceBundle().getText(
               "detailLineItemTableHeadingCount",
@@ -198,7 +198,7 @@ sap.ui.define(
         // Store original busy indicator delay for the detail view
         var iOriginalViewBusyDelay = this.getView().getBusyIndicatorDelay(),
           oViewModel = this.getModel("detailView"),
-          oLineItemTable = this.byId("lineItemsList"),
+          oLineItemTable = this.byId("tableAnimals"),
           iOriginalLineItemTableBusyDelay =
             oLineItemTable.getBusyIndicatorDelay();
 
@@ -244,7 +244,7 @@ sap.ui.define(
 
       _applySearch: function (aTableSearchState) {
         debugger;
-        var oTable = this.byId("lineItemsList"),
+        var oTable = this.byId("tableAnimals"),
           oViewModel = this.getModel("detailView");
         oTable.getBinding("items").filter(aTableSearchState, "Application");
         // changes the noDataText of the list in case there are no filter results
@@ -257,7 +257,7 @@ sap.ui.define(
       },
 
       onRefresh: function () {
-        var oTable = this.byId("lineItemsList");
+        var oTable = this.byId("tableAnimals");
         oTable.getBinding("items").refresh();
       },
 
@@ -325,7 +325,7 @@ sap.ui.define(
 
       _onDeleteAnimal: function () {
         var oModel = this.getView().getModel();
-        var oTable = this.getView().byId("lineItemsList");
+        var oTable = this.getView().byId("tableAnimals");
         var oItems = oTable.getSelectedContextPaths();
 
         for (var item in oItems) {
@@ -507,16 +507,17 @@ sap.ui.define(
 
 
       onPress: function(oEvent) {
+        debugger;
         var oItem = oEvent.getSource();
-        var sPath = oItem.getBindingContext().getPath("Name");
-        var sPath1 = oItem.getBindingContext().getPath("Branch");
-        var oTable = this.getView().byId("abc");
+        var sPath = oItem.getBindingContext().getPath("Id");
+        var sPath1 = oItem.getBindingContext().getPath("Cpf");
+        var oTable = this.getView().byId("tableAnimals");
         var modelData = oTable.getModel();
         var data = modelData.getProperty(sPath);
         var data1 = modelData.getProperty(sPath1);
   
         var oRouter = sap.ui.core.UIComponent.getRouterFor(this);
-        oRouter.navTo("page2", {
+        oRouter.navTo("order", {
           invoicePath: data,
           invoicePath1: data1
         });

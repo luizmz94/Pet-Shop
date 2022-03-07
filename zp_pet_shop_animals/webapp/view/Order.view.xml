@@ -1,5 +1,5 @@
 <mvc:View
-	controllerName=""
+	controllerName="petshop.zppetshopanimals.controller.Order"
 	xmlns:mvc="sap.ui.core.mvc"
 	xmlns="sap.m"
 	xmlns:c="sap.ui.core"
