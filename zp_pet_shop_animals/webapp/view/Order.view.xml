@@ -1,24 +1,207 @@
 <mvc:View
-	controllerName="petshop.zppetshopanimals.controller.Order"
 	xmlns:mvc="sap.ui.core.mvc"
-	xmlns="sap.m"
-	xmlns:c="sap.ui.core"
-	displayBlock="true"
+	xmlns="sap.uxap"
+	xmlns:layout="sap.ui.layout"
+	xmlns:m="sap.m"
+	controllerName="petshop.zppetshopanimals.controller.Order"
 	height="100%"
-	busyIndicatorDelay="0"
 >
-
-<App>
-    <pages>
-        <Page showNavButton="true" navButtonPress="onNavBack">
-            <content>
-                <VBox>
-                    <Text id="myTestId" text="Name"></Text>
-                    <Text id="TestId" text="Branch"></Text>
-                </VBox>
-            </content>
-        </Page>
-    </pages>
-</App>
-
+	<m:Page
+		showNavButton="true"
+		navButtonPress="onNavBack"
+	>
+		<m:content>
+			<ObjectPageLayout
+				id="ObjectPageLayout"
+				enableLazyLoading="true"
+				useIconTabBar="true"
+				showTitleInHeaderContent="true"
+				selectedSection="personal"
+				upperCaseAnchorBar="false"
+			>
+				<headerTitle>
+					<ObjectPageDynamicHeaderTitle>
+						<expandedHeading>
+							<m:Title
+								text="{Name}"
+								wrapping="true"
+							/>
+						</expandedHeading>
+						<snappedHeading>
+							<m:FlexBox
+								fitContainer="true"
+								alignItems="Center"
+							>
+								<m:Avatar
+									src="https://www.petz.com.br/blog/wp-content/uploads/2019/04/quantos-anos-vive-um-gatinho.jpg"
+									class="sapUiTinyMarginEnd"
+								/>
+								<m:Title
+									text="{Name}"
+									wrapping="true"
+								/>
+							</m:FlexBox>
+						</snappedHeading>
+						<expandedContent>
+							<m:Text text="{Species}"/>
+						</expandedContent>
+						<snappedContent>
+							<m:Text text="{Species}"/>
+						</snappedContent>
+						<snappedTitleOnMobile>
+							<m:Title text="{Species}"/>
+						</snappedTitleOnMobile>
+						<actions>
+							<m:Button
+								text="Edit"
+								type="Emphasized"
+							/>
+							<m:Button
+								type="Transparent"
+								text="Delete"
+							/>
+							<m:Button
+								type="Transparent"
+								text="Copy"
+							/>
+							<m:OverflowToolbarButton
+								icon="sap-icon://action"
+								type="Transparent"
+								text="Share"
+								tooltip="action"
+							/>
+						</actions>
+					</ObjectPageDynamicHeaderTitle>
+				</headerTitle>
+				<headerContent>
+					<m:FlexBox
+						wrap="Wrap"
+						fitContainer="true"
+					>
+						<m:Avatar
+							class="sapUiSmallMarginEnd"
+							src="./test-resources/sap/uxap/images/imageID_275314.png"
+							displaySize="L"
+						/>
+						<layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
+							<m:Link text="+33 6 4512 5158"/>
+							<m:Link text="DeniseSmith@sap.com"/>
+						</layout:VerticalLayout>
+						<layout:HorizontalLayout class="sapUiSmallMarginBeginEnd">
+							<m:Image src="./test-resources/sap/uxap/images/linkedin.png"/>
+							<m:Image
+								src="./test-resources/sap/uxap/images/Twitter.png"
+								class="sapUiSmallMarginBegin"
+							/>
+						</layout:HorizontalLayout>
+						<layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
+							<m:Label text="Hello! I am Denise and I use UxAP"/>
+							<m:VBox>
+								<m:Label text="Achieved goals"/>
+								<m:ProgressIndicator
+									percentValue="30"
+									displayValue="30%"
+								/>
+							</m:VBox>
+						</layout:VerticalLayout>
+						<layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
+							<m:Label text="San Jose, USA"/>
+						</layout:VerticalLayout>
+					</m:FlexBox>
+				</headerContent>
+				<sections>
+					<ObjectPageSection
+						titleUppercase="false"
+						id="goals"
+						title="2014 Goals Plan"
+					>
+						<subSections>
+							<ObjectPageSubSection
+								id="goalsSS1"
+								titleUppercase="false"
+							>
+								<blocks>
+								</blocks>
+							</ObjectPageSubSection>
+						</subSections>
+					</ObjectPageSection>
+					<ObjectPageSection
+						titleUppercase="false"
+						id="personal"
+						title="Personal"
+					>
+						<subSections>
+							<ObjectPageSubSection
+								id="personalSS1"
+								title="Connect"
+								titleUppercase="false"
+							>
+								<blocks>
+								</blocks>
+							</ObjectPageSubSection>
+							<ObjectPageSubSection
+								id="personalSS2"
+								title="Payment information"
+								titleUppercase="false"
+							>
+								<blocks>
+								</blocks>
+								<moreBlocks>
+								</moreBlocks>
+							</ObjectPageSubSection>
+						</subSections>
+					</ObjectPageSection>
+					<ObjectPageSection
+						titleUppercase="false"
+						id="employment"
+						title="Employment"
+					>
+						<subSections>
+							<ObjectPageSubSection
+								id="employmentSS1"
+								title="Job information"
+								titleUppercase="false"
+							>
+								<blocks>
+								</blocks>
+							</ObjectPageSubSection>
+							<ObjectPageSubSection
+								id="employmentSS2"
+								title="Employee Details"
+								titleUppercase="false"
+							>
+								<blocks>
+								</blocks>
+								<moreBlocks>
+								</moreBlocks>
+							</ObjectPageSubSection>
+							<ObjectPageSubSection
+								id="employmentSS3"
+								title="Job Relationship"
+								titleUppercase="false"
+							>
+								<blocks>
+								</blocks>
+							</ObjectPageSubSection>
+						</subSections>
+					</ObjectPageSection>
+					<ObjectPageSection
+						titleUppercase="false"
+						id="connections"
+						title="Connections"
+					>
+						<subSections>
+							<ObjectPageSubSection
+								id="connectionsSS1"
+								titleUppercase="false"
+							>
+								<blocks>
+								</blocks>
+							</ObjectPageSubSection>
+						</subSections>
+					</ObjectPageSection>
+				</sections>
+			</ObjectPageLayout>
+		</m:content>
+	</m:Page>
 </mvc:View>

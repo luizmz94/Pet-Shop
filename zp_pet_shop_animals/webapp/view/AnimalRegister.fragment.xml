@@ -2,10 +2,10 @@
 	xmlns="sap.m"
 	xmlns:c="sap.ui.core"
 	xmlns:f="sap.ui.layout.form"
-	
+	xmlns:u="sap.ui.unified"
 >
 	<Dialog
-		id="openDialog"
+		id="openDialogAnimal"
 		title="{i18n>registerAnimal}"
 	>
 		<beginButton>
@@ -21,6 +21,9 @@
 				type="Reject"
 				press="handleCancelBtnPress"
 			/>
+			<!-- <Button
+			text="Upload File"
+			press="handleUploadPress"/> -->
 		</endButton>
 		<f:SimpleForm
 			id="AnimalRegisterForm"
@@ -44,9 +47,18 @@
 				/>
 				<Label text="{/#Animals/Age/@sap:label}"/>
 				<Input
-				value="{Animal>/Age}"
-				placeholder="{i18n>enterAge}"
-			/>
+					value="{Animal>/Age}"
+					placeholder="{i18n>enterAge}"
+				/>
+				<!-- <Label text="AnimalPicture"/>
+				<u:FileUploader
+					id="fileUploader"
+					name="myFileUpload"
+					uploadUrl="upload/"
+					tooltip="Upload your file to the local server"
+					uploadComplete="handleUploadComplete"
+					change="onChangeFileUploader"
+				/> -->
 			</f:content>
 		</f:SimpleForm>
 	</Dialog>

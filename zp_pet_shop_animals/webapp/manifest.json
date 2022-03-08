@@ -102,7 +102,7 @@
 					"target": "master"
 				},
 				{
-					"pattern": "Objects/{objectId}",
+					"pattern": "Customer/{objectId}",
 					"name": "object",
 					"target": [
 						"master",
@@ -110,7 +110,7 @@
 					]
 				},
 				{
-					"pattern": "Order/{invoicePath}/{invoicePath1}",
+					"pattern": "Animal/{animalId}",
 					"name": "order",
 					"target": [ 
 						"order"],

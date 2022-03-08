@@ -261,7 +261,6 @@ sap.ui.define(
         oTable.getBinding("items").refresh();
       },
 
-
       /**
        * Set the full screen mode to false and navigate to master page
        */
@@ -309,7 +308,7 @@ sap.ui.define(
       _onCreateAnimal: function () {
         this.gbEditing = false;
         var oView = this.getView();
-        if (!this.byId("openDialog")) {
+        if (!this.byId("openDialogAnimal")) {
           Fragment.load({
             id: oView.getId(),
             name: "petshop.zppetshopanimals.view.AnimalRegister",
@@ -319,7 +318,7 @@ sap.ui.define(
             oDialog.open();
           });
         } else {
-          this.byId("openDialog").open();
+          this.byId("openDialogAnimal").open();
         }
       },
 
@@ -489,9 +488,101 @@ sap.ui.define(
       },
 
       handleCancelBtnPress: function () {
-        this.byId("openDialog").close();
+        this.byId("openDialogAnimal").close();
         var oModelAnimal = this.getView().getModel("Animal");
         this.clearModel(oModelAnimal);
+      },
+
+      handleUploadComplete: function (oEvent) {
+        debugger;
+        var sResponse = oEvent.getParameter("response"),
+          iHttpStatusCode = parseInt(/\d{3}/.exec(sResponse)[0]),
+          sMessage;
+
+        if (sResponse) {
+          sMessage =
+            iHttpStatusCode === 200
+              ? sResponse + " (Upload Success)"
+              : sResponse + " (Upload Error)";
+          MessageToast.show(sMessage);
+        }
+      },
+
+      onChangeFileUploader: function (oEvent) {
+        debugger;
+        var fileDetails = oEvent.getParameters("file").files[0];
+        sap.ui.getCore().fileUploadArr = [];
+        if (fileDetails) {
+         var mimeDet = fileDetails.type,
+          fileName = fileDetails.name;
+          
+          // Calling method....
+         this.base64coonversionMethod(mimeDet, fileName, fileDetails, "001");
+         debugger;
+        } else {
+         sap.ui.getCore().fileUploadArr = [];
+        }
+       },
+
+      base64coonversionMethod: function (fileMime, fileName, fileDetails, DocNum) {
+        debugger;
+        var that = this;
+        if (!FileReader.prototype.readAsBinaryString) {
+         FileReader.prototype.readAsBinaryString = function (fileData) {
+          var binary = "";
+          var reader = new FileReader();
+          reader.onload = function (e) {
+           var bytes = new Uint8Array(reader.result);
+           var length = bytes.byteLength;
+           for (var i = 0; i < length; i++) {
+            binary += String.fromCharCode(bytes[i]);
+           }
+           that.base64ConversionRes = btoa(binary);
+           sap.ui.getCore().fileUploadArr.push({
+            "DocumentType": DocNum,
+            "MimeType": fileMime,
+            "FileName": fileName,
+            "Content": that.base64ConversionRes,
+           });
+          };
+          reader.readAsArrayBuffer(fileData);
+         };
+        }
+        var reader = new FileReader();
+        reader.onload = function (readerEvt) {
+         var binaryString = readerEvt.target.result;
+         that.base64ConversionRes = btoa(binaryString);
+         sap.ui.getCore().fileUploadArr.push({
+          "DocumentType": DocNum,
+          "MimeType": fileMime,
+          "FileName": fileName,
+          "Content": that.base64ConversionRes,
+     
+         });
+        };
+        reader.readAsBinaryString(fileDetails);
+       },
+
+
+      handleUploadPress: function () {
+        debugger;
+        var oFileUploader = this.byId("fileUploader");
+        oFileUploader
+          .checkFileReadable()
+          .then(
+            function () {
+              debugger;
+              oFileUploader.upload();
+            },
+            function (error) {
+              MessageToast.show(
+                "The file cannot be read. It may have changed."
+              );
+            }
+          )
+          .then(function () {
+            oFileUploader.clear();
+          });
       },
 
       clearModel: function (oModel) {
@@ -505,25 +596,18 @@ sap.ui.define(
         });
       },
 
-
-      onPress: function(oEvent) {
-        debugger;
+      onPress: function (oEvent) {
         var oItem = oEvent.getSource();
         var sPath = oItem.getBindingContext().getPath("Id");
-        var sPath1 = oItem.getBindingContext().getPath("Cpf");
         var oTable = this.getView().byId("tableAnimals");
         var modelData = oTable.getModel();
         var data = modelData.getProperty(sPath);
-        var data1 = modelData.getProperty(sPath1);
-  
+
         var oRouter = sap.ui.core.UIComponent.getRouterFor(this);
         oRouter.navTo("order", {
-          invoicePath: data,
-          invoicePath1: data1
+          animalId: data,
         });
       },
-
-
     });
   }
 );
