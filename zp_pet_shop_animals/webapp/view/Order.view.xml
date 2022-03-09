@@ -5,18 +5,25 @@
 	xmlns:m="sap.m"
 	controllerName="petshop.zppetshopanimals.controller.Order"
 	height="100%"
+	xmlns:semantic="sap.f.semantic"
 >
-	<m:Page
+	<!-- <m:Page
 		showNavButton="true"
 		navButtonPress="onNavBack"
+		
+	> -->
+	<semantic:SemanticPage
+		id="detailPage"
+		busy="{detailView>/busy}"
+		busyIndicatorDelay="{detailView>/delay}"
 	>
-		<m:content>
+		<semantic:content>
 			<ObjectPageLayout
 				id="ObjectPageLayout"
 				enableLazyLoading="true"
 				useIconTabBar="true"
 				showTitleInHeaderContent="true"
-				selectedSection="personal"
+				selectedSection="create"
 				upperCaseAnchorBar="false"
 			>
 				<headerTitle>
@@ -80,40 +87,55 @@
 					>
 						<m:Avatar
 							class="sapUiSmallMarginEnd"
-							src="./test-resources/sap/uxap/images/imageID_275314.png"
+							src="https://www.petz.com.br/blog/wp-content/uploads/2019/04/quantos-anos-vive-um-gatinho.jpg"
 							displaySize="L"
 						/>
 						<layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
-							<m:Link text="+33 6 4512 5158"/>
-							<m:Link text="DeniseSmith@sap.com"/>
+							<m:ObjectAttribute
+								title="{/#Animals/Age/@sap:label}"
+								text="{Age}"
+							/>
+							<m:ObjectAttribute
+								title="{/#Animals/Race/@sap:label}"
+								text="{Race}"
+							/>
 						</layout:VerticalLayout>
-						<layout:HorizontalLayout class="sapUiSmallMarginBeginEnd">
+						<!-- <layout:HorizontalLayout class="sapUiSmallMarginBeginEnd">
 							<m:Image src="./test-resources/sap/uxap/images/linkedin.png"/>
 							<m:Image
 								src="./test-resources/sap/uxap/images/Twitter.png"
 								class="sapUiSmallMarginBegin"
 							/>
-						</layout:HorizontalLayout>
+						</layout:HorizontalLayout> -->
 						<layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
-							<m:Label text="Hello! I am Denise and I use UxAP"/>
-							<m:VBox>
+							<m:ObjectAttribute
+								title="{/#Animals/Createdon/@sap:label}"
+								text="{
+									path: 'Createdon',
+									type: 'sap.ui.model.type.DateTime',
+									formatOptions: {
+										style: 'medium'
+									}
+								}"
+							/>
+							<!-- <m:VBox>
 								<m:Label text="Achieved goals"/>
 								<m:ProgressIndicator
 									percentValue="30"
 									displayValue="30%"
 								/>
-							</m:VBox>
+							</m:VBox> -->
 						</layout:VerticalLayout>
-						<layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
+						<!-- <layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
 							<m:Label text="San Jose, USA"/>
-						</layout:VerticalLayout>
+						</layout:VerticalLayout> -->
 					</m:FlexBox>
 				</headerContent>
 				<sections>
 					<ObjectPageSection
 						titleUppercase="false"
-						id="goals"
-						title="2014 Goals Plan"
+						id="create"
+						title="{i18n>createOrder}"
 					>
 						<subSections>
 							<ObjectPageSubSection
@@ -121,6 +143,71 @@
 								titleUppercase="false"
 							>
 								<blocks>
+									<m:Table
+										id="ins"
+										items="{/Products}"
+									>
+										<m:headerToolbar>
+											<m:Toolbar>
+												<m:Button
+													icon="sap-icon://add"
+													text="Row"
+													press="addRow"
+												/>
+												<m:Button
+													icon="sap-icon://display"
+													text="Row"
+													press="fetchRecords"
+												/>
+											</m:Toolbar>
+										</m:headerToolbar>
+										<m:columns>
+											<m:Column width="50px"/>
+											<m:Column>
+												<m:Text text="Category"/>
+											</m:Column>
+											<m:Column
+												minScreenWidth="Tablet"
+												demandPopin="true"
+											>
+												<m:Text text="Description"/>
+											</m:Column>
+											<m:Column
+												minScreenWidth="Tablet"
+												demandPopin="true"
+											>
+												<m:Text text="Quantity"/>
+											</m:Column>
+											<m:Column
+												minScreenWidth="Tablet"
+												demandPopin="true"
+											>
+												<m:Text text="Unit"/>
+											</m:Column>
+											<m:Column
+												minScreenWidth="Tablet"
+												demandPopin="true"
+											>
+												<m:Text text="Value"/>
+											</m:Column>
+										</m:columns>
+										<m:items>
+											<m:ColumnListItem>
+												<m:cells>
+													<m:Button
+														icon="sap-icon://delete"
+														press="deleteRow"
+														type="Reject"
+													/>
+													<m:Input value="{Category}"/>
+													<m:Input value="{Description}"/>
+													<m:Input value="{Quantity}"/>
+													<m:Input value="{Unit}"/>
+													<m:Input value="{Value}"/>
+												</m:cells>
+											</m:ColumnListItem>
+										</m:items>
+									</m:Table>
 								</blocks>
 							</ObjectPageSubSection>
 						</subSections>
@@ -137,6 +224,8 @@
 								titleUppercase="false"
 							>
 								<blocks>
+									<m:TextArea width="100%" id="output" ></m:TextArea>
+									<m:Label text="qualquer coisa 1"/>
 								</blocks>
 							</ObjectPageSubSection>
 							<ObjectPageSubSection
@@ -145,8 +234,10 @@
 								titleUppercase="false"
 							>
 								<blocks>
+									<m:Label text="qualquer coisa 2"/>
 								</blocks>
 								<moreBlocks>
+									<m:Label text="qualquer coisa3"/>
 								</moreBlocks>
 							</ObjectPageSubSection>
 						</subSections>
@@ -163,6 +254,7 @@
 								titleUppercase="false"
 							>
 								<blocks>
+									<m:Label text="qualquer coisa 4"/>
 								</blocks>
 							</ObjectPageSubSection>
 							<ObjectPageSubSection
@@ -171,8 +263,10 @@
 								titleUppercase="false"
 							>
 								<blocks>
+									<m:Label text="qualquer coisa 5"/>
 								</blocks>
 								<moreBlocks>
+									<m:Label text="qualquer coisa 6"/>
 								</moreBlocks>
 							</ObjectPageSubSection>
 							<ObjectPageSubSection
@@ -181,6 +275,7 @@
 								titleUppercase="false"
 							>
 								<blocks>
+									<m:Label text="qualquer coisa 7 "/>
 								</blocks>
 							</ObjectPageSubSection>
 						</subSections>
@@ -196,12 +291,13 @@
 								titleUppercase="false"
 							>
 								<blocks>
+									<m:Label text="qualquer coisa"/>
 								</blocks>
 							</ObjectPageSubSection>
 						</subSections>
 					</ObjectPageSection>
 				</sections>
 			</ObjectPageLayout>
-		</m:content>
-	</m:Page>
+		</semantic:content>
+	</semantic:SemanticPage>
 </mvc:View>

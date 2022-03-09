@@ -16,6 +16,20 @@ sap.ui.define(
         });
 
         this.setModel(oOrderModel, "orderView");
+
+        debugger;
+        this._data = {
+          Products: [
+            { Category: "a", Description: "b", Quantity:"c", Unit:"d", Value:"e"},
+          ],
+        };
+
+        this.jModel = new sap.ui.model.json.JSONModel();
+        this.jModel.setData(this._data);
+      },  
+
+      onBeforeRendering: function () {
+        this.byId("ins").setModel(this.jModel);
       },
       onNavBack: function () {
         history.go(-1);
@@ -50,7 +64,7 @@ sap.ui.define(
         this.getView().bindElement({
           path: sObjectPath,
           events: {
-            // change: this._onBindingChange.bind(this),
+            change: this._onBindingChange.bind(this),
             dataRequested: function () {
               oViewModel.setProperty("/busy", true);
             },
@@ -59,6 +73,64 @@ sap.ui.define(
             },
           },
         });
+      },
+
+      _onBindingChange: function () {
+        var oView = this.getView(),
+          oElementBinding = oView.getElementBinding();
+
+        // No data for the binding
+        if (!oElementBinding.getBoundContext()) {
+          this.getRouter().getTargets().display("detailObjectNotFound");
+          // if object could not be found, the selection in the master list
+          // does not make sense anymore.
+          this.getOwnerComponent().oListSelector.clearMasterListSelection();
+          return;
+        }
+        var sPath = oElementBinding.getPath(),
+          oResourceBundle = this.getResourceBundle(),
+          oObject = oView.getModel().getObject(sPath),
+          sObjectId = oObject.Cpf,
+          sObjectName = oObject.Name,
+          oViewModel = this.getModel("detailView");
+
+        this.getOwnerComponent().oListSelector.selectAListItem(sPath);
+
+        // oViewModel.setProperty(
+        //   "/shareSendEmailSubject",
+        //   oResourceBundle.getText("shareSendEmailObjectSubject", [sObjectId])
+        // );
+        // oViewModel.setProperty(
+        //   "/shareSendEmailMessage",
+        //   oResourceBundle.getText("shareSendEmailObjectMessage", [
+        //     sObjectName,
+        //     sObjectId,
+        //     location.href,
+        //   ])
+        // );
+      },
+
+      addRow: function (oArg) {
+        this._data.Products.push({ Category: "", Description: "", Quantity:"", Unit:"", Value:""});
+        this.jModel.refresh(); //which will add the new record
+      },
+
+      deleteRow: function (oArg) {
+        var deleteRecord = oArg.getSource().getBindingContext().getObject();
+        for (var i = 0; i < this._data.Products.length; i++) {
+          if (this._data.Products[i] == deleteRecord) {
+            //	pop this._data.Products[i]
+            this._data.Products.splice(i, 1); //removing 1 record from i th index.
+            this.jModel.refresh();
+            break; //quit the loop
+          }
+        }
+      },
+
+      fetchRecords: function (oArg) {
+        //data will be in this._data.Products
+        this.byId('output').setValue(JSON.stringify(this._data.Products));	
+        console.log(this._data.Products);
       },
     });
   }
