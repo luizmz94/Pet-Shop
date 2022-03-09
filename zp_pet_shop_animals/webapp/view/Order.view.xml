@@ -6,6 +6,8 @@
 	controllerName="petshop.zppetshopanimals.controller.Order"
 	height="100%"
 	xmlns:semantic="sap.f.semantic"
+	xmlns:core="sap.ui.core"
+	xmlns:customData="http://schemas.sap.com/sapui5/extension/sap.ui.core.CustomData/1"
 >
 	<!-- <m:Page
 		showNavButton="true"
@@ -199,9 +201,30 @@
 														press="deleteRow"
 														type="Reject"
 													/>
-													<m:Input value="{Category}"/>
+													<!-- <m:Input value="{Category}"/> -->
+													<m:ComboBox
+														id="multiComboBox"
+														customData:hasValue="true"
+														value="{Category}"
+													>
+														<core:Item
+															key="1"
+															text="Serviço"
+														/>
+														<core:Item
+															key="2"
+															text="Produto"
+														/>
+													</m:ComboBox>
 													<m:Input value="{Description}"/>
 													<m:Input value="{Quantity}"/>
+													<!-- <m:Input
+					<m:ObjectNumber
+						number="{Quantity}"
+						unit="{Unit}"
+ />
+ </m:Input> -->
+
 													<m:Input value="{Unit}"/>
 													<m:Input value="{Value}"/>
 												</m:cells>
@@ -224,7 +247,10 @@
 								titleUppercase="false"
 							>
 								<blocks>
-									<m:TextArea width="100%" id="output" ></m:TextArea>
+									<m:TextArea
+										width="100%"
+										id="output"
+									/>
 									<m:Label text="qualquer coisa 1"/>
 								</blocks>
 							</ObjectPageSubSection>

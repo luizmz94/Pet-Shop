@@ -17,13 +17,13 @@ sap.ui.define(
 
         this.setModel(oOrderModel, "orderView");
 
-        debugger;
         this._data = {
           Products: [
-            { Category: "a", Description: "b", Quantity:"c", Unit:"d", Value:"e"},
+            { Category: "a", Description: "b", Quantity:1, Unit:"KG", Value:"e"},
           ],
         };
 
+        this._options = {}
         this.jModel = new sap.ui.model.json.JSONModel();
         this.jModel.setData(this._data);
       },  
@@ -111,7 +111,7 @@ sap.ui.define(
       },
 
       addRow: function (oArg) {
-        this._data.Products.push({ Category: "", Description: "", Quantity:"", Unit:"", Value:""});
+        this._data.Products.push({ Category: "", Description: "", Quantity:0, Unit:"", Value:""});
         this.jModel.refresh(); //which will add the new record
       },
 
