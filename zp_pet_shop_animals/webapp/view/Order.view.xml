@@ -27,6 +27,7 @@
 				showTitleInHeaderContent="true"
 				selectedSection="create"
 				upperCaseAnchorBar="false"
+				showFooter="true"
 			>
 				<headerTitle>
 					<ObjectPageDynamicHeaderTitle>
@@ -146,8 +147,8 @@
 							>
 								<blocks>
 									<m:Table
-										id="ins"
-										items="{/Products}"
+										id="tableProducts"
+										items="{servicesAndProducts>/Products}"
 									>
 										<m:headerToolbar>
 											<m:Toolbar>
@@ -166,31 +167,37 @@
 										<m:columns>
 											<m:Column width="50px"/>
 											<m:Column>
-												<m:Text text="Category"/>
+												<m:Text text="{i18n>category}"/>
 											</m:Column>
 											<m:Column
 												minScreenWidth="Tablet"
 												demandPopin="true"
 											>
-												<m:Text text="Description"/>
+												<m:Text text="{i18n>description}"/>
 											</m:Column>
 											<m:Column
 												minScreenWidth="Tablet"
 												demandPopin="true"
 											>
-												<m:Text text="Quantity"/>
+												<m:Text text="{i18n>quantity}"/>
 											</m:Column>
 											<m:Column
 												minScreenWidth="Tablet"
 												demandPopin="true"
 											>
-												<m:Text text="Unit"/>
+												<m:Text text="{i18n>unit}"/>
 											</m:Column>
 											<m:Column
 												minScreenWidth="Tablet"
 												demandPopin="true"
 											>
-												<m:Text text="Value"/>
+												<m:Text text="{i18n>value}"/>
+											</m:Column>
+											<m:Column
+												minScreenWidth="Tablet"
+												demandPopin="true"
+											>
+												<m:Text text="{i18n>total}"/>
 											</m:Column>
 										</m:columns>
 										<m:items>
@@ -205,7 +212,7 @@
 													<m:ComboBox
 														id="multiComboBox"
 														customData:hasValue="true"
-														value="{Category}"
+														value="{servicesAndProducts>Category}"
 													>
 														<core:Item
 															key="1"
@@ -216,17 +223,14 @@
 															text="Produto"
 														/>
 													</m:ComboBox>
-													<m:Input value="{Description}"/>
-													<m:Input value="{Quantity}"/>
-													<!-- <m:Input
-					<m:ObjectNumber
-						number="{Quantity}"
-						unit="{Unit}"
- />
- </m:Input> -->
+													<m:Input value="{servicesAndProducts>Description}"/>
+													<m:Input value="{servicesAndProducts>Quantity}"/>
 
-													<m:Input value="{Unit}"/>
-													<m:Input value="{Value}"/>
+													<m:Input value="{servicesAndProducts>Unit}"/>
+													<m:Input value="{servicesAndProducts>Value}"/>
+													<m:ObjectNumber
+														number="{Total}"
+														 />
 												</m:cells>
 											</m:ColumnListItem>
 										</m:items>
@@ -323,6 +327,20 @@
 						</subSections>
 					</ObjectPageSection>
 				</sections>
+				<footer>
+					<m:OverflowToolbar>
+						<m:ToolbarSpacer/>
+						<m:Button
+							type="Emphasized"
+							text="{i18n>save}"
+							press="_saveOrder"
+						/>
+						<m:Button
+							text="{i18n>clear}"
+							press="_clearOrderTable"
+						/>
+					</m:OverflowToolbar>
+				</footer>
 			</ObjectPageLayout>
 		</semantic:content>
 	</semantic:SemanticPage>

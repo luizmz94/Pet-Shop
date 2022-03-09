@@ -19,17 +19,15 @@ sap.ui.define(
 
         this._data = {
           Products: [
-            { Category: "a", Description: "b", Quantity:1, Unit:"KG", Value:"e"},
+            { Category: "", Description: "", Quantity:1, Unit:"", Value:0, Total:0},
           ],
         };
 
-        this._options = {}
-        this.jModel = new sap.ui.model.json.JSONModel();
-        this.jModel.setData(this._data);
+        this.jModel = new JSONModel(this._data);
       },  
 
       onBeforeRendering: function () {
-        this.byId("ins").setModel(this.jModel);
+        this.byId("tableProducts").setModel(this.jModel, "servicesAndProducts");
       },
       onNavBack: function () {
         history.go(-1);
@@ -111,7 +109,7 @@ sap.ui.define(
       },
 
       addRow: function (oArg) {
-        this._data.Products.push({ Category: "", Description: "", Quantity:0, Unit:"", Value:""});
+        this._data.Products.push({ Category: "", Description: "", Quantity:0, Unit:"", Value:0, Total:0});
         this.jModel.refresh(); //which will add the new record
       },
 
@@ -132,6 +130,21 @@ sap.ui.define(
         this.byId('output').setValue(JSON.stringify(this._data.Products));	
         console.log(this._data.Products);
       },
+
+      _saveOrder: function() {
+
+
+
+      }, 
+
+
+      _clearOrderTable: function() {
+
+
+
+      },
+
+
     });
   }
 );
