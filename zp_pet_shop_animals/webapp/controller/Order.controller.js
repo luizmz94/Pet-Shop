@@ -13,22 +13,24 @@ sap.ui.define(
         var oOrderModel = new JSONModel({
           busy: false,
           delay: 0,
+          showFooter: false,
         });
 
         this.setModel(oOrderModel, "orderView");
 
         this._data = {
           Products: [
-            { Category: "", Description: "", Quantity:1, Unit:"", Value:0, Total:0},
+            // { Category: "", Description: "", Quantity:1, Unit:"", Value:0, Total:0},
           ],
         };
 
         this.jModel = new JSONModel(this._data);
-      },  
+      },
 
       onBeforeRendering: function () {
         this.byId("tableProducts").setModel(this.jModel, "servicesAndProducts");
       },
+
       onNavBack: function () {
         history.go(-1);
       },
@@ -44,12 +46,6 @@ sap.ui.define(
               this._bindView("/" + sAnimalPath);
             }.bind(this)
           );
-        // var cc = oEvent.getParameter("arguments").invoicePath;
-        // var textId = this.getView().byId("myTestId");
-        // textId.setText(cc);
-        // var cc1 = oEvent.getParameter("arguments").invoicePath1;
-        // var textId1 = this.getView().byId("TestId");
-        // textId1.setText(cc1);
       },
 
       _bindView: function (sObjectPath) {
@@ -94,6 +90,8 @@ sap.ui.define(
 
         this.getOwnerComponent().oListSelector.selectAListItem(sPath);
 
+        this._clearOrderTable();
+
         // oViewModel.setProperty(
         //   "/shareSendEmailSubject",
         //   oResourceBundle.getText("shareSendEmailObjectSubject", [sObjectId])
@@ -109,12 +107,25 @@ sap.ui.define(
       },
 
       addRow: function (oArg) {
-        this._data.Products.push({ Category: "", Description: "", Quantity:0, Unit:"", Value:0, Total:0});
+        this._data.Products.push({
+          Category: "",
+          Description: "",
+          Quantity: 0,
+          Unit: "",
+          Value: 0,
+          Total: 0,
+        });
         this.jModel.refresh(); //which will add the new record
+
+        // var oViewModel = this.getModel("orderView");
+        this.getModel("orderView").setProperty("/showFooter", true);
       },
 
-      deleteRow: function (oArg) {
-        var deleteRecord = oArg.getSource().getBindingContext().getObject();
+      deleteRow: function (oEvent) {
+        var deleteRecord = oEvent
+          .getSource()
+          .getBindingContext("servicesAndProducts")
+          .getObject();
         for (var i = 0; i < this._data.Products.length; i++) {
           if (this._data.Products[i] == deleteRecord) {
             //	pop this._data.Products[i]
@@ -123,28 +134,24 @@ sap.ui.define(
             break; //quit the loop
           }
         }
+        if (this._data.Products.length == 0) {
+          this.getModel("orderView").setProperty("/showFooter", false);
+        }
       },
 
       fetchRecords: function (oArg) {
         //data will be in this._data.Products
-        this.byId('output').setValue(JSON.stringify(this._data.Products));	
+        this.byId("output").setValue(JSON.stringify(this._data.Products));
         console.log(this._data.Products);
       },
 
-      _saveOrder: function() {
+      _saveOrder: function () {},
 
-
-
-      }, 
-
-
-      _clearOrderTable: function() {
-
-
-
+      _clearOrderTable: function () {
+        this._data.Products.splice(0, 100);
+        this.jModel.refresh();
+        this.getModel("orderView").setProperty("/showFooter", false);
       },
-
-
     });
   }
 );

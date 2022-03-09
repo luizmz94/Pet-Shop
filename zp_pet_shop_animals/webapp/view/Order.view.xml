@@ -16,8 +16,8 @@
 	> -->
 	<semantic:SemanticPage
 		id="detailPage"
-		busy="{detailView>/busy}"
-		busyIndicatorDelay="{detailView>/delay}"
+		busy="{orderView>/busy}"
+		busyIndicatorDelay="{orderView>/delay}"
 	>
 		<semantic:content>
 			<ObjectPageLayout
@@ -27,7 +27,7 @@
 				showTitleInHeaderContent="true"
 				selectedSection="create"
 				upperCaseAnchorBar="false"
-				showFooter="true"
+				showFooter="{orderView>/showFooter}"
 			>
 				<headerTitle>
 					<ObjectPageDynamicHeaderTitle>
