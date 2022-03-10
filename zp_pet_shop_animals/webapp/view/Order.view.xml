@@ -19,6 +19,26 @@
 		busy="{orderView>/busy}"
 		busyIndicatorDelay="{orderView>/delay}"
 	>
+		<semantic:closeAction>
+			<semantic:CloseAction
+				id="closeColumn"
+				press=".onNavBack"
+			/>
+		</semantic:closeAction>
+		<semantic:fullScreenAction>
+			<semantic:FullScreenAction
+				id="enterFullScreen"
+				visible="{= !${device>/system/phone} &amp;&amp; !${appView>/actionButtonsInfo/midColumn/fullScreen}}"
+				press=".toggleFullScreen"
+			/>
+		</semantic:fullScreenAction>
+		<semantic:exitFullScreenAction>
+			<semantic:ExitFullScreenAction
+				id="exitFullScreen"
+				visible="{= !${device>/system/phone} &amp;&amp; ${appView>/actionButtonsInfo/midColumn/fullScreen}}"
+				press=".toggleFullScreen"
+			/>
+		</semantic:exitFullScreenAction>
 		<semantic:content>
 			<ObjectPageLayout
 				id="ObjectPageLayout"
@@ -223,14 +243,39 @@
 															text="Produto"
 														/>
 													</m:ComboBox>
-													<m:Input value="{servicesAndProducts>Description}"/>
-													<m:Input value="{servicesAndProducts>Quantity}"/>
-
+													<m:Input
+														value="{servicesAndProducts>Description}"
+														showClearIcon="true"
+													/>
+													<m:Input
+														value="{servicesAndProducts>Quantity}"
+														change="_onChangeQuantity"
+														type="Number"
+														showClearIcon="true"
+													/>
 													<m:Input value="{servicesAndProducts>Unit}"/>
-													<m:Input value="{servicesAndProducts>Value}"/>
-													<m:ObjectNumber
-														number="{Total}"
-														 />
+													<m:Input
+														value="{servicesAndProducts>Value}"
+														type="Number"
+														showClearIcon="true"
+														change="_onChangeQuantity"
+													/>
+													<m:Input
+														value="{servicesAndProducts>Total}"
+														type="Number"
+														showClearIcon="true"
+														change="_onChangeTotal"
+													/>
+													<!-- <m:Input value="{
+														parts: [{
+															path: 'servicesAndProducts>Value'
+														}],
+														type: 'sap.ui.model.type.Currency',
+														formatOptions: {
+															showMeasure: false
+														}
+													}"/> -->
+													<!-- <m:ObjectNumber number="{servicesAndProducts>Total}"/> -->
 												</m:cells>
 											</m:ColumnListItem>
 										</m:items>

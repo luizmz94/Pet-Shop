@@ -31,6 +31,26 @@ sap.ui.define([
 			  Telephone: "",
 			});
 			return oModel;
+		  }, 
+		  createOrderHeaderModel: function () {
+			var oModel = new JSONModel({
+			  Id: "",
+			  Animalid: "",
+			  Customerid: "",
+			  Currency: ""
+			});
+			return oModel;
+		  },
+		  createOrderItemModel: function () {
+			var oModel = new JSONModel({
+			  Id: "",
+			  Itemid: "",
+			  Description: "",
+			  Quantity: 0,
+			  Unit: "", 
+			  Value: 0
+			});
+			return oModel;
 		  }
 
 
