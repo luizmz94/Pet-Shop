@@ -235,11 +235,11 @@
 														value="{servicesAndProducts>Category}"
 													>
 														<core:Item
-															key="1"
+															key="SRV"
 															text="Serviço"
 														/>
 														<core:Item
-															key="2"
+															key="PRD"
 															text="Produto"
 														/>
 													</m:ComboBox>

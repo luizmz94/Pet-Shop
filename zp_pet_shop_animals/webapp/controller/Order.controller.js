@@ -1,5 +1,5 @@
 sap.ui.define(
-  ["./BaseController", "sap/ui/model/json/JSONModel", "sap/m/MessageBox",],
+  ["./BaseController", "sap/ui/model/json/JSONModel", "sap/m/MessageBox"],
   function (BaseController, JSONModel, MessageBox) {
     "use strict";
 
@@ -20,7 +20,22 @@ sap.ui.define(
 
         this._data = {
           Products: [
-            // { Category: "", Description: "", Quantity:1, Unit:"", Value:0, Total:0},
+            // {
+            //   Category: "1",
+            //   Description: "Teste",
+            //   Quantity: "1",
+            //   Unit: "KG",
+            //   Value: "123",
+            //   Total: "123",
+            // },
+            // {
+            //   Category: "2",
+            //   Description: "Teste 2",
+            //   Quantity: "2",
+            //   Unit: "KG",
+            //   Value: "123",
+            //   Total: "246",
+            // },
           ],
         };
 
@@ -117,7 +132,7 @@ sap.ui.define(
 
         this.getOwnerComponent().oListSelector.selectAListItem(sPath);
 
-        this._clearOrderTable();
+        // this._clearOrderTable();
 
         // oViewModel.setProperty(
         //   "/shareSendEmailSubject",
@@ -135,12 +150,15 @@ sap.ui.define(
 
       addRow: function (oArg) {
         this._data.Products.push({
+          Id: "",
+          ItemId: "",
           Category: "",
+          ServiceProductid:"",
           Description: "",
-          Quantity: 0,
+          Quantity: "",
           Unit: "",
-          Value: 0,
-          Total: 0,
+          Value: "",
+          Total: "",
         });
         this.jModel.refresh(); //which will add the new record
 
@@ -173,73 +191,124 @@ sap.ui.define(
       },
 
       _saveOrder: function (oEvent) {
-        var errors = 0;
-        debugger;
-
         var oCurrentAnimal = oEvent.getSource().getBindingContext().getObject();
-
         var oOrderHeader = this.getView().getModel("OrderHeader").getData();
 
         oOrderHeader.Id = "1";
         oOrderHeader.Animalid = oCurrentAnimal.Id;
         oOrderHeader.Customerid = oCurrentAnimal.Cpf;
-        oOrderHeader.Currency = 'BRL';
-
-        debugger;
+        oOrderHeader.Currency = "BRL";
 
         var oModel = this.getView().getModel();
 
         oModel.create("/OrderHeadersSet", oOrderHeader, {
           success: function (oData, oResponse) {
             if (oResponse.statusCode == "201") {
-              debugger;
+debugger;
+              for (let key in this._data.Products) {
+                var line = this._data.Products[key];
 
-              for (var line in this._data.Products){
+                line.Id = oData.Id;
+                line.Itemid = (+key + 1).toString();
+                line.Description = line.Description;
+                line.Quantity = line.Quantity.toString();
+                line.Unit = line.Unit;
+                line.Value = line.Value.toString();
                 
-                var oOrderItem = this.getView().getModel("OrderItem").getData();
+              }
 
-                debugger;
-                oOrderItem.Id = oData.Id;
-                oOrderItem.Itemid = "1";
-                oOrderItem.Description = line.Description;
-
-
-                oModel.create("/OrderItemsSet", oOrderItem, {
-                  success: function (oData, oResponse) {
-                    if (oResponse.statusCode == "201") {
-                      debugger;
-        
- 
-
-                    }
-                  }.bind(this),
-                  
-                  error: function (oError) {
-                    debugger;
-                    errors++
-                    var oSapMessage = JSON.parse(oError.responseText);
-                    var msg = oSapMessage.error.message.value;
-                    MessageBox.error(msg);
-                  },
-                });
+              var payload = {
+                Key: "1",
+                Json: JSON.stringify(this._data.Products),
               };
+
+              oModel.create("/OrderItemsJsonSet", payload, {
+                success: function (oData, oResponse) {
+                  debugger;
+                },
+                error: function (oError) {
+                  debugger;
+                },
+              });
+
+              // var aDeferredGroup = oModel
+              //   .getDeferredGroups()
+              //   .push("batchCreate");
+              // oModel.setDeferredGroups(aDeferredGroup);
+
+              // oModel.setDeferredGroups(
+              //   oModel.getDeferredGroups().concat(["myGroupId"])
+              // );
+
+              // for (let key in this._data.Products) {
+              //   var line = this._data.Products[key];
+              //   var oOrderItem = this.getView().getModel("OrderItem").getData();
+
+              //   var orderItemId = (+key + 1).toString();
+              //   oOrderItem.Id = (+oData.Id + 1).toString();
+              //   oOrderItem.Itemid = orderItemId;
+              //   oOrderItem.Description = line.Description;
+              //   oOrderItem.Quantity = line.Quantity.toString();
+              //   oOrderItem.Unit = line.Unit;
+              //   oOrderItem.Value = line.Value.toString();
+
+              //   var mParameters = {
+              //     groupId: "myGroupId",
+              //     changeSetId: orderItemId,
+              //   };
+
+              //   debugger;
+              //   oModel.create("/OrderItemsSet", oOrderItem, mParameters);
+              //   // oModel.createEntry("/OrderItemsSet", oOrderItem);
+
+              //   // oModel.create("/OrderItemsSet", oOrderItem, {
+              //   //   success: function (oData, oResponse) {
+              //   //     if (oResponse.statusCode == "201") {
+              //   //       debugger;
+
+              //   //     }
+              //   //   }.bind(this),
+
+              //   //   error: function (oError) {
+              //   //     debugger;
+              //   //     errors++
+              //   //     var oSapMessage = JSON.parse(oError.responseText);
+              //   //     var msg = oSapMessage.error.message.value;
+              //   //     MessageBox.error(msg);
+              //   //   },
+              //   // });
+              //   oModel.submitChanges({
+              //     groupId: "myGroupId",
+              //     success: function (oData, oResponse) {
+              //       debugger;
+              //       var msg = this.getResourceBundle().getText("created");
+              //       MessageBox.success(msg);
+              //     }.bind(this),
+              //     error: function (oData, oResponse) {
+              //       debugger;
+              //       var oSapMessage = JSON.parse(oError.responseText);
+              //       var msg = oSapMessage.error.message.value;
+              //       MessageBox.error(msg);
+              //     }.bind(this),
+              //   });
+
+              // }
+
+              // // var mParameters = {
+              // //   groupId: "myGroupId"
+              // // };
+
+              // // oModel.submitChanges(mParameters, {
             }
           }.bind(this),
-          
+
           error: function (oError) {
             debugger;
-            errors++
             var oSapMessage = JSON.parse(oError.responseText);
             var msg = oSapMessage.error.message.value;
             MessageBox.error(msg);
           },
         });
-
-        if ( errors == 0 ){
-        var msg = this.getResourceBundle().getText("created");
-        MessageBox.success(msg);
-        };
-
       },
 
       _clearOrderTable: function () {
