@@ -1,6 +1,11 @@
 sap.ui.define(
-  ["./BaseController", "sap/ui/model/json/JSONModel", "sap/m/MessageBox"],
-  function (BaseController, JSONModel, MessageBox) {
+  [
+    "./BaseController",
+    "sap/ui/model/json/JSONModel",
+    "sap/m/MessageBox",
+    "sap/ui/core/Fragment",
+  ],
+  function (BaseController, JSONModel, MessageBox, Fragment) {
     "use strict";
 
     return BaseController.extend("petshop.zppetshopanimals.controller.Order", {
@@ -14,32 +19,24 @@ sap.ui.define(
           busy: false,
           delay: 0,
           showFooter: false,
+          messageIcon: "sap-icon://message-success",
         });
 
         this.setModel(oOrderModel, "orderView");
 
         this._data = {
-          Products: [
-            // {
-            //   Category: "1",
-            //   Description: "Teste",
-            //   Quantity: "1",
-            //   Unit: "KG",
-            //   Value: "123",
-            //   Total: "123",
-            // },
-            // {
-            //   Category: "2",
-            //   Description: "Teste 2",
-            //   Quantity: "2",
-            //   Unit: "KG",
-            //   Value: "123",
-            //   Total: "246",
-            // },
-          ],
+          Products: [],
         };
 
         this.jModel = new JSONModel(this._data);
+
+        // set message model
+        var oMessageManager;
+        oMessageManager = sap.ui.getCore().getMessageManager();
+        this.getView().setModel(oMessageManager.getMessageModel(), "message");
+
+        // activate automatic message generation for complete view
+        oMessageManager.registerObject(this.getView(), true);
       },
 
       onBeforeRendering: function () {
@@ -151,9 +148,9 @@ sap.ui.define(
       addRow: function (oArg) {
         this._data.Products.push({
           Id: "",
-          ItemId: "",
+          Itemid: "",
           Category: "",
-          ServiceProductid:"",
+          Serviceproductid: "",
           Description: "",
           Quantity: "",
           Unit: "",
@@ -191,6 +188,8 @@ sap.ui.define(
       },
 
       _saveOrder: function (oEvent) {
+        this.onClearMessages();
+
         var oCurrentAnimal = oEvent.getSource().getBindingContext().getObject();
         var oOrderHeader = this.getView().getModel("OrderHeader").getData();
 
@@ -204,7 +203,74 @@ sap.ui.define(
         oModel.create("/OrderHeadersSet", oOrderHeader, {
           success: function (oData, oResponse) {
             if (oResponse.statusCode == "201") {
-debugger;
+              oModel.setDeferredGroups(
+                oModel.getDeferredGroups().concat(["myGroupId"])
+              );
+
+              var mParameters = {
+                groupId: "myGroupId",
+              };
+
+              for (let key in this._data.Products) {
+                var line = this._data.Products[key];
+
+                var itemId = key;
+                itemId = ++itemId;
+
+                line.Id = oData.Id;
+                line.Itemid = itemId.toString();
+                line.Description = line.Description;
+                line.Quantity = line.Quantity.toString();
+                line.Unit = line.Unit;
+                line.Value = line.Value.toString();
+                line.Total = line.Total.toString();
+
+                oModel.create("/OrderItemsSet", line, {
+                  groupId: "myGroupId",
+                  success: function (oData, oResponse) {
+                    this._setMessageIcon();
+                  }.bind(this),
+                  error: function (oError) {
+                    this._setMessageIcon();
+                    // var oSapMessage = JSON.parse(oError.responseText);
+                    // var msg = oSapMessage.error.message.value;
+                    // MessageBox.error(msg);
+                  }.bind(this),
+                });
+              }
+
+              // oModel.setUseBatch(true);
+
+              oModel.submitChanges({
+                groupId: "myGroupId",
+              });
+            }
+          }.bind(this),
+
+          error: function (oError) {
+            var oSapMessage = JSON.parse(oError.responseText);
+            var msg = oSapMessage.error.message.value;
+            MessageBox.error(msg);
+          },
+        });
+      },
+
+      _saveOrderWithJson: function (oEvent) {
+        this.onClearMessages();
+
+        var oCurrentAnimal = oEvent.getSource().getBindingContext().getObject();
+        var oOrderHeader = this.getView().getModel("OrderHeader").getData();
+
+        oOrderHeader.Id = "1";
+        oOrderHeader.Animalid = oCurrentAnimal.Id;
+        oOrderHeader.Customerid = oCurrentAnimal.Cpf;
+        oOrderHeader.Currency = "BRL";
+
+        var oModel = this.getView().getModel();
+
+        oModel.create("/OrderHeadersSet", oOrderHeader, {
+          success: function (oData, oResponse) {
+            if (oResponse.statusCode == "201") {
               for (let key in this._data.Products) {
                 var line = this._data.Products[key];
 
@@ -214,9 +280,8 @@ debugger;
                 line.Quantity = line.Quantity.toString();
                 line.Unit = line.Unit;
                 line.Value = line.Value.toString();
-                
+                line.Total = line.Total.toString();
               }
-
               var payload = {
                 Key: "1",
                 Json: JSON.stringify(this._data.Products),
@@ -224,86 +289,21 @@ debugger;
 
               oModel.create("/OrderItemsJsonSet", payload, {
                 success: function (oData, oResponse) {
-                  debugger;
-                },
+                  this._setMessageIcon();
+                  // var msg = this.getResourceBundle().getText("createOrderSucess");
+                  // MessageBox.success(msg);
+                }.bind(this),
                 error: function (oError) {
-                  debugger;
-                },
+                  this._setMessageIcon();
+                  // var oSapMessage = JSON.parse(oError.responseText);
+                  // var msg = oSapMessage.error.message.value;
+                  // MessageBox.error(msg);
+                }.bind(this),
               });
-
-              // var aDeferredGroup = oModel
-              //   .getDeferredGroups()
-              //   .push("batchCreate");
-              // oModel.setDeferredGroups(aDeferredGroup);
-
-              // oModel.setDeferredGroups(
-              //   oModel.getDeferredGroups().concat(["myGroupId"])
-              // );
-
-              // for (let key in this._data.Products) {
-              //   var line = this._data.Products[key];
-              //   var oOrderItem = this.getView().getModel("OrderItem").getData();
-
-              //   var orderItemId = (+key + 1).toString();
-              //   oOrderItem.Id = (+oData.Id + 1).toString();
-              //   oOrderItem.Itemid = orderItemId;
-              //   oOrderItem.Description = line.Description;
-              //   oOrderItem.Quantity = line.Quantity.toString();
-              //   oOrderItem.Unit = line.Unit;
-              //   oOrderItem.Value = line.Value.toString();
-
-              //   var mParameters = {
-              //     groupId: "myGroupId",
-              //     changeSetId: orderItemId,
-              //   };
-
-              //   debugger;
-              //   oModel.create("/OrderItemsSet", oOrderItem, mParameters);
-              //   // oModel.createEntry("/OrderItemsSet", oOrderItem);
-
-              //   // oModel.create("/OrderItemsSet", oOrderItem, {
-              //   //   success: function (oData, oResponse) {
-              //   //     if (oResponse.statusCode == "201") {
-              //   //       debugger;
-
-              //   //     }
-              //   //   }.bind(this),
-
-              //   //   error: function (oError) {
-              //   //     debugger;
-              //   //     errors++
-              //   //     var oSapMessage = JSON.parse(oError.responseText);
-              //   //     var msg = oSapMessage.error.message.value;
-              //   //     MessageBox.error(msg);
-              //   //   },
-              //   // });
-              //   oModel.submitChanges({
-              //     groupId: "myGroupId",
-              //     success: function (oData, oResponse) {
-              //       debugger;
-              //       var msg = this.getResourceBundle().getText("created");
-              //       MessageBox.success(msg);
-              //     }.bind(this),
-              //     error: function (oData, oResponse) {
-              //       debugger;
-              //       var oSapMessage = JSON.parse(oError.responseText);
-              //       var msg = oSapMessage.error.message.value;
-              //       MessageBox.error(msg);
-              //     }.bind(this),
-              //   });
-
-              // }
-
-              // // var mParameters = {
-              // //   groupId: "myGroupId"
-              // // };
-
-              // // oModel.submitChanges(mParameters, {
             }
           }.bind(this),
 
           error: function (oError) {
-            debugger;
             var oSapMessage = JSON.parse(oError.responseText);
             var msg = oSapMessage.error.message.value;
             MessageBox.error(msg);
@@ -330,6 +330,54 @@ debugger;
           .getBindingContext("servicesAndProducts")
           .getObject();
         rowChanged.Value = rowChanged.Total / rowChanged.Quantity;
+      },
+
+      onMessagePopoverPress: function (oEvent) {
+        var oSourceControl = oEvent.getSource();
+        this._getMessagePopover().then(function (oMessagePopover) {
+          oMessagePopover.openBy(oSourceControl);
+        });
+      },
+
+      onClearMessages: function () {
+        this.getModel("orderView").setProperty(
+          "/messageIcon",
+          "sap-icon://message-success"
+        );
+
+        sap.ui.getCore().getMessageManager().removeAllMessages();
+      },
+
+      //################ Private APIs ###################
+
+      _getMessagePopover: function () {
+        var oView = this.getView();
+
+        // create popover lazily (singleton)
+        if (!this._pMessagePopover) {
+          this._pMessagePopover = Fragment.load({
+            id: oView.getId(),
+            name: "petshop.zppetshopanimals.view.MessagePopover",
+          }).then(function (oMessagePopover) {
+            oView.addDependent(oMessagePopover);
+            return oMessagePopover;
+          });
+        }
+        return this._pMessagePopover;
+      },
+
+      _setMessageIcon: function () {
+        var messages = this.getView().getModel("message").getData();
+
+        for (let lin in messages) {
+          var type = messages[lin].type;
+          if (type != "Success") {
+            this.getModel("orderView").setProperty(
+              "/messageIcon",
+              "sap-icon://alert"
+            );
+          }
+        }
       },
     });
   }
