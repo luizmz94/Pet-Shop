@@ -186,16 +186,17 @@
 										</m:headerToolbar>
 										<m:columns>
 											<m:Column width="50px"/>
-											<m:Column>
-												<m:Text text="{i18n>category}"/>
-											</m:Column>
 											<m:Column
 												minScreenWidth="Tablet"
 												demandPopin="true"
+												width="280px"
 											>
 												<m:Text text="{i18n>description}"/>
 											</m:Column>
-											<m:Column
+											<m:Column width="130px">
+												<m:Text text="{i18n>category}"/>
+											</m:Column>
+											<m:Column width="100px"
 												minScreenWidth="Tablet"
 												demandPopin="true"
 											>
@@ -204,18 +205,21 @@
 											<m:Column
 												minScreenWidth="Tablet"
 												demandPopin="true"
+												width="80px"
 											>
 												<m:Text text="{i18n>unit}"/>
 											</m:Column>
 											<m:Column
 												minScreenWidth="Tablet"
 												demandPopin="true"
+												width="100px"
 											>
 												<m:Text text="{i18n>value}"/>
 											</m:Column>
 											<m:Column
 												minScreenWidth="Tablet"
 												demandPopin="true"
+												width="100px"
 											>
 												<m:Text text="{i18n>total}"/>
 											</m:Column>
@@ -229,6 +233,26 @@
 														type="Reject"
 													/>
 													<!-- <m:Input value="{Category}"/> -->
+													<m:Input
+														id="InputDescription"
+														value="{servicesAndProducts>Description}"
+														showClearIcon="true"
+														required="true"
+														showSuggestion="true"
+														suggestionItems="{
+															path: '/ZshLzSrvPrdSet',
+															templateShareable: false
+														}"
+														change="_onChangeDescription"
+													>
+														<m:suggestionItems>
+															<core:ListItem
+																key="{Description}"
+																text="{Description}"
+																additionalText="{Value}"
+															/>
+														</m:suggestionItems>
+													</m:Input>
 													<m:ComboBox
 														id="multiComboBox"
 														customData:hasValue="true"
@@ -245,18 +269,31 @@
 														/>
 													</m:ComboBox>
 													<m:Input
-														value="{servicesAndProducts>Description}"
-														showClearIcon="true"
-														required="true"
-													/>
-													<m:Input
 														value="{servicesAndProducts>Quantity}"
 														change="_onChangeQuantity"
 														type="Number"
 														showClearIcon="true"
 														required="true"
 													/>
-													<m:Input value="{servicesAndProducts>Unit}"/>
+													<m:Input
+														id="InputUnit"
+														value="{servicesAndProducts>Unit}"
+														showClearIcon="true"
+														required="true"
+														showSuggestion="true"
+														suggestionItems="{
+															path: '/HT006Set',
+															templateShareable: false
+														}"
+													>
+														<m:suggestionItems>
+															<core:ListItem
+																key="{Msehi}"
+																text="{Msehi}"
+																additionalText="{Msehl}"
+															/>
+														</m:suggestionItems>
+													</m:Input>
 													<m:Input
 														value="{servicesAndProducts>Value}"
 														type="Number"
@@ -386,11 +423,11 @@
 							type="Emphasized"
 							press="onMessagePopoverPress"
 						/>
-						<m:Button 
-						text="Clear" 
-						press="onClearMessages"
-						visible="{=${message>/}.length > 0}"/>
-						
+						<m:Button
+							text="Clear"
+							press="onClearMessages"
+							visible="{=${message>/}.length > 0}"
+						/>
 						<m:ToolbarSpacer/>
 						<m:ToolbarSpacer/>
 						<m:Button

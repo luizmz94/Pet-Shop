@@ -4,8 +4,17 @@ sap.ui.define(
     "sap/ui/model/json/JSONModel",
     "sap/m/MessageBox",
     "sap/ui/core/Fragment",
+    "sap/ui/model/Filter",
+    "sap/ui/model/FilterOperator",
   ],
-  function (BaseController, JSONModel, MessageBox, Fragment) {
+  function (
+    BaseController,
+    JSONModel,
+    MessageBox,
+    Fragment,
+    Filter,
+    FilterOperator
+  ) {
     "use strict";
 
     return BaseController.extend("petshop.zppetshopanimals.controller.Order", {
@@ -129,20 +138,7 @@ sap.ui.define(
 
         this.getOwnerComponent().oListSelector.selectAListItem(sPath);
 
-        // this._clearOrderTable();
-
-        // oViewModel.setProperty(
-        //   "/shareSendEmailSubject",
-        //   oResourceBundle.getText("shareSendEmailObjectSubject", [sObjectId])
-        // );
-        // oViewModel.setProperty(
-        //   "/shareSendEmailMessage",
-        //   oResourceBundle.getText("shareSendEmailObjectMessage", [
-        //     sObjectName,
-        //     sObjectId,
-        //     location.href,
-        //   ])
-        // );
+        this._clearOrderTable();
       },
 
       addRow: function (oArg) {
@@ -188,6 +184,7 @@ sap.ui.define(
       },
 
       _saveOrder: function (oEvent) {
+        this.createOrderErro = false;
         this.onClearMessages();
 
         var oCurrentAnimal = oEvent.getSource().getBindingContext().getObject();
@@ -229,12 +226,16 @@ sap.ui.define(
                   groupId: "myGroupId",
                   success: function (oData, oResponse) {
                     this._setMessageIcon();
+                    if (
+                      key == this._data.Products.length - 1 &&
+                      this.createOrderErro == false
+                    ) {
+                      this._clearOrderTable();
+                    }
                   }.bind(this),
                   error: function (oError) {
                     this._setMessageIcon();
-                    // var oSapMessage = JSON.parse(oError.responseText);
-                    // var msg = oSapMessage.error.message.value;
-                    // MessageBox.error(msg);
+                    this.createOrderErro = true;
                   }.bind(this),
                 });
               }
@@ -314,7 +315,10 @@ sap.ui.define(
       _clearOrderTable: function () {
         this._data.Products.splice(0, 100);
         this.jModel.refresh();
-        this.getModel("orderView").setProperty("/showFooter", false);
+        var messages = this.getView().getModel("message").getData();
+        if (messages.length == 0) {
+          this.getModel("orderView").setProperty("/showFooter", false);
+        }
       },
 
       _onChangeQuantity: function (oEvent) {
@@ -332,6 +336,28 @@ sap.ui.define(
         rowChanged.Value = rowChanged.Total / rowChanged.Quantity;
       },
 
+      _onChangeDescription: function (oEvent) {
+        var rowChanged = oEvent
+          .getSource()
+          .getBindingContext("servicesAndProducts")
+          .getObject();
+
+        var suggestions = oEvent
+          .getSource()
+          .getSuggestionItemByKey(rowChanged.Description);
+
+        if (suggestions) {
+          var suggestionItem = suggestions.getBindingContext().getObject();
+          rowChanged.Value = suggestionItem.Value;
+          rowChanged.Category = suggestionItem.Category;
+          rowChanged.Unit = suggestionItem.Unit;
+          if (suggestionItem.Category == "SRV") {
+            rowChanged.Quantity = "1";
+            rowChanged.Total = rowChanged.Value;
+          }
+        }
+      },
+
       onMessagePopoverPress: function (oEvent) {
         var oSourceControl = oEvent.getSource();
         this._getMessagePopover().then(function (oMessagePopover) {
@@ -346,6 +372,9 @@ sap.ui.define(
         );
 
         sap.ui.getCore().getMessageManager().removeAllMessages();
+        if (this._data.Products.length == 0) {
+          this.getModel("orderView").setProperty("/showFooter", false);
+        }
       },
 
       //################ Private APIs ###################
