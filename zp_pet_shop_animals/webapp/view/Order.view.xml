@@ -8,6 +8,8 @@
 	xmlns:semantic="sap.f.semantic"
 	xmlns:core="sap.ui.core"
 	xmlns:customData="http://schemas.sap.com/sapui5/extension/sap.ui.core.CustomData/1"
+	xmlns:smartTable="sap.ui.comp.smarttable"
+	xmlns:app="http://schemas.sap.com/sapui5/extension/sap.ui.core.CustomData/1"
 >
 	<!-- <m:Page
 		showNavButton="true"
@@ -85,21 +87,22 @@
 							<m:Button
 								text="Edit"
 								type="Emphasized"
+								press="_onEditAnimal"
 							/>
-							<m:Button
+							<!-- <m:Button
 								type="Transparent"
 								text="Delete"
-							/>
-							<m:Button
+							/> -->
+							<!-- <m:Button
 								type="Transparent"
 								text="Copy"
-							/>
-							<m:OverflowToolbarButton
+							/> -->
+							<!-- <m:OverflowToolbarButton
 								icon="sap-icon://action"
 								type="Transparent"
 								text="Share"
 								tooltip="action"
-							/>
+							/> -->
 						</actions>
 					</ObjectPageDynamicHeaderTitle>
 				</headerTitle>
@@ -177,11 +180,11 @@
 													text="Row"
 													press="addRow"
 												/>
-												<m:Button
+												<!-- <m:Button
 													icon="sap-icon://display"
 													text="Row"
 													press="fetchRecords"
-												/>
+												/> -->
 											</m:Toolbar>
 										</m:headerToolbar>
 										<m:columns>
@@ -196,7 +199,8 @@
 											<m:Column width="130px">
 												<m:Text text="{i18n>category}"/>
 											</m:Column>
-											<m:Column width="100px"
+											<m:Column
+												width="100px"
 												minScreenWidth="Tablet"
 												demandPopin="true"
 											>
@@ -328,24 +332,34 @@
 					</ObjectPageSection>
 					<ObjectPageSection
 						titleUppercase="false"
-						id="personal"
-						title="Personal"
+						id="orderHistory"
+						title="{i18n>orderHistory}"
 					>
 						<subSections>
 							<ObjectPageSubSection
-								id="personalSS1"
-								title="Connect"
+								id="orderHeader"
 								titleUppercase="false"
 							>
 								<blocks>
-									<m:TextArea
-										width="100%"
-										id="output"
+									<!-- <m:VBox> -->
+									<smartTable:SmartTable
+										id="orderHeadersTable"
+										entitySet="OrderHeadersSet"
+										tableType="ResponsiveTable"
+										useVariantManagement="false"
+										useTablePersonalisation="false"
+										header="{i18n>orderHeader}"
+										persistencyKey="SmartTableAnalytical_Explored"
+										enableAutoBinding="true"
+										showFullScreenButton="true"
+										class="sapUiResponsiveContentPadding"
+										enableAutoColumnWidth="true"
+										initiallyVisibleFields="Id,Animalid,Customerid,Currency,Createdon,Createdby"
 									/>
-									<m:Label text="qualquer coisa 1"/>
+									<!-- </m:VBox> -->
 								</blocks>
 							</ObjectPageSubSection>
-							<ObjectPageSubSection
+							<!-- <ObjectPageSubSection
 								id="personalSS2"
 								title="Payment information"
 								titleUppercase="false"
@@ -356,10 +370,10 @@
 								<moreBlocks>
 									<m:Label text="qualquer coisa3"/>
 								</moreBlocks>
-							</ObjectPageSubSection>
+							</ObjectPageSubSection> -->
 						</subSections>
 					</ObjectPageSection>
-					<ObjectPageSection
+					<!-- <ObjectPageSection
 						titleUppercase="false"
 						id="employment"
 						title="Employment"
@@ -372,6 +386,10 @@
 							>
 								<blocks>
 									<m:Label text="qualquer coisa 4"/>
+									<m:Button
+										text="teste"
+										press="_readOrderAndItems"
+									/>
 								</blocks>
 							</ObjectPageSubSection>
 							<ObjectPageSubSection
@@ -412,7 +430,7 @@
 								</blocks>
 							</ObjectPageSubSection>
 						</subSections>
-					</ObjectPageSection>
+					</ObjectPageSection> -->
 				</sections>
 				<footer>
 					<m:OverflowToolbar>

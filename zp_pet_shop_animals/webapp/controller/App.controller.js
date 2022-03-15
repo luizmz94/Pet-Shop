@@ -24,6 +24,9 @@ sap.ui.define(
             cpf: {
               blocked: false,
             },
+            animalId: {
+              blocked: false,
+            },
           },
         });
         this.setModel(oViewModel, "appView");

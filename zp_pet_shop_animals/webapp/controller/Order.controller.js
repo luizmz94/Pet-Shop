@@ -94,6 +94,12 @@ sap.ui.define(
               this._bindView("/" + sAnimalPath);
             }.bind(this)
           );
+
+        var orderHeadersPath =
+          "/AnimalsSet('" + sAnimalId + "')/OrderHeadersSet";
+        var oSmartTable = this.getView().byId("orderHeadersTable");
+        oSmartTable.setTableBindingPath(orderHeadersPath);
+        oSmartTable.rebindTable();
       },
 
       _bindView: function (sObjectPath) {
@@ -139,6 +145,71 @@ sap.ui.define(
         this.getOwnerComponent().oListSelector.selectAListItem(sPath);
 
         this._clearOrderTable();
+      },
+
+      _onEditAnimal(oEvent) {
+        this.getModel("appView").setProperty("/keys/animalId/blocked", true);
+
+        var oView = this.getView();
+        var oCurrentAnimal = oEvent.getSource().getBindingContext().getObject();
+
+        var oModelAnimal = oView.getModel("Animal");
+        oModelAnimal.setData(oCurrentAnimal);
+
+        if (!this.byId("openDialog")) {
+          Fragment.load({
+            id: oView.getId(),
+            name: "petshop.zppetshopanimals.view.AnimalRegister",
+            controller: this,
+          }).then(function (oDialog) {
+            oView.addDependent(oDialog);
+            oDialog.open();
+          });
+        } else {
+          this.byId("openDialog").open();
+        }
+        // this.gbEditing = true;
+      },
+
+      handleSaveBtnPress: function (oEvent) {
+        var oModelAnimal = this.getView().getModel("Animal");
+        var oModel = this.getView().getModel();
+
+        var oCurrentAnimal = oModelAnimal.getData();
+        var sUpdate = oModel.createKey("/AnimalsSet", {
+          Id: oCurrentAnimal.Id,
+        });
+        oModel.update(sUpdate, oCurrentAnimal, {
+          method: "PUT",
+          success: function (data, oResponse) {
+            var msg = this.getResourceBundle().getText("updated");
+            MessageBox.success(msg);
+            this.handleCancelBtnPress();
+            oModel.refresh();
+          }.bind(this),
+          error: function (oError) {
+            var oSapMessage = JSON.parse(oError.responseText);
+            var msg = oSapMessage.error.message.value;
+            MessageBox.error(msg);
+          }.bind(this),
+        });
+      },
+
+      clearModel: function (oModel) {
+        oModel.setData({
+          Id: "",
+          Name: "",
+          Species: "",
+          Race: "",
+          Age: "",
+          Cpf: "",
+        });
+      },
+
+      handleCancelBtnPress: function () {
+        this.byId("openDialogAnimal").close();
+        var oModelAnimal = this.getView().getModel("Animal");
+        this.clearModel(oModelAnimal);
       },
 
       addRow: function (oArg) {
@@ -315,10 +386,10 @@ sap.ui.define(
       _clearOrderTable: function () {
         this._data.Products.splice(0, 100);
         this.jModel.refresh();
-        var messages = this.getView().getModel("message").getData();
-        if (messages.length == 0) {
-          this.getModel("orderView").setProperty("/showFooter", false);
-        }
+        // var messages = this.getView().getModel("message").getData();
+        // if (messages.length == 0) {
+        //   this.getModel("orderView").setProperty("/showFooter", false);
+        // }
       },
 
       _onChangeQuantity: function (oEvent) {
@@ -355,6 +426,12 @@ sap.ui.define(
             rowChanged.Quantity = "1";
             rowChanged.Total = rowChanged.Value;
           }
+        } else {
+          rowChanged.Value = "";
+          rowChanged.Category = "";
+          rowChanged.Unit = "";
+          rowChanged.Quantity = "";
+          rowChanged.Total = "";
         }
       },
 
@@ -407,6 +484,23 @@ sap.ui.define(
             );
           }
         }
+      },
+
+      _readOrderAndItems: function (oEvent) {
+        var animalPath = oEvent.getSource().getBindingContext().getPath();
+        var orderHeadersPath = animalPath + "/OrderHeadersSet";
+
+        var oModel = this.getView().getModel();
+
+        oModel.read(orderHeadersPath, {
+          success: function (oData, oResponse) {
+            var teste = oData.results;
+            debugger;
+          }.bind(this),
+          error: function (oError) {
+            debugger;
+          }.bind(this),
+        });
       },
     });
   }
