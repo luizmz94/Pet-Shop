@@ -488,7 +488,7 @@ sap.ui.define(
 
       _readOrderAndItems: function (oEvent) {
         var animalPath = oEvent.getSource().getBindingContext().getPath();
-        var orderHeadersPath = animalPath + "/OrderHeadersSet";
+        var orderHeadersPath = animalPath + "/GetOrders";
 
         var oModel = this.getView().getModel();
 

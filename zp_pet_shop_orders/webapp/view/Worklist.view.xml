@@ -1,0 +1,217 @@
+<mvc:View
+	controllerName="petshop.zppetshoporders.controller.Worklist"
+	xmlns="sap.m"
+	xmlns:mvc="sap.ui.core.mvc"
+	xmlns:semantic="sap.f.semantic"
+	xmlns:smartFilterBar="sap.ui.comp.smartfilterbar"
+	xmlns:smartTable="sap.ui.comp.smarttable"
+	xmlns:core="sap.ui.core"
+>
+	<semantic:SemanticPage
+		id="page"
+		headerPinnable="false"
+		toggleHeaderOnTitleClick="false"
+	>
+		<semantic:titleHeading>
+			<Title
+				text="{i18n>worklistTitle}"
+				level="H2"
+			/>
+		</semantic:titleHeading>
+		<semantic:content>
+			<VBox fitContainer="true">
+				<smartFilterBar:SmartFilterBar
+					id="smartFilterBar"
+					entitySet="OrderHeadersReportSet"
+					persistencyKey="SmartFilter_Explored"
+					showClearButton="true"
+				>
+					<smartFilterBar:controlConfiguration>
+						<smartFilterBar:ControlConfiguration
+							key="Id"
+							visibleInAdvancedArea="true"
+						/>
+						<smartFilterBar:ControlConfiguration
+							key="Name"
+							visibleInAdvancedArea="true"
+						/>
+						<smartFilterBar:ControlConfiguration
+							key="Customername"
+							visibleInAdvancedArea="true"
+						/>
+					</smartFilterBar:controlConfiguration>
+					<smartFilterBar:layoutData>
+						<FlexItemData shrinkFactor="0"/>
+					</smartFilterBar:layoutData>
+				</smartFilterBar:SmartFilterBar>
+				<smartTable:SmartTable
+					id="LineItemsSmartTable"
+					entitySet="OrderHeadersReportSet"
+					smartFilterId="smartFilterBar"
+					tableType="ResponsiveTable"
+					useExportToExcel="true"
+					beforeExport="onBeforeExport"
+					useVariantManagement="false"
+					useTablePersonalisation="false"
+					header="{i18n>header}"
+					showRowCount="true"
+					persistencyKey="SmartTableAnalytical_Explored"
+					enableAutoBinding="true"
+					showFullScreenButton="true"
+					class="sapUiResponsiveContentPadding"
+					enableAutoColumnWidth="true"
+					initiallyVisibleFields="Id,Name,Customername,Servicevalue,Productvalue,Createdon,Createdby"
+				>
+					<Table
+						id="Table"
+						mode="MultiSelect"
+                        
+					>
+						<!-- <columns>
+							<Column width="80px">
+								<customData>
+									<core:CustomData
+										key="p13nData"
+										value='\{"columnKey": "Action", "sortProperty": "Action","filterProperty": "Action", "columnIndex":0}'
+									/>
+								</customData>
+								<Text text="{i18n>action}"/>
+							</Column>
+						</columns>
+						<items>
+							<ColumnListItem>
+								<cells>
+									<HBox justifyContent="End">
+										<Button
+											icon="sap-icon://edit"
+											press="handleEditStudent"
+										/>
+										<Button
+											icon="sap-icon://delete"
+											press="handleDeleteStudent"
+										/>
+									</HBox>
+								</cells>
+							</ColumnListItem>
+						</items> -->
+					</Table>
+					<smartTable:customToolbar>
+						<OverflowToolbar design="Transparent">
+							<ToolbarSpacer/>
+							<OverflowToolbarButton
+								icon="sap-icon://add"
+								text="{i18n>create}"
+								tooltip="{i18n>create}"
+								press="onCreate"
+							/>
+							<OverflowToolbarButton
+								icon="sap-icon://less"
+								text="{i18n>delete}"
+								tooltip="{i18n>delete}"
+								press="onDelete"
+							/>
+						</OverflowToolbar>
+					</smartTable:customToolbar>
+					<smartTable:layoutData>
+						<FlexItemData
+							growFactor="1"
+							baseSize="0%"
+						/>
+					</smartTable:layoutData>
+				</smartTable:SmartTable>
+			</VBox>
+			<!-- <Table
+				id="table"
+				width="auto"
+				items="{
+					path: '/OrderHeadersReportSet',
+					sorter: {
+						path: 'Id',
+						descending: false
+					}
+				}"
+				noDataText="{worklistView>/tableNoDataText}"
+				busyIndicatorDelay="{worklistView>/tableBusyDelay}"
+				growing="true"
+				growingScrollToLoad="true"
+				updateFinished=".onUpdateFinished"
+			>
+				<headerToolbar>
+					<OverflowToolbar>
+						<Title
+							id="tableHeader"
+							text="{worklistView>/worklistTableTitle}"
+							level="H3"
+						/>
+						<ToolbarSpacer/>
+						<SearchField
+							id="searchField"
+							tooltip="{i18n>worklistSearchTooltip}"
+							search=".onSearch"
+						>
+							<layoutData>
+								<OverflowToolbarLayoutData
+									maxWidth="200px"
+									priority="NeverOverflow"
+								/>
+							</layoutData>
+						</SearchField>
+					</OverflowToolbar>
+				</headerToolbar>
+				<columns>
+					<Column>
+						<Text text="{/#OrderHeaders/Id/@sap:label}"/>
+					</Column>
+					<Column>
+						<Text text="{/#OrderHeaders/Animalid/@sap:label}"/>
+					</Column>
+					<Column>
+						<Text text="{/#Animals/Name/@sap:label}"/>
+					</Column>
+					<Column>
+						<Text text="{/#Animals/Species/@sap:label}"/>
+					</Column>
+					<Column>
+						<Text text="{/#Animals/Race/@sap:label}"/>
+					</Column>
+					<Column>
+						<Text text="{/#Animals/Cpf/@sap:label}"/>
+					</Column>
+					<Column>
+						<Text text="{/#Customers/Name/@sap:label}"/>
+					</Column>
+					<Column>
+						<Text text="{/#OrderHeaders/Currency/@sap:label}"/>
+					</Column>
+					<Column>
+						<Text text="Service Values"/>
+					</Column>
+				</columns>
+				<items>
+					<ColumnListItem
+						type="Navigation"
+						press=".onPress"
+					>
+						<cells>
+							<ObjectIdentifier title="{Id}"/>
+							<Text text="{Animalid}"/>
+							<Text text="{Name}"/>
+							<Text text="{Species}"/>
+							<Text text="{Race}"/>
+							<Text text="{Customerid}"/>
+							<Text text="{Customername}"/>
+							<Text text="{Currency}"/>
+							<Text text="{Servicevalue}"/>
+						</cells>
+					</ColumnListItem>
+				</items>
+			</Table> -->
+		</semantic:content>
+		<semantic:sendEmailAction>
+			<semantic:SendEmailAction
+				id="shareEmail"
+				press=".onShareEmailPress"
+			/>
+		</semantic:sendEmailAction>
+	</semantic:SemanticPage>
+</mvc:View>

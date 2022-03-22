@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="1.0" xmlns:edmx="http://schemas.microsoft.com/ado/2007/06/edmx" xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata" xmlns:sap="http://www.sap.com/Protocols/SAPData">
+    <edmx:DataServices m:DataServiceVersion="2.0">
+        <Schema Namespace="ZP_ZL_PET_SHOP_SRV" xml:lang="pt" sap:schema-version="1" xmlns="http://schemas.microsoft.com/ado/2008/09/edm">
+            <EntityType Name="Subscription" sap:semantics="subscriptions" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="ID"/>
+                </Key>
+                <Property Name="ID" Type="Edm.String" Nullable="false" MaxLength="32" sap:label="Sub. ID" sap:creatable="false" sap:updatable="false" sap:filterable="false"/>
+                <Property Name="user" Type="Edm.String" MaxLength="12" m:FC_TargetPath="SyndicationAuthorName" m:FC_KeepInContent="false" sap:label="Nome do usuário" sap:creatable="false" sap:filterable="false"/>
+                <Property Name="updated" Type="Edm.DateTime" Precision="0" m:FC_TargetPath="SyndicationUpdated" m:FC_KeepInContent="false" sap:label="Registro hora" sap:creatable="false" sap:filterable="false"/>
+                <Property Name="title" Type="Edm.String" MaxLength="255" m:FC_TargetPath="SyndicationTitle" m:FC_KeepInContent="false" sap:label="Title" sap:filterable="false"/>
+                <Property Name="deliveryAddress" Type="Edm.String" sap:label="Delivery Address" sap:filterable="false"/>
+                <Property Name="persistNotifications" Type="Edm.Boolean" sap:label="Persist Notification" sap:filterable="false"/>
+                <Property Name="collection" Type="Edm.String" MaxLength="40" sap:label="Collection" sap:filterable="false"/>
+                <Property Name="filter" Type="Edm.String" sap:label="Filter" sap:filterable="false"/>
+                <Property Name="select" Type="Edm.String" MaxLength="255" sap:label="Select" sap:filterable="false"/>
+                <Property Name="changeType" Type="Edm.String" MaxLength="30" sap:label="Change Type"/>
+            </EntityType>
+            <EntityType Name="Notification" sap:semantics="notifications" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="ID"/>
+                </Key>
+                <Property Name="ID" Type="Edm.String" Nullable="false" MaxLength="32" sap:label="Notification ID"/>
+                <Property Name="collection" Type="Edm.String" MaxLength="40" sap:label="Collection"/>
+                <Property Name="title" Type="Edm.String" m:FC_TargetPath="SyndicationTitle" m:FC_KeepInContent="false" sap:label="Notif. Text"/>
+                <Property Name="updated" Type="Edm.DateTime" Precision="0" m:FC_TargetPath="SyndicationUpdated" m:FC_KeepInContent="false" sap:label="Registro hora"/>
+                <Property Name="changeType" Type="Edm.String" MaxLength="30" sap:label="Change Type"/>
+                <Property Name="entriesOfInterest" Type="Edm.Int32" sap:label="No. of Entries"/>
+                <Property Name="recipient" Type="Edm.String" MaxLength="112" sap:label="Recipient" sap:creatable="false" sap:updatable="false"/>
+            </EntityType>
+            <EntityType Name="Customers" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="Cpf"/>
+                </Key>
+                <Property Name="Cpf" Type="Edm.String" Nullable="false" MaxLength="14" sap:unicode="false" sap:label="CPF"/>
+                <Property Name="Name" Type="Edm.String" MaxLength="80" sap:unicode="false" sap:label="Nome completo"/>
+                <Property Name="Telephone" Type="Edm.String" MaxLength="30" sap:unicode="false" sap:label="Telefone"/>
+                <Property Name="Address" Type="Edm.String" MaxLength="55" sap:unicode="false" sap:label="Endereço"/>
+                <NavigationProperty Name="CpfSh" Relationship="ZP_ZL_PET_SHOP_SRV.Zk_Cpf_to_Sh" FromRole="FromRole_Zk_Cpf_to_Sh" ToRole="ToRole_Zk_Cpf_to_Sh"/>
+                <NavigationProperty Name="GetAnimals" Relationship="ZP_ZL_PET_SHOP_SRV.ZK_Customer_to_Animals" FromRole="FromRole_ZK_Customer_to_Animals" ToRole="ToRole_ZK_Customer_to_Animals"/>
+            </EntityType>
+            <EntityType Name="Animals" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="Id"/>
+                </Key>
+                <Property Name="Id" Type="Edm.String" Nullable="false" MaxLength="4" sap:unicode="false" sap:label="ID do Animal"/>
+                <Property Name="Name" Type="Edm.String" MaxLength="35" sap:unicode="false" sap:label="Animal"/>
+                <Property Name="Species" Type="Edm.String" MaxLength="30" sap:unicode="false" sap:label="Espécie"/>
+                <Property Name="Race" Type="Edm.String" MaxLength="30" sap:unicode="false" sap:label="Raça"/>
+                <Property Name="Age" Type="Edm.String" MaxLength="3" sap:unicode="false" sap:label="Idade"/>
+                <Property Name="Cpf" Type="Edm.String" MaxLength="14" sap:unicode="false" sap:label="CPF"/>
+                <Property Name="Createdon" Type="Edm.DateTimeOffset" Precision="0" sap:unicode="false" sap:label="Criado em"/>
+                <NavigationProperty Name="GetCustomer" Relationship="ZP_ZL_PET_SHOP_SRV.ZK_Customer_to_Animals" FromRole="ToRole_ZK_Customer_to_Animals" ToRole="FromRole_ZK_Customer_to_Animals"/>
+                <NavigationProperty Name="GetOrders" Relationship="ZP_ZL_PET_SHOP_SRV.ZK_Animal_to_Order_Header" FromRole="FromRole_ZK_Animal_to_Order_Header" ToRole="ToRole_ZK_Animal_to_Order_Header"/>
+            </EntityType>
+            <EntityType Name="ZshLzCpfCustomer" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="Cpf"/>
+                </Key>
+                <Property Name="Cpf" Type="Edm.String" Nullable="false" MaxLength="14" sap:unicode="false" sap:label="CPF" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Name" Type="Edm.String" Nullable="false" MaxLength="80" sap:unicode="false" sap:label="Nome completo" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+            </EntityType>
+            <EntityType Name="FcWaers" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="Waers"/>
+                </Key>
+                <Property Name="Waers" Type="Edm.String" Nullable="false" MaxLength="5" sap:unicode="false" sap:label="Moeda" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false" sap:semantics="currency-code"/>
+                <Property Name="Ktext" Type="Edm.String" Nullable="false" MaxLength="15" sap:unicode="false" sap:label="Texto breve" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Ltext" Type="Edm.String" Nullable="false" MaxLength="40" sap:unicode="false" sap:label="Txt.descritivo" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+            </EntityType>
+            <EntityType Name="OrderItemsJson" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="Key"/>
+                </Key>
+                <Property Name="Key" Type="Edm.String" Nullable="false" sap:unicode="false" sap:label="Key"/>
+                <Property Name="Json" Type="Edm.String" sap:unicode="false" sap:label="Json"/>
+            </EntityType>
+            <EntityType Name="OrderHeaders" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="Id"/>
+                </Key>
+                <Property Name="Id" Type="Edm.String" Nullable="false" MaxLength="4" sap:unicode="false" sap:label="ID Ordem"/>
+                <Property Name="Animalid" Type="Edm.String" MaxLength="4" sap:unicode="false" sap:label="ID do Animal"/>
+                <Property Name="Customerid" Type="Edm.String" MaxLength="14" sap:unicode="false" sap:label="CPF"/>
+                <Property Name="Currency" Type="Edm.String" MaxLength="5" sap:unicode="false" sap:label="Moeda" sap:semantics="currency-code"/>
+                <Property Name="Createdon" Type="Edm.DateTime" Nullable="false" Precision="0" sap:unicode="false" sap:label="Criado em"/>
+                <Property Name="Createdby" Type="Edm.String" MaxLength="12" sap:unicode="false" sap:label="Criado por"/>
+                <NavigationProperty Name="GetItems" Relationship="ZP_ZL_PET_SHOP_SRV.ZK_Order_Header_to_Items" FromRole="FromRole_ZK_Order_Header_to_Items" ToRole="ToRole_ZK_Order_Header_to_Items"/>
+                <NavigationProperty Name="GetAnimals" Relationship="ZP_ZL_PET_SHOP_SRV.ZK_Animal_to_Order_Header" FromRole="ToRole_ZK_Animal_to_Order_Header" ToRole="FromRole_ZK_Animal_to_Order_Header"/>
+            </EntityType>
+            <EntityType Name="HT006" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="Msehi"/>
+                </Key>
+                <Property Name="Mseh3" Type="Edm.String" Nullable="false" MaxLength="3" sap:unicode="false" sap:label="Comercial" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Msehi" Type="Edm.String" Nullable="false" MaxLength="3" sap:unicode="false" sap:label="Unid.med.int." sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false" sap:semantics="unit-of-measure"/>
+                <Property Name="Msehl" Type="Edm.String" Nullable="false" MaxLength="30" sap:unicode="false" sap:label="Texto UM" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Txdim" Type="Edm.String" Nullable="false" MaxLength="20" sap:unicode="false" sap:label="Texto dimensão" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+            </EntityType>
+            <EntityType Name="OrderItems" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="Id"/>
+                    <PropertyRef Name="Itemid"/>
+                </Key>
+                <Property Name="Id" Type="Edm.String" Nullable="false" MaxLength="4" sap:unicode="false" sap:label="ID Ordem"/>
+                <Property Name="Itemid" Type="Edm.String" Nullable="false" MaxLength="4" sap:unicode="false" sap:label="Item da Ordem"/>
+                <Property Name="Serviceproductid" Type="Edm.String" MaxLength="4" sap:unicode="false" sap:label="Id Srv / Prt"/>
+                <Property Name="Category" Type="Edm.String" MaxLength="3" sap:unicode="false" sap:label="Serviço / Produto"/>
+                <Property Name="Description" Type="Edm.String" MaxLength="80" sap:unicode="false" sap:label="Descrição"/>
+                <Property Name="Quantity" Type="Edm.Decimal" Precision="13" Scale="3" sap:unicode="false" sap:unit="Unit" sap:label="Quantidade"/>
+                <Property Name="Unit" Type="Edm.String" MaxLength="3" sap:unicode="false" sap:label="UM pedido" sap:semantics="unit-of-measure"/>
+                <Property Name="Value" Type="Edm.Decimal" Precision="12" Scale="3" sap:unicode="false" sap:label="Valor bruto"/>
+                <Property Name="Total" Type="Edm.Decimal" Precision="12" Scale="3" sap:unicode="false" sap:label="Valor Total"/>
+                <NavigationProperty Name="GetHeader" Relationship="ZP_ZL_PET_SHOP_SRV.ZK_Order_Header_to_Items" FromRole="ToRole_ZK_Order_Header_to_Items" ToRole="FromRole_ZK_Order_Header_to_Items"/>
+            </EntityType>
+            <EntityType Name="ZshLzSrvPrd" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="Id"/>
+                </Key>
+                <Property Name="Id" Type="Edm.String" Nullable="false" MaxLength="4" sap:unicode="false" sap:label="Id Srv / Prt" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Category" Type="Edm.String" Nullable="false" MaxLength="3" sap:unicode="false" sap:label="Serviço / Produto" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Description" Type="Edm.String" Nullable="false" MaxLength="80" sap:unicode="false" sap:label="Descrição" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Unit" Type="Edm.String" Nullable="false" MaxLength="3" sap:unicode="false" sap:label="UM pedido" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false" sap:semantics="unit-of-measure"/>
+                <Property Name="Value" Type="Edm.Decimal" Nullable="false" Precision="12" Scale="3" sap:unicode="false" sap:label="Valor bruto" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+            </EntityType>
+            <Association Name="ZK_Order_Header_to_Items" sap:content-version="1">
+                <End Type="ZP_ZL_PET_SHOP_SRV.OrderHeaders" Multiplicity="1" Role="FromRole_ZK_Order_Header_to_Items"/>
+                <End Type="ZP_ZL_PET_SHOP_SRV.OrderItems" Multiplicity="*" Role="ToRole_ZK_Order_Header_to_Items"/>
+                <ReferentialConstraint>
+                    <Principal Role="FromRole_ZK_Order_Header_to_Items">
+                        <PropertyRef Name="Id"/>
+                    </Principal>
+                    <Dependent Role="ToRole_ZK_Order_Header_to_Items">
+                        <PropertyRef Name="Id"/>
+                    </Dependent>
+                </ReferentialConstraint>
+            </Association>
+            <Association Name="Zk_Cpf_to_Sh" sap:content-version="1">
+                <End Type="ZP_ZL_PET_SHOP_SRV.Customers" Multiplicity="1" Role="FromRole_Zk_Cpf_to_Sh"/>
+                <End Type="ZP_ZL_PET_SHOP_SRV.ZshLzCpfCustomer" Multiplicity="*" Role="ToRole_Zk_Cpf_to_Sh"/>
+            </Association>
+            <Association Name="ZK_Customer_to_Animals" sap:content-version="1">
+                <End Type="ZP_ZL_PET_SHOP_SRV.Customers" Multiplicity="1" Role="FromRole_ZK_Customer_to_Animals"/>
+                <End Type="ZP_ZL_PET_SHOP_SRV.Animals" Multiplicity="*" Role="ToRole_ZK_Customer_to_Animals"/>
+                <ReferentialConstraint>
+                    <Principal Role="FromRole_ZK_Customer_to_Animals">
+                        <PropertyRef Name="Cpf"/>
+                    </Principal>
+                    <Dependent Role="ToRole_ZK_Customer_to_Animals">
+                        <PropertyRef Name="Cpf"/>
+                    </Dependent>
+                </ReferentialConstraint>
+            </Association>
+            <Association Name="ZK_Animal_to_Order_Header" sap:content-version="1">
+                <End Type="ZP_ZL_PET_SHOP_SRV.Animals" Multiplicity="1" Role="FromRole_ZK_Animal_to_Order_Header"/>
+                <End Type="ZP_ZL_PET_SHOP_SRV.OrderHeaders" Multiplicity="*" Role="ToRole_ZK_Animal_to_Order_Header"/>
+                <ReferentialConstraint>
+                    <Principal Role="FromRole_ZK_Animal_to_Order_Header">
+                        <PropertyRef Name="Id"/>
+                    </Principal>
+                    <Dependent Role="ToRole_ZK_Animal_to_Order_Header">
+                        <PropertyRef Name="Animalid"/>
+                    </Dependent>
+                </ReferentialConstraint>
+            </Association>
+            <EntityContainer Name="ZP_ZL_PET_SHOP_SRV_Entities" m:IsDefaultEntityContainer="true" sap:supported-formats="atom json xlsx">
+                <EntitySet Name="SubscriptionCollection" EntityType="ZP_ZL_PET_SHOP_SRV.Subscription" sap:content-version="1"/>
+                <EntitySet Name="NotificationCollection" EntityType="ZP_ZL_PET_SHOP_SRV.Notification" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:addressable="false" sap:content-version="1"/>
+                <EntitySet Name="CustomersSet" EntityType="ZP_ZL_PET_SHOP_SRV.Customers" sap:searchable="true" sap:content-version="1"/>
+                <EntitySet Name="AnimalsSet" EntityType="ZP_ZL_PET_SHOP_SRV.Animals" sap:searchable="true" sap:content-version="1"/>
+                <EntitySet Name="ZshLzCpfCustomerSet" EntityType="ZP_ZL_PET_SHOP_SRV.ZshLzCpfCustomer" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:pageable="false" sap:content-version="1"/>
+                <EntitySet Name="FcWaersCollection" EntityType="ZP_ZL_PET_SHOP_SRV.FcWaers" sap:content-version="1"/>
+                <EntitySet Name="OrderItemsJsonSet" EntityType="ZP_ZL_PET_SHOP_SRV.OrderItemsJson" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:pageable="false" sap:addressable="false" sap:content-version="1"/>
+                <EntitySet Name="OrderHeadersSet" EntityType="ZP_ZL_PET_SHOP_SRV.OrderHeaders" sap:searchable="true" sap:content-version="1"/>
+                <EntitySet Name="HT006Set" EntityType="ZP_ZL_PET_SHOP_SRV.HT006" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:pageable="false" sap:content-version="1"/>
+                <EntitySet Name="OrderItemsSet" EntityType="ZP_ZL_PET_SHOP_SRV.OrderItems" sap:searchable="true" sap:content-version="1"/>
+                <EntitySet Name="ZshLzSrvPrdSet" EntityType="ZP_ZL_PET_SHOP_SRV.ZshLzSrvPrd" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:pageable="false" sap:content-version="1"/>
+                <AssociationSet Name="Zk_Cpf_to_ShSet" Association="ZP_ZL_PET_SHOP_SRV.Zk_Cpf_to_Sh" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
+                    <End EntitySet="CustomersSet" Role="FromRole_Zk_Cpf_to_Sh"/>
+                    <End EntitySet="ZshLzCpfCustomerSet" Role="ToRole_Zk_Cpf_to_Sh"/>
+                </AssociationSet>
+                <AssociationSet Name="ZK_Customer_to_AnimalsSet" Association="ZP_ZL_PET_SHOP_SRV.ZK_Customer_to_Animals" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
+                    <End EntitySet="CustomersSet" Role="FromRole_ZK_Customer_to_Animals"/>
+                    <End EntitySet="AnimalsSet" Role="ToRole_ZK_Customer_to_Animals"/>
+                </AssociationSet>
+                <AssociationSet Name="ZK_Order_Header_to_ItemsSet" Association="ZP_ZL_PET_SHOP_SRV.ZK_Order_Header_to_Items" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
+                    <End EntitySet="OrderHeadersSet" Role="FromRole_ZK_Order_Header_to_Items"/>
+                    <End EntitySet="OrderItemsSet" Role="ToRole_ZK_Order_Header_to_Items"/>
+                </AssociationSet>
+                <AssociationSet Name="ZK_Animal_to_Order_HeaderSet" Association="ZP_ZL_PET_SHOP_SRV.ZK_Animal_to_Order_Header" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
+                    <End EntitySet="AnimalsSet" Role="FromRole_ZK_Animal_to_Order_Header"/>
+                    <End EntitySet="OrderHeadersSet" Role="ToRole_ZK_Animal_to_Order_Header"/>
+                </AssociationSet>
+            </EntityContainer>
+            <atom:link rel="self" href="http://vm31.4hub.cloud:53100/sap/opu/odata/sap/ZP_ZL_PET_SHOP_SRV/$metadata" xmlns:atom="http://www.w3.org/2005/Atom"/>
+            <atom:link rel="latest-version" href="http://vm31.4hub.cloud:53100/sap/opu/odata/sap/ZP_ZL_PET_SHOP_SRV/$metadata" xmlns:atom="http://www.w3.org/2005/Atom"/>
+        </Schema>
+    </edmx:DataServices>
+</edmx:Edmx>
