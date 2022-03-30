@@ -1,30 +1,211 @@
 <mvc:View
-    controllerName="petshop.zppetshoporders.controller.Object"
-    xmlns="sap.m"
-    xmlns:mvc="sap.ui.core.mvc"
-    xmlns:semantic="sap.f.semantic">
-
-    <semantic:SemanticPage
-        id="page"
-        headerPinnable="false"
-        toggleHeaderOnTitleClick="false"
-        busy="{objectView>/busy}"
-        busyIndicatorDelay="{objectView>/delay}">
-
-        <semantic:titleHeading>
-            <Title
-                text="{Id}"
-                level="H2"/>
-        </semantic:titleHeading>
-
-        <semantic:headerContent>
-            <ObjectNumber />
-        </semantic:headerContent>
-
-        <semantic:sendEmailAction>
-            <semantic:SendEmailAction id="shareEmail" press=".onShareEmailPress"/>
-        </semantic:sendEmailAction>
-
-    </semantic:SemanticPage>
-
+	xmlns:mvc="sap.ui.core.mvc"
+	xmlns="sap.uxap"
+	xmlns:layout="sap.ui.layout"
+	xmlns:m="sap.m"
+	controllerName="petshop.zppetshoporders.controller.Object"
+	height="100%"
+	xmlns:semantic="sap.f.semantic"
+	xmlns:smartTable="sap.ui.comp.smarttable"
+	xmlns:customData="http://schemas.sap.com/sapui5/extension/sap.ui.core.CustomData/1"
+>
+	<!-- <m:Page
+		showNavButton="true"
+		navButtonPress="onNavBack"
+		
+	> -->
+	<semantic:SemanticPage
+		id="detailPage"
+		busy="{orderView>/busy}"
+		busyIndicatorDelay="{orderView>/delay}"
+		
+	>
+		<semantic:closeAction>
+			<semantic:CloseAction
+				id="closeColumn"
+				press=".onNavBack"
+			/>
+		</semantic:closeAction>
+		<semantic:fullScreenAction>
+			<semantic:FullScreenAction
+				id="enterFullScreen"
+				visible="{= !${device>/system/phone} &amp;&amp; !${appView>/actionButtonsInfo/midColumn/fullScreen}}"
+				press=".toggleFullScreen"
+			/>
+		</semantic:fullScreenAction>
+		<semantic:exitFullScreenAction>
+			<semantic:ExitFullScreenAction
+				id="exitFullScreen"
+				visible="{= !${device>/system/phone} &amp;&amp; ${appView>/actionButtonsInfo/midColumn/fullScreen}}"
+				press=".toggleFullScreen"
+			/>
+		</semantic:exitFullScreenAction>
+		<semantic:content>
+			<ObjectPageLayout
+				id="ObjectPageLayout"
+				enableLazyLoading="true"
+				useIconTabBar="true"
+				showTitleInHeaderContent="true"
+				selectedSection="historyPage"
+				upperCaseAnchorBar="false"
+				showFooter="{orderView>/showFooter}"
+			>
+				<headerTitle>
+					<ObjectPageDynamicHeaderTitle>
+						<expandedHeading>
+							<m:Title
+								text="Animal: {Name}"
+								wrapping="true"
+							/>
+						</expandedHeading>
+						<snappedHeading>
+							<m:FlexBox
+								fitContainer="true"
+								alignItems="Center"
+							>
+								<m:Avatar
+									src="https://www.petz.com.br/blog/wp-content/uploads/2019/04/quantos-anos-vive-um-gatinho.jpg"
+									class="sapUiTinyMarginEnd"
+								/>
+								<m:Title
+									text="Animal: {Name}"
+									wrapping="true"
+								/>
+							</m:FlexBox>
+						</snappedHeading>
+						<expandedContent>
+							<m:Text text="{Species}"/>
+						</expandedContent>
+						<snappedContent>
+							<m:Text text="{Species}"/>
+						</snappedContent>
+						<snappedTitleOnMobile>
+							<m:Title text="{Species}"/>
+						</snappedTitleOnMobile>
+						<actions>
+							<m:Button
+								text="Edit"
+								type="Emphasized"
+								press="_onEditAnimal"
+							/>
+						</actions>
+					</ObjectPageDynamicHeaderTitle>
+				</headerTitle>
+				<headerContent>
+					<m:FlexBox
+						wrap="Wrap"
+						fitContainer="true"
+					>
+						<m:Avatar
+							class="sapUiSmallMarginEnd"
+							src="https://www.petz.com.br/blog/wp-content/uploads/2019/04/quantos-anos-vive-um-gatinho.jpg"
+							displaySize="L"
+						/>
+						<layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
+							<m:ObjectAttribute
+								title="{/#OrderHeadersReport/Id/@sap:label}"
+								text="{Id}"
+							/>
+							<m:ObjectAttribute
+								title="{/#OrderHeadersReport/Customername/@sap:label}"
+								text="{Customername}"
+							/>
+						</layout:VerticalLayout>
+						<layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
+							<m:ObjectAttribute
+								title="{/#OrderHeadersReport/Servicevalue/@sap:label}"
+								text="{Servicevalue}"
+							/>
+							<m:ObjectAttribute
+								title="{/#OrderHeadersReport/Productvalue/@sap:label}"
+								text="{Productvalue}"
+							/>
+							<m:ObjectAttribute
+								title="{/#Animals/Createdon/@sap:label}"
+								text="{
+									path: 'Createdon',
+									type: 'sap.ui.model.type.DateTime',
+									formatOptions: {
+										style: 'medium'
+									}
+								}"
+							/>
+						</layout:VerticalLayout>
+					</m:FlexBox>
+				</headerContent>
+				<sections>
+					<ObjectPageSection
+						titleUppercase="false"
+						id="historyPage"
+						title="{i18n>orderItemsLong}"
+					>
+						<subSections>
+							<ObjectPageSubSection
+								id="goalsSS1"
+								titleUppercase="false"
+							>
+								<blocks>
+									<smartTable:SmartTable
+										id="orderHeadersTable"
+										entitySet="OrderItemsReportSet"
+										tableType="ResponsiveTable"
+										useVariantManagement="false"
+										useTablePersonalisation="false"
+										header="{i18n>orderItems}"
+										persistencyKey="SmartTableAnalytical_Explored"
+										enableAutoBinding="true"
+										showFullScreenButton="true"
+										class="sapUiResponsiveContentPadding"
+										enableAutoColumnWidth="true"
+										initiallyVisibleFields="Id,Itemid,Serviceproductid,Categorydescription,Description,Quantity,Value,Total"
+										tableBindingPath="GetItemsReport"
+										editTogglable="true"
+										customData:useSmartField="true"
+										fieldChange="onFieldChange"
+										editToggled="onToggled"
+									>
+										<m:Table
+											id="Table"
+											mode="SingleSelect"
+										>
+											<m:items>
+												<m:ColumnListItem/>
+											</m:items>
+										</m:Table>
+									</smartTable:SmartTable>
+								</blocks>
+							</ObjectPageSubSection>
+						</subSections>
+					</ObjectPageSection>
+				</sections>
+				<footer>
+					<m:OverflowToolbar>
+						<m:Button
+							icon="{orderView>/messageIcon}"
+							text="{=${message>/}.length}"
+							visible="{=${message>/}.length > 0}"
+							type="Emphasized"
+							press="onMessagePopoverPress"
+						/>
+						<m:Button
+							text="Clear"
+							press="onClearMessages"
+							visible="{=${message>/}.length > 0}"
+						/>
+						<m:ToolbarSpacer/>
+						<m:ToolbarSpacer/>
+						<m:Button
+							type="Emphasized"
+							text="{i18n>save}"
+							press="_saveOrder"
+						/>
+						<m:Button
+							text="{i18n>clear}"
+							press="_clearOrderTable"
+						/>
+					</m:OverflowToolbar>
+				</footer>
+			</ObjectPageLayout>
+		</semantic:content>
+	</semantic:SemanticPage>
 </mvc:View>

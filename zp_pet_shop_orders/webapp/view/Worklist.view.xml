@@ -51,8 +51,8 @@
 					tableType="ResponsiveTable"
 					useExportToExcel="true"
 					beforeExport="onBeforeExport"
-					useVariantManagement="false"
-					useTablePersonalisation="false"
+					useVariantManagement="true"
+					useTablePersonalisation="true"
 					header="{i18n>header}"
 					showRowCount="true"
 					persistencyKey="SmartTableAnalytical_Explored"
@@ -60,13 +60,20 @@
 					showFullScreenButton="true"
 					class="sapUiResponsiveContentPadding"
 					enableAutoColumnWidth="true"
-					initiallyVisibleFields="Id,Name,Customername,Servicevalue,Productvalue,Createdon,Createdby"
+					initiallyVisibleFields="Id,Name,Customername,Servicevalue,Productvalue"
+					
+					
 				>
 					<Table
 						id="Table"
 						mode="MultiSelect"
-                        
 					>
+						<items>
+							<ColumnListItem
+								type="Navigation"
+								press=".onPress"
+							/>
+						</items>
 						<!-- <columns>
 							<Column width="80px">
 								<customData>
@@ -102,7 +109,7 @@
 								icon="sap-icon://add"
 								text="{i18n>create}"
 								tooltip="{i18n>create}"
-								press="onCreate"
+								press="_addOrder"
 							/>
 							<OverflowToolbarButton
 								icon="sap-icon://less"
@@ -207,11 +214,11 @@
 				</items>
 			</Table> -->
 		</semantic:content>
-		<semantic:sendEmailAction>
+		<!-- <semantic:sendEmailAction>
 			<semantic:SendEmailAction
 				id="shareEmail"
 				press=".onShareEmailPress"
 			/>
-		</semantic:sendEmailAction>
+		</semantic:sendEmailAction> -->
 	</semantic:SemanticPage>
 </mvc:View>

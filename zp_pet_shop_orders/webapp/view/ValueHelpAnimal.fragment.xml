@@ -1,0 +1,16 @@
+<core:FragmentDefinition xmlns="sap.m" xmlns:core="sap.ui.core">
+	<SelectDialog
+		id="valueHelpAnimal"
+		title="{i18n>animals}"
+		items="{/AnimalsValueHelpSet}"
+		search=".onValueHelpSearch"
+		confirm=".onValueHelpClose"
+		cancel=".onValueHelpClose">
+		<StandardListItem
+			icon="{ProductPicUrl}"	
+			iconDensityAware="false"
+			iconInset="false"
+			title="{Name}"
+			description="{Customername}" />
+	</SelectDialog>
+</core:FragmentDefinition>
