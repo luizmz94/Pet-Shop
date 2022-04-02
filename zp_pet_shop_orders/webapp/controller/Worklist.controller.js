@@ -6,6 +6,7 @@ sap.ui.define(
     "sap/ui/model/Filter",
     "sap/ui/model/FilterOperator",
     "sap/ui/core/Fragment",
+    "sap/m/PDFViewer",
   ],
   function (
     BaseController,
@@ -13,7 +14,8 @@ sap.ui.define(
     formatter,
     Filter,
     FilterOperator,
-    Fragment
+    Fragment,
+    PDFViewer
   ) {
     "use strict";
 
@@ -31,11 +33,6 @@ sap.ui.define(
          * @public
          */
         onInit: function () {
-
-          debugger;
-          this._smartFilterBar = this.getView().byId("smartFilterBar");
-          // this._smartFilterBar.setLiveMode(false);
-
           this.setInitialSortOrder();
 
           var oViewModel;
@@ -203,14 +200,16 @@ sap.ui.define(
               id: oView.getId(),
               name: "petshop.zppetshoporders.view.createOrder",
               controller: this,
-            }).then(function (oDialog) {
-              oView.addDependent(oDialog);
-              oDialog.open();
-              var tableOrderNew = oView.byId("tableProducts");
-              if (tableOrderNew) {
-                tableOrderNew.setModel(this.jModel, "servicesAndProducts");
-              }
-            }.bind(this));
+            }).then(
+              function (oDialog) {
+                oView.addDependent(oDialog);
+                oDialog.open();
+                var tableOrderNew = oView.byId("tableProducts");
+                if (tableOrderNew) {
+                  tableOrderNew.setModel(this.jModel, "servicesAndProducts");
+                }
+              }.bind(this)
+            );
           } else {
             this.byId("openDialog").open();
             var tableOrderNew = this.byId("tableProducts");
@@ -340,25 +339,75 @@ sap.ui.define(
           this.jModel.refresh();
         },
 
-
         _addOrder: function (oItem) {
           this.getRouter().navTo("orderCreate", {
             orderId: "New",
           });
         },
 
-        setInitialSortOrder: function() {
-          var oSmartTable = this.getView().byId("LineItemsSmartTable");            
+        setInitialSortOrder: function () {
+          var oSmartTable = this.getView().byId("LineItemsSmartTable");
           oSmartTable.applyVariant({
-               sort: {
-                        sortItems: [{ 
-                                       columnKey: "Id", 
-                                       operation:"Descending"}
-                                   ]
-                     }
+            sort: {
+              sortItems: [
+                {
+                  columnKey: "Id",
+                  operation: "Descending",
+                },
+              ],
+            },
           });
-  }
+        },
 
+        onPrint: function (oEvent) {
+          var orderId = oEvent.getSource().getBindingContext().getObject().Id;
+          var sRead =
+            "/PdfOrderSet(OrderId='" +
+            orderId +
+            "',Filename='Teste',GetPdf='X')" +
+            "/$value";
+
+          var opdfViewer = new PDFViewer();
+          this.getView().addDependent(opdfViewer);
+          var sServiceURL = this.getView().getModel().sServiceUrl;
+          var sSource = sServiceURL + sRead;
+          opdfViewer.setSource(sSource);
+
+          var sTitle = this.getResourceBundle().getText("orderid", [orderId]);
+          opdfViewer.setTitle(sTitle);
+          opdfViewer.open();
+        },
+
+        openPdf: function (oEvent) {
+          var orderId = oEvent.getSource().getBindingContext().getObject().Id;
+
+          sap.m.URLHelper.redirect(
+            window.location.href + "&/PdfView/" + orderId,
+            true
+          );
+        },
+
+        onPrintDirectly: function (oEvent) {
+          var oModel = this.getView().getModel();
+          var orderId = oEvent.getSource().getBindingContext().getObject().Id;
+
+          var sRead =
+            "/PdfOrderSet(OrderId='" +
+            orderId +
+            "',Filename='Teste',GetPdf='')" +
+            "/$value";
+
+          oModel.read(
+            sRead,
+            null,
+            null,
+            false,
+            function (oData, oResponse) {},
+            function (err) {
+              console.log("err");
+            }
+          );
+        },
       }
     );
   }

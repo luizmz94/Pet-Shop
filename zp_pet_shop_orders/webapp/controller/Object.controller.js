@@ -29,6 +29,7 @@ sap.ui.define(
           busy: true,
           delay: 0,
         });
+
         this.getRouter()
           .getRoute("object")
           .attachPatternMatched(this._onObjectMatched, this);
@@ -111,11 +112,6 @@ sap.ui.define(
           sOrderName = oOrder.Name;
 
         oViewModel.setProperty("/busy", false);
-
-        // oViewModel.setProperty("/shareSendEmailSubject",
-        //     oResourceBundle.getText("shareSendEmailObjectSubject", [sObjectId]));
-        // oViewModel.setProperty("/shareSendEmailMessage",
-        //     oResourceBundle.getText("shareSendEmailObjectMessage", [sObjectName, sObjectId, location.href]));
       },
 
       onFieldChange: function (evt) {
@@ -123,6 +119,7 @@ sap.ui.define(
 
         var change = evt.getParameter("changeEvent");
         if (change) {
+          debugger;
           var sPath = change.getSource().getBindingContext().getPath();
           var oEntry = change.getSource().getBindingContext().getObject();
 

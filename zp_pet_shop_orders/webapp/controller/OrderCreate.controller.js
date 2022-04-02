@@ -201,6 +201,7 @@ sap.ui.define(
 
         onBeforeRendering: function () {
           var tableOrderNew = this.byId("tableProducts");
+          debugger;
           if (tableOrderNew) {
             tableOrderNew.setModel(this.jModel, "servicesAndProducts");
           }
@@ -358,6 +359,11 @@ sap.ui.define(
           }
           return this._pMessagePopover;
         },
+
+
+
+
+
       }
     );
   }

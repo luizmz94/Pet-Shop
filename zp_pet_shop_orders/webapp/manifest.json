@@ -97,6 +97,11 @@
           "pattern": "OrderCreate",
           "name": "orderCreate",
           "target": ["orderCreate"]
+        },
+        {
+          "pattern": "PdfView/{orderId}",
+          "name": "pdfView",
+          "target": ["pdfView"]
         }
       ],
       "targets": {
@@ -115,6 +120,12 @@
         "orderCreate": {
           "viewName": "OrderCreate",
           "viewId": "OrderCreate",
+          "viewLevel": 2,
+          "title": "{i18n>objectViewTitle}"
+        },
+        "pdfView": {
+          "viewName": "PdfOrder",
+          "viewId": "PdfOrder",
           "viewLevel": 2,
           "title": "{i18n>objectViewTitle}"
         },

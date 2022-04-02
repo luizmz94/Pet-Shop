@@ -61,46 +61,59 @@
 					class="sapUiResponsiveContentPadding"
 					enableAutoColumnWidth="true"
 					initiallyVisibleFields="Id,Name,Customername,Servicevalue,Productvalue"
-					
-					
 				>
 					<Table
 						id="Table"
 						mode="MultiSelect"
 					>
-						<items>
-							<ColumnListItem
-								type="Navigation"
-								press=".onPress"
-							/>
-						</items>
-						<!-- <columns>
-							<Column width="80px">
+						<columns>
+							<Column width="90px">
 								<customData>
 									<core:CustomData
 										key="p13nData"
 										value='\{"columnKey": "Action", "sortProperty": "Action","filterProperty": "Action", "columnIndex":0}'
 									/>
 								</customData>
-								<Text text="{i18n>action}"/>
+								<Text text=""/>
 							</Column>
 						</columns>
 						<items>
-							<ColumnListItem>
+							<ColumnListItem
+								type="Navigation"
+								press=".onPress"
+							>
 								<cells>
-									<HBox justifyContent="End">
-										<Button
-											icon="sap-icon://edit"
-											press="handleEditStudent"
-										/>
-										<Button
-											icon="sap-icon://delete"
-											press="handleDeleteStudent"
-										/>
+									<HBox justifyContent="Start">
+										<!-- <Button
+											icon="sap-icon://print"
+											press="onPrint"
+										/> -->
+										<MenuButton
+											text=""
+											buttonMode="Split"
+											defaultAction="onPrint"
+											useDefaultActionOnly="true"
+											icon="sap-icon://pdf-attachment"
+										>
+											<menu>
+												<Menu>
+													<MenuItem
+														text="{i18n>newtab}"
+														icon="sap-icon://pdf-reader"
+														press="openPdf"
+													/>
+													<MenuItem
+														text="{i18n>printdirectly}"
+														icon="sap-icon://print"
+														press="onPrintDirectly"
+													/>
+												</Menu>
+											</menu>
+										</MenuButton>
 									</HBox>
 								</cells>
 							</ColumnListItem>
-						</items> -->
+						</items>
 					</Table>
 					<smartTable:customToolbar>
 						<OverflowToolbar design="Transparent">
@@ -127,98 +140,6 @@
 					</smartTable:layoutData>
 				</smartTable:SmartTable>
 			</VBox>
-			<!-- <Table
-				id="table"
-				width="auto"
-				items="{
-					path: '/OrderHeadersReportSet',
-					sorter: {
-						path: 'Id',
-						descending: false
-					}
-				}"
-				noDataText="{worklistView>/tableNoDataText}"
-				busyIndicatorDelay="{worklistView>/tableBusyDelay}"
-				growing="true"
-				growingScrollToLoad="true"
-				updateFinished=".onUpdateFinished"
-			>
-				<headerToolbar>
-					<OverflowToolbar>
-						<Title
-							id="tableHeader"
-							text="{worklistView>/worklistTableTitle}"
-							level="H3"
-						/>
-						<ToolbarSpacer/>
-						<SearchField
-							id="searchField"
-							tooltip="{i18n>worklistSearchTooltip}"
-							search=".onSearch"
-						>
-							<layoutData>
-								<OverflowToolbarLayoutData
-									maxWidth="200px"
-									priority="NeverOverflow"
-								/>
-							</layoutData>
-						</SearchField>
-					</OverflowToolbar>
-				</headerToolbar>
-				<columns>
-					<Column>
-						<Text text="{/#OrderHeaders/Id/@sap:label}"/>
-					</Column>
-					<Column>
-						<Text text="{/#OrderHeaders/Animalid/@sap:label}"/>
-					</Column>
-					<Column>
-						<Text text="{/#Animals/Name/@sap:label}"/>
-					</Column>
-					<Column>
-						<Text text="{/#Animals/Species/@sap:label}"/>
-					</Column>
-					<Column>
-						<Text text="{/#Animals/Race/@sap:label}"/>
-					</Column>
-					<Column>
-						<Text text="{/#Animals/Cpf/@sap:label}"/>
-					</Column>
-					<Column>
-						<Text text="{/#Customers/Name/@sap:label}"/>
-					</Column>
-					<Column>
-						<Text text="{/#OrderHeaders/Currency/@sap:label}"/>
-					</Column>
-					<Column>
-						<Text text="Service Values"/>
-					</Column>
-				</columns>
-				<items>
-					<ColumnListItem
-						type="Navigation"
-						press=".onPress"
-					>
-						<cells>
-							<ObjectIdentifier title="{Id}"/>
-							<Text text="{Animalid}"/>
-							<Text text="{Name}"/>
-							<Text text="{Species}"/>
-							<Text text="{Race}"/>
-							<Text text="{Customerid}"/>
-							<Text text="{Customername}"/>
-							<Text text="{Currency}"/>
-							<Text text="{Servicevalue}"/>
-						</cells>
-					</ColumnListItem>
-				</items>
-			</Table> -->
 		</semantic:content>
-		<!-- <semantic:sendEmailAction>
-			<semantic:SendEmailAction
-				id="shareEmail"
-				press=".onShareEmailPress"
-			/>
-		</semantic:sendEmailAction> -->
 	</semantic:SemanticPage>
 </mvc:View>
