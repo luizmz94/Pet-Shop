@@ -8,6 +8,7 @@ sap.ui.define(
     "sap/m/MessageBox",
     "sap/ui/model/Filter",
     "sap/ui/model/FilterOperator",
+    "sap/m/Dialog",
   ],
   function (
     BaseController,
@@ -17,7 +18,8 @@ sap.ui.define(
     Fragment,
     MessageBox,
     Filter,
-    FilterOperator
+    FilterOperator,
+    Dialog
   ) {
     "use strict";
 
@@ -455,6 +457,9 @@ sap.ui.define(
                 MessageBox.success(msg);
                 this.clearModel(oModelAnimal);
                 this.handleCancelBtnPress();
+
+                this._sendToSAP(oData);
+
               }
             }.bind(this),
 
@@ -513,56 +518,59 @@ sap.ui.define(
         var fileDetails = oEvent.getParameters("file").files[0];
         sap.ui.getCore().fileUploadArr = [];
         if (fileDetails) {
-         var mimeDet = fileDetails.type,
-          fileName = fileDetails.name;
-          
-          // Calling method....
-         this.base64coonversionMethod(mimeDet, fileName, fileDetails, "001");
-         debugger;
-        } else {
-         sap.ui.getCore().fileUploadArr = [];
-        }
-       },
+          var mimeDet = fileDetails.type,
+            fileName = fileDetails.name;
 
-      base64coonversionMethod: function (fileMime, fileName, fileDetails, DocNum) {
+          // Calling method....
+          this.base64coonversionMethod(mimeDet, fileName, fileDetails, "001");
+          debugger;
+        } else {
+          sap.ui.getCore().fileUploadArr = [];
+        }
+      },
+
+      base64coonversionMethod: function (
+        fileMime,
+        fileName,
+        fileDetails,
+        DocNum
+      ) {
         debugger;
         var that = this;
         if (!FileReader.prototype.readAsBinaryString) {
-         FileReader.prototype.readAsBinaryString = function (fileData) {
-          var binary = "";
-          var reader = new FileReader();
-          reader.onload = function (e) {
-           var bytes = new Uint8Array(reader.result);
-           var length = bytes.byteLength;
-           for (var i = 0; i < length; i++) {
-            binary += String.fromCharCode(bytes[i]);
-           }
-           that.base64ConversionRes = btoa(binary);
-           sap.ui.getCore().fileUploadArr.push({
-            "DocumentType": DocNum,
-            "MimeType": fileMime,
-            "FileName": fileName,
-            "Content": that.base64ConversionRes,
-           });
+          FileReader.prototype.readAsBinaryString = function (fileData) {
+            var binary = "";
+            var reader = new FileReader();
+            reader.onload = function (e) {
+              var bytes = new Uint8Array(reader.result);
+              var length = bytes.byteLength;
+              for (var i = 0; i < length; i++) {
+                binary += String.fromCharCode(bytes[i]);
+              }
+              that.base64ConversionRes = btoa(binary);
+              sap.ui.getCore().fileUploadArr.push({
+                DocumentType: DocNum,
+                MimeType: fileMime,
+                FileName: fileName,
+                Content: that.base64ConversionRes,
+              });
+            };
+            reader.readAsArrayBuffer(fileData);
           };
-          reader.readAsArrayBuffer(fileData);
-         };
         }
         var reader = new FileReader();
         reader.onload = function (readerEvt) {
-         var binaryString = readerEvt.target.result;
-         that.base64ConversionRes = btoa(binaryString);
-         sap.ui.getCore().fileUploadArr.push({
-          "DocumentType": DocNum,
-          "MimeType": fileMime,
-          "FileName": fileName,
-          "Content": that.base64ConversionRes,
-     
-         });
+          var binaryString = readerEvt.target.result;
+          that.base64ConversionRes = btoa(binaryString);
+          sap.ui.getCore().fileUploadArr.push({
+            DocumentType: DocNum,
+            MimeType: fileMime,
+            FileName: fileName,
+            Content: that.base64ConversionRes,
+          });
         };
         reader.readAsBinaryString(fileDetails);
-       },
-
+      },
 
       handleUploadPress: function () {
         debugger;
@@ -606,6 +614,135 @@ sap.ui.define(
         var oRouter = sap.ui.core.UIComponent.getRouterFor(this);
         oRouter.navTo("order", {
           animalId: data,
+        });
+      },
+
+      takePhoto: function (oEvent) {
+        var oVBox = this.getView().byId("wow");
+        oVBox.removeItem(0);
+
+        this.attachName = "";
+        var that = this;
+
+        if (this.fixedDialog === undefined) {
+          this.fixedDialog = new Dialog({
+            title: "Click on capture to take photo",
+            beginButton: new sap.m.Button({
+              text: "Capture Photo",
+              press: function () {
+                that.imageVal = document.getElementById("player");
+                that.fixedDialog.close();
+              },
+            }),
+            content: [
+              new sap.ui.core.HTML({
+                content: "<video id='player' autoplay></video>",
+              }),
+              // new sap.m.Input({
+              //   placeholder: "please enter name image here",
+              //   value: this.attachName,
+              //   required: true,
+              // }),
+            ],
+
+            endButton: new sap.m.Button({
+              id: "buttonCancel",
+              text: "Cancel",
+              press: function () {
+                that.fixedDialog.close();
+                player.srcObject.getTracks()[0].stop();
+              },
+            }),
+          });
+          this.fixedDialog.attachBeforeClose(this.setImage, this);
+          this.getView().addDependent(this.fixedDialog);
+        }
+
+        this.fixedDialog.open();
+
+        var handleSucess = function (stream) {
+          player.srcObject = stream;
+        };
+
+        navigator.mediaDevices
+          .getUserMedia({
+            video: true,
+          })
+          .then(handleSucess);
+      },
+
+      setImage: function (oEvent) {
+        if (oEvent.getParameters().origin.sId === "buttonCancel") {
+          return;
+        }
+
+        var oVBox = this.getView().byId("wow");
+        var items = oVBox.getItems();
+        var snapId = "snapshot-" + items.length;
+        var textId = snapId + "-text";
+        var imageVal = this.imageVal;
+
+        // if (this.oCanvas === undefined) {
+        this.oCanvas = new sap.ui.core.HTML({
+          content:
+            "<canvas id='" +
+            snapId +
+            "' width='450px' height='320px'" +
+            " style='2px solid red'></canvas>",
+        });
+        oVBox.addItem(this.oCanvas);
+
+        this.oCanvas.addEventDelegate({
+          onAfterRendering: function () {
+            var snapShotCanvas = document.getElementById(snapId);
+            var oContext = snapShotCanvas.getContext("2d");
+            oContext.drawImage(
+              imageVal,
+              0,
+              0,
+              snapShotCanvas.width,
+              snapShotCanvas.height
+            );
+            player.srcObject.getTracks()[0].stop();
+          }.bind(this),
+        });
+
+        // }
+      },
+
+      _sendToSAP: function (oData) {
+        var oDataModel = this.getView().getModel();
+        var oVBox = this.getView().byId("wow");
+        var Item = oVBox.getItems()[0];
+
+        // var domParser = new DOMParser();
+        // var htmlDoc = domParser.parseFromString(
+        //   oItem.getProperty("content"),
+        //   "text/html"
+        // );
+        var snapId = "snapshot-0";
+        var stringImage = document
+          .getElementById(snapId)
+          .toDataURL()
+          .replace("data:image/png;base64,", "");
+
+        var payload = {
+          Id: oData.Id,
+          // Content: btoa(encodeURIComponent(stringImage)),
+          Content: stringImage,
+          Filename: oData.Id + " - " + oData.Name,
+          Filetype: "jpeg",
+        };
+        oVBox.removeItem(0)
+        oDataModel.create("/AnimalsAttachmentSet", payload, {
+          sucess: function () {
+            sap.m.MessageToast.show("Wow!! Picture updated to SAP system");
+          },
+          error: function (oError) {
+            var oSapMessage = JSON.parse(oError.responseText);
+            var msg = oSapMessage.error.message.value;
+            MessageBox.error(msg);
+          },
         });
       },
     });

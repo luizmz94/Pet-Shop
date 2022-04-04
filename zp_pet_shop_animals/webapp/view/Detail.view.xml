@@ -35,105 +35,112 @@
 			</layout:HorizontalLayout>
 		</semantic:headerContent>
 		<semantic:content>
-			<Table
-				id="tableAnimals"
-				width="auto"
-				items="{
-					path: 'GetAnimals',
-					sorter: {
-						path: 'Id',
-						descending: false
-					}
-				}"
-				updateFinished=".onListUpdateFinished"
-				noDataText="{detailView>/tableNoDataText}"
-				busyIndicatorDelay="{detailView>/lineItemTableDelay}"
-				mode="MultiSelect"
-				growing="true"
-				growingScrollToLoad="true"
-			>
-				<headerToolbar>
-					<Toolbar>
-						<Title
-							id="lineItemsTitle"
-							text="{detailView>/lineItemListTitle}"
-							titleStyle="H3"
-							level="H3"
-						/>
-						<ToolbarSpacer/>
-						<SearchField
-							id="searchField"
-							tooltip="{i18n>searchByName}"
-							placeholder="{i18n>searchByName}"
-							enableSuggestions="true"
-							search=".onSearch"
-						>
-							<layoutData>
-								<OverflowToolbarLayoutData
-									maxWidth="269px"
-									priority="NeverOverflow"
-								/>
-							</layoutData>
-						</SearchField>
-						<OverflowToolbarButton
-							tooltip="Add"
-							type="Transparent"
-							text="Add"
-							icon="sap-icon://add"
-							press="_onCreateAnimal"
-						/>
-						<OverflowToolbarButton
-							tooltip="Less"
-							type="Transparent"
-							text="Less"
-							icon="sap-icon://less"
-							press="_onDeleteAnimal"
-						/>
-					</Toolbar>
-				</headerToolbar>
-				<columns>
-					<Column>
-						<Text text="{/#Animals/Id/@sap:label}"/>
-					</Column>
-					<Column>
-						<Text text="{/#Animals/Name/@sap:label}"/>
-					</Column>
-					<Column>
-						<Text text="{/#Animals/Species/@sap:label}"/>
-					</Column>
-					<Column>
-						<Text text="{/#Animals/Race/@sap:label}"/>
-					</Column>
-					<Column>
-						<Text text="{/#Animals/Age/@sap:label}"/>
-					</Column>
-					<Column>
-						<Text text="{/#Animals/Createdon/@sap:label}"/>
-					</Column>
-				</columns>
-				<items>
-					<ColumnListItem press="onPress" type="Navigation">
-						<cells>
-							<ObjectIdentifier
-								title="{Id}"
-								text="{LineItemID}"
+			<VBox>
+				<Table
+					id="tableAnimals"
+					width="auto"
+					items="{
+						path: 'GetAnimals',
+						sorter: {
+							path: 'Id',
+							descending: false
+						}
+					}"
+					updateFinished=".onListUpdateFinished"
+					noDataText="{detailView>/tableNoDataText}"
+					busyIndicatorDelay="{detailView>/lineItemTableDelay}"
+					mode="MultiSelect"
+					growing="true"
+					growingScrollToLoad="true"
+				>
+					<headerToolbar>
+						<Toolbar>
+							<Title
+								id="lineItemsTitle"
+								text="{detailView>/lineItemListTitle}"
+								titleStyle="H3"
+								level="H3"
 							/>
-							<Text text="{Name}"/>
-							<Text text="{Species}"/>
-							<Text text="{Race}"/>
-							<Text text="{Age}"/>
-							<Text text="{
-								path: 'Createdon',
-								type: 'sap.ui.model.type.DateTime',
-								formatOptions: {
-									style: 'medium'
+							<ToolbarSpacer/>
+							<SearchField
+								id="searchField"
+								tooltip="{i18n>searchByName}"
+								placeholder="{i18n>searchByName}"
+								enableSuggestions="true"
+								search=".onSearch"
+							>
+								<layoutData>
+									<OverflowToolbarLayoutData
+										maxWidth="269px"
+										priority="NeverOverflow"
+									/>
+								</layoutData>
+							</SearchField>
+							<OverflowToolbarButton
+								tooltip="Add"
+								type="Transparent"
+								text="Add"
+								icon="sap-icon://add"
+								press="_onCreateAnimal"
+							/>
+							<OverflowToolbarButton
+								tooltip="Less"
+								type="Transparent"
+								text="Less"
+								icon="sap-icon://less"
+								press="_onDeleteAnimal"
+							/>
+						</Toolbar>
+					</headerToolbar>
+					<columns>
+						<Column>
+							<Text text="{/#Animals/Id/@sap:label}"/>
+						</Column>
+						<Column>
+							<Text text="{/#Animals/Name/@sap:label}"/>
+						</Column>
+						<Column>
+							<Text text="{/#Animals/Species/@sap:label}"/>
+						</Column>
+						<Column>
+							<Text text="{/#Animals/Race/@sap:label}"/>
+						</Column>
+						<Column>
+							<Text text="{/#Animals/Age/@sap:label}"/>
+						</Column>
+						<Column>
+							<Text text="{/#Animals/Createdon/@sap:label}"/>
+						</Column>
+					</columns>
+					<items>
+						<ColumnListItem
+							press="onPress"
+							type="Navigation"
+						>
+							<cells>
+								<ObjectIdentifier
+									title="{Id}"
+									text="{LineItemID}"
+								/>
+								<Text text="{Name}"/>
+								<Text text="{Species}"/>
+								<Text text="{Race}"/>
+								<Text text="{Age}"/>
+								<Text text="{
+									path: 'Createdon',
+									type: 'sap.ui.model.type.DateTime',
+									formatOptions: {
+										style: 'medium'
+									}
 								}
-							}
-								"/>
-						</cells>
-					</ColumnListItem>
-				</items>
-			</Table>
+									"/>
+							</cells>
+						</ColumnListItem>
+					</items>
+				</Table>
+				<VBox id="wow">
+				</VBox>
+			</VBox>
 		</semantic:content>
 		<!--Semantic ShareMenu Buttons-->
 		<semantic:closeAction>

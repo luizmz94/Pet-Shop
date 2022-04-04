@@ -50,6 +50,12 @@
 					value="{Animal>/Age}"
 					placeholder="{i18n>enterAge}"
 				/>
+				<Label text="Take Picture"/>
+				<Button
+					icon="sap-icon://picture"
+					text=""
+					press="takePhoto"
+				/>
 				<!-- <Label text="AnimalPicture"/>
 				<u:FileUploader
 					id="fileUploader"
