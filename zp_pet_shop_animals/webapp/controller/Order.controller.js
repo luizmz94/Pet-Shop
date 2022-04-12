@@ -95,11 +95,13 @@ sap.ui.define(
             }.bind(this)
           );
 
-        var orderHeadersPath =
-          "/AnimalsSet('" + sAnimalId + "')/OrderHeadersSet";
-        var oSmartTable = this.getView().byId("orderHeadersTable");
-        oSmartTable.setTableBindingPath(orderHeadersPath);
-        oSmartTable.rebindTable();
+          debugger;
+
+        // var orderHeadersPath =
+        //   "/AnimalsSet('" + sAnimalId + "')/GetOrders";
+        // var oSmartTable = this.getView().byId("orderHeadersTable");
+        // oSmartTable.setTableBindingPath(orderHeadersPath);
+        // oSmartTable.rebindTable();
       },
 
       _bindView: function (sObjectPath) {

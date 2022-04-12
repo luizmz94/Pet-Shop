@@ -9,6 +9,7 @@ sap.ui.define(
     "sap/ui/model/Filter",
     "sap/ui/model/FilterOperator",
     "sap/m/Dialog",
+    "sap/m/MessageToast",
   ],
   function (
     BaseController,
@@ -19,7 +20,8 @@ sap.ui.define(
     MessageBox,
     Filter,
     FilterOperator,
-    Dialog
+    Dialog,
+    MessageToast
   ) {
     "use strict";
 
@@ -224,7 +226,6 @@ sap.ui.define(
       },
 
       onSearch: function (oEvent) {
-        debugger;
         if (oEvent.getParameters().refreshButtonPressed) {
           // Search field's 'refresh' button has been pressed.
           // This is visible if you select any master list item.
@@ -245,7 +246,6 @@ sap.ui.define(
       },
 
       _applySearch: function (aTableSearchState) {
-        debugger;
         var oTable = this.byId("tableAnimals"),
           oViewModel = this.getModel("detailView");
         oTable.getBinding("items").filter(aTableSearchState, "Application");
@@ -457,9 +457,7 @@ sap.ui.define(
                 MessageBox.success(msg);
                 this.clearModel(oModelAnimal);
                 this.handleCancelBtnPress();
-
                 this._sendToSAP(oData);
-
               }
             }.bind(this),
 
@@ -499,7 +497,6 @@ sap.ui.define(
       },
 
       handleUploadComplete: function (oEvent) {
-        debugger;
         var sResponse = oEvent.getParameter("response"),
           iHttpStatusCode = parseInt(/\d{3}/.exec(sResponse)[0]),
           sMessage;
@@ -514,7 +511,6 @@ sap.ui.define(
       },
 
       onChangeFileUploader: function (oEvent) {
-        debugger;
         var fileDetails = oEvent.getParameters("file").files[0];
         sap.ui.getCore().fileUploadArr = [];
         if (fileDetails) {
@@ -523,7 +519,6 @@ sap.ui.define(
 
           // Calling method....
           this.base64coonversionMethod(mimeDet, fileName, fileDetails, "001");
-          debugger;
         } else {
           sap.ui.getCore().fileUploadArr = [];
         }
@@ -535,7 +530,6 @@ sap.ui.define(
         fileDetails,
         DocNum
       ) {
-        debugger;
         var that = this;
         if (!FileReader.prototype.readAsBinaryString) {
           FileReader.prototype.readAsBinaryString = function (fileData) {
@@ -562,6 +556,18 @@ sap.ui.define(
         reader.onload = function (readerEvt) {
           var binaryString = readerEvt.target.result;
           that.base64ConversionRes = btoa(binaryString);
+
+          var image = new sap.m.Image("image2", {
+            src: "data:" + fileMime + ";base64," + that.base64ConversionRes,
+            height: "360px",
+          });
+
+          var oVBox = that.getView().byId("wowDialog");
+          if (oVBox.getItems().length != 0) {
+            oVBox.removeItem(0);
+          }
+          oVBox.addItem(image);
+
           sap.ui.getCore().fileUploadArr.push({
             DocumentType: DocNum,
             MimeType: fileMime,
@@ -573,13 +579,11 @@ sap.ui.define(
       },
 
       handleUploadPress: function () {
-        debugger;
-        var oFileUploader = this.byId("fileUploader");
+        var oFileUploader = this.byId("fileUploaderDialog");
         oFileUploader
           .checkFileReadable()
           .then(
             function () {
-              debugger;
               oFileUploader.upload();
             },
             function (error) {
@@ -618,10 +622,9 @@ sap.ui.define(
       },
 
       takePhoto: function (oEvent) {
-        var oVBox = this.getView().byId("wow");
+        var oVBox = this.getView().byId("wowDialog");
         oVBox.removeItem(0);
 
-        this.attachName = "";
         var that = this;
 
         if (this.fixedDialog === undefined) {
@@ -672,11 +675,13 @@ sap.ui.define(
       },
 
       setImage: function (oEvent) {
+        var that = this;
+        this.stringImg = "";
         if (oEvent.getParameters().origin.sId === "buttonCancel") {
           return;
         }
 
-        var oVBox = this.getView().byId("wow");
+        var oVBox = this.getView().byId("wowDialog");
         var items = oVBox.getItems();
         var snapId = "snapshot-" + items.length;
         var textId = snapId + "-text";
@@ -687,7 +692,7 @@ sap.ui.define(
           content:
             "<canvas id='" +
             snapId +
-            "' width='450px' height='320px'" +
+            "' width='500px' height='360px'" +
             " style='2px solid red'></canvas>",
         });
         oVBox.addItem(this.oCanvas);
@@ -706,34 +711,120 @@ sap.ui.define(
             player.srcObject.getTracks()[0].stop();
           }.bind(this),
         });
-
+        // var snapId = "snapshot-0";
+        // this.stringImg = document
+        //   .getElementById(snapId)
+        //   .toDataURL()
+        //   .replace("data:image/png;base64,", "");
+        // oVBox.removeItem(0);
         // }
+      },
+
+      getPicture: function (oEvent) {
+        this.attachName = "";
+        this.pictureUrl = "";
+        var that = this;
+        if (!this.getPictureDialog) {
+          this.getPictureDialog = new Dialog({
+            id: "getPictureDialog",
+            title: "Click on capture to take photo",
+            beginButton: new sap.m.Button({
+              text: "Ok",
+              press: function () {
+                that.getPictureDialog.close();
+              },
+            }),
+            content: [
+              new sap.m.Label({
+                text: "Upload by URL",
+              }),
+              new sap.m.Input(this.createId("pictureURLId"), {
+                placeholder: "please enter name image here",
+                required: true,
+                change: this.getImgFromUrl.bind(this),
+              }),
+              new sap.m.Label({
+                text: "Upload by local File",
+              }),
+              new sap.ui.unified.FileUploader(
+                this.createId("fileUploaderDialog"),
+                {
+                  id: "fileUploader",
+                  uploadUrl: this.pictureUrl,
+                  uploadComplete: this.handleUploadComplete.bind(this),
+                  change: this.onChangeFileUploader.bind(this),
+                }
+              ),
+              new sap.m.Label({
+                text: "Take picture",
+              }),
+              new sap.m.Button({
+                text: "Take Picture",
+                press: that.takePhoto.bind(this),
+              }),
+              new sap.m.VBox(this.createId("wowDialog"), {
+                id: "wow",
+              }),
+            ],
+
+            endButton: new sap.m.Button({
+              text: "Cancel",
+              press: function () {
+                var oVBox = that.getView().byId("wowDialog");
+                oVBox.removeItem(0);
+                that.getPictureDialog.close();
+              },
+            }),
+          });
+          this.getView().addDependent(this.getPictureDialog);
+        }
+        this.getPictureDialog.open();
+      },
+
+      getImgFromUrl: function (oEvent) {
+        this.pictureUrl = oEvent.getSource().getValue();
+        if (!this._image) {
+          this._image = new sap.m.Image("imageName", {
+            src: this.pictureUrl,
+            height: "360px",
+          });
+        } else {
+          this._image.setSrc(this.pictureUrl);
+        }
+        var oVBox = this.getView().byId("wowDialog");
+        if (oVBox.getItems().length != 0) {
+          oVBox.removeItem(0);
+        }
+        oVBox.addItem(this._image);
       },
 
       _sendToSAP: function (oData) {
         var oDataModel = this.getView().getModel();
-        var oVBox = this.getView().byId("wow");
-        var Item = oVBox.getItems()[0];
+        var oVBox = this.getView().byId("wowDialog");
+        var oItem = oVBox.getItems()[0];
 
+        
+        this.stringImg = oItem.getSrc();
         // var domParser = new DOMParser();
         // var htmlDoc = domParser.parseFromString(
         //   oItem.getProperty("content"),
         //   "text/html"
         // );
-        var snapId = "snapshot-0";
-        var stringImage = document
-          .getElementById(snapId)
-          .toDataURL()
-          .replace("data:image/png;base64,", "");
+
+        // var snapId = "snapshot-0";
+        // var stringImage = document
+        //   .getElementById(snapId)
+        //   .toDataURL()
+        //   .replace("data:image/png;base64,", "");
 
         var payload = {
           Id: oData.Id,
           // Content: btoa(encodeURIComponent(stringImage)),
-          Content: stringImage,
+          Content: this.stringImg,
           Filename: oData.Id + " - " + oData.Name,
           Filetype: "jpeg",
         };
-        oVBox.removeItem(0)
+        oVBox.removeItem(0);
         oDataModel.create("/AnimalsAttachmentSet", payload, {
           sucess: function () {
             sap.m.MessageToast.show("Wow!! Picture updated to SAP system");
@@ -745,6 +836,39 @@ sap.ui.define(
           },
         });
       },
+
+      // handleUploadComplete: function (oEvent) {
+      //   var sResponse = oEvent.getParameter("response"),
+      //     iHttpStatusCode = parseInt(/\d{3}/.exec(sResponse)[0]),
+      //     sMessage;
+
+      //   if (sResponse) {
+      //     sMessage =
+      //       iHttpStatusCode === 200
+      //         ? sResponse + " (Upload Success)"
+      //         : sResponse + " (Upload Error)";
+      //     MessageToast.show(sMessage);
+      //   }
+      // },
+
+      // handleUploadPress: function () {
+      //   var oFileUploader = this.byId("fileUploaderDialog");
+      //   oFileUploader
+      //     .checkFileReadable()
+      //     .then(
+      //       function () {
+      //         oFileUploader.upload();
+      //       },
+      //       function (error) {
+      //         MessageToast.show(
+      //           "The file cannot be read. It may have changed."
+      //         );
+      //       }
+      //     )
+      //     .then(function () {
+      //       oFileUploader.clear();
+      //     });
+      // },
     });
   }
 );

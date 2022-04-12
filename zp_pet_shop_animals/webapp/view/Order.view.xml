@@ -65,7 +65,7 @@
 								alignItems="Center"
 							>
 								<m:Avatar
-									src="https://www.petz.com.br/blog/wp-content/uploads/2019/04/quantos-anos-vive-um-gatinho.jpg"
+									src="{Content}"
 									class="sapUiTinyMarginEnd"
 								/>
 								<m:Title
@@ -113,7 +113,7 @@
 					>
 						<m:Avatar
 							class="sapUiSmallMarginEnd"
-							src="https://www.petz.com.br/blog/wp-content/uploads/2019/04/quantos-anos-vive-um-gatinho.jpg"
+							src="{Content}"
 							displaySize="L"
 						/>
 						<layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
@@ -345,6 +345,7 @@
 									<smartTable:SmartTable
 										id="orderHeadersTable"
 										entitySet="OrderHeadersSet"
+										tableBindingPath="GetOrders"
 										tableType="ResponsiveTable"
 										useVariantManagement="false"
 										useTablePersonalisation="false"

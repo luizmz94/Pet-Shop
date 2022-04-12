@@ -50,17 +50,18 @@
 					value="{Animal>/Age}"
 					placeholder="{i18n>enterAge}"
 				/>
-				<Label text="Take Picture"/>
+				<Label text="Picture"/>
 				<Button
 					icon="sap-icon://picture"
 					text=""
-					press="takePhoto"
+					press="getPicture"
 				/>
-				<!-- <Label text="AnimalPicture"/>
+				<!-- <Input value="{Animal>/Url}"/>
+				<Label text="AnimalPicture"/>
 				<u:FileUploader
 					id="fileUploader"
 					name="myFileUpload"
-					uploadUrl="upload/"
+					uploadUrl="{Animal>/Url}"
 					tooltip="Upload your file to the local server"
 					uploadComplete="handleUploadComplete"
 					change="onChangeFileUploader"
