@@ -51,7 +51,14 @@ sap.ui.define([
 			  Value: 0
 			});
 			return oModel;
-		  }
+		  }, 
+
+		  createUploadPictureModel: function () {
+			var oModel = new JSONModel({
+			  Url: ""
+			});
+			return oModel;
+		  },
 
 
 	};

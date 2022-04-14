@@ -28,6 +28,9 @@ sap.ui.define([
 
                 // set the customer model
 				this.setModel(models.createCustomerModel(), "Customer");
+
+                // set the UploadPicture model
+                this.setModel(models.createUploadPictureModel(), "UploadPicture");
             }
         });
     }

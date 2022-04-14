@@ -30,6 +30,7 @@ sap.ui.define([
 			this.setModel(models.createCustomerModel(), "Customer");
 			this.setModel(models.createOrderHeaderModel(), "OrderHeader");
 			this.setModel(models.createOrderItemModel(), "OrderItem");
+			this.setModel(models.createUploadPictureModel(), "UploadPicture");
 
 			// call the base component's init function and create the App view
 			UIComponent.prototype.init.apply(this, arguments);

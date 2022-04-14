@@ -72,15 +72,6 @@ sap.ui.define(
        * Event handler when the share by E-Mail button has been clicked
        * @public
        */
-      onSendEmailPress: function () {
-        var oViewModel = this.getModel("detailView");
-
-        URLHelper.triggerEmail(
-          null,
-          oViewModel.getProperty("/shareSendEmailSubject"),
-          oViewModel.getProperty("/shareSendEmailMessage")
-        );
-      },
 
       /**
        * Updates the item count within the line item table's header
@@ -183,19 +174,6 @@ sap.ui.define(
           oViewModel = this.getModel("detailView");
 
         this.getOwnerComponent().oListSelector.selectAListItem(sPath);
-
-        oViewModel.setProperty(
-          "/shareSendEmailSubject",
-          oResourceBundle.getText("shareSendEmailObjectSubject", [sObjectId])
-        );
-        oViewModel.setProperty(
-          "/shareSendEmailMessage",
-          oResourceBundle.getText("shareSendEmailObjectMessage", [
-            sObjectName,
-            sObjectId,
-            location.href,
-          ])
-        );
       },
 
       _onMetadataLoaded: function () {
@@ -445,9 +423,12 @@ sap.ui.define(
         var oCurrentAnimal = oModelAnimal.getData();
         oCurrentAnimal.Id = "1";
         oCurrentAnimal.Cpf = this.sCustomerCpf;
+        oCurrentAnimal.Content = this.oImageEditorDialog
+          .getContent()[0]
+          .getImageEditor()
+          .getImagePngDataURL();
 
         // faltou o ID do animal
-
         if (!this.gbEditing) {
           oModel.create("/AnimalsSet", oModelAnimal.getData(), {
             success: function (oData, oResponse) {
@@ -457,7 +438,7 @@ sap.ui.define(
                 MessageBox.success(msg);
                 this.clearModel(oModelAnimal);
                 this.handleCancelBtnPress();
-                this._sendToSAP(oData);
+                // this._sendToSAP(oData);
               }
             }.bind(this),
 
@@ -469,6 +450,10 @@ sap.ui.define(
           });
         } else {
           oCurrentAnimal = oModelAnimal.getData();
+          oCurrentAnimal.Content = this.oImageEditorDialog
+            .getContent()[0]
+            .getImageEditor()
+            .getImagePngDataURL();
           var sUpdate = oModel.createKey("/AnimalsSet", {
             Id: oModelAnimal.Id,
           });
@@ -496,107 +481,6 @@ sap.ui.define(
         this.clearModel(oModelAnimal);
       },
 
-      handleUploadComplete: function (oEvent) {
-        var sResponse = oEvent.getParameter("response"),
-          iHttpStatusCode = parseInt(/\d{3}/.exec(sResponse)[0]),
-          sMessage;
-
-        if (sResponse) {
-          sMessage =
-            iHttpStatusCode === 200
-              ? sResponse + " (Upload Success)"
-              : sResponse + " (Upload Error)";
-          MessageToast.show(sMessage);
-        }
-      },
-
-      onChangeFileUploader: function (oEvent) {
-        var fileDetails = oEvent.getParameters("file").files[0];
-        sap.ui.getCore().fileUploadArr = [];
-        if (fileDetails) {
-          var mimeDet = fileDetails.type,
-            fileName = fileDetails.name;
-
-          // Calling method....
-          this.base64coonversionMethod(mimeDet, fileName, fileDetails, "001");
-        } else {
-          sap.ui.getCore().fileUploadArr = [];
-        }
-      },
-
-      base64coonversionMethod: function (
-        fileMime,
-        fileName,
-        fileDetails,
-        DocNum
-      ) {
-        var that = this;
-        if (!FileReader.prototype.readAsBinaryString) {
-          FileReader.prototype.readAsBinaryString = function (fileData) {
-            var binary = "";
-            var reader = new FileReader();
-            reader.onload = function (e) {
-              var bytes = new Uint8Array(reader.result);
-              var length = bytes.byteLength;
-              for (var i = 0; i < length; i++) {
-                binary += String.fromCharCode(bytes[i]);
-              }
-              that.base64ConversionRes = btoa(binary);
-              sap.ui.getCore().fileUploadArr.push({
-                DocumentType: DocNum,
-                MimeType: fileMime,
-                FileName: fileName,
-                Content: that.base64ConversionRes,
-              });
-            };
-            reader.readAsArrayBuffer(fileData);
-          };
-        }
-        var reader = new FileReader();
-        reader.onload = function (readerEvt) {
-          var binaryString = readerEvt.target.result;
-          that.base64ConversionRes = btoa(binaryString);
-
-          var image = new sap.m.Image("image2", {
-            src: "data:" + fileMime + ";base64," + that.base64ConversionRes,
-            height: "360px",
-          });
-
-          var oVBox = that.getView().byId("wowDialog");
-          if (oVBox.getItems().length != 0) {
-            oVBox.removeItem(0);
-          }
-          oVBox.addItem(image);
-
-          sap.ui.getCore().fileUploadArr.push({
-            DocumentType: DocNum,
-            MimeType: fileMime,
-            FileName: fileName,
-            Content: that.base64ConversionRes,
-          });
-        };
-        reader.readAsBinaryString(fileDetails);
-      },
-
-      handleUploadPress: function () {
-        var oFileUploader = this.byId("fileUploaderDialog");
-        oFileUploader
-          .checkFileReadable()
-          .then(
-            function () {
-              oFileUploader.upload();
-            },
-            function (error) {
-              MessageToast.show(
-                "The file cannot be read. It may have changed."
-              );
-            }
-          )
-          .then(function () {
-            oFileUploader.clear();
-          });
-      },
-
       clearModel: function (oModel) {
         oModel.setData({
           Id: "",
@@ -620,255 +504,6 @@ sap.ui.define(
           animalId: data,
         });
       },
-
-      takePhoto: function (oEvent) {
-        var oVBox = this.getView().byId("wowDialog");
-        oVBox.removeItem(0);
-
-        var that = this;
-
-        if (this.fixedDialog === undefined) {
-          this.fixedDialog = new Dialog({
-            title: "Click on capture to take photo",
-            beginButton: new sap.m.Button({
-              text: "Capture Photo",
-              press: function () {
-                that.imageVal = document.getElementById("player");
-                that.fixedDialog.close();
-              },
-            }),
-            content: [
-              new sap.ui.core.HTML({
-                content: "<video id='player' autoplay></video>",
-              }),
-              // new sap.m.Input({
-              //   placeholder: "please enter name image here",
-              //   value: this.attachName,
-              //   required: true,
-              // }),
-            ],
-
-            endButton: new sap.m.Button({
-              id: "buttonCancel",
-              text: "Cancel",
-              press: function () {
-                that.fixedDialog.close();
-                player.srcObject.getTracks()[0].stop();
-              },
-            }),
-          });
-          this.fixedDialog.attachBeforeClose(this.setImage, this);
-          this.getView().addDependent(this.fixedDialog);
-        }
-
-        this.fixedDialog.open();
-
-        var handleSucess = function (stream) {
-          player.srcObject = stream;
-        };
-
-        navigator.mediaDevices
-          .getUserMedia({
-            video: true,
-          })
-          .then(handleSucess);
-      },
-
-      setImage: function (oEvent) {
-        var that = this;
-        this.stringImg = "";
-        if (oEvent.getParameters().origin.sId === "buttonCancel") {
-          return;
-        }
-
-        var oVBox = this.getView().byId("wowDialog");
-        var items = oVBox.getItems();
-        var snapId = "snapshot-" + items.length;
-        var textId = snapId + "-text";
-        var imageVal = this.imageVal;
-
-        // if (this.oCanvas === undefined) {
-        this.oCanvas = new sap.ui.core.HTML({
-          content:
-            "<canvas id='" +
-            snapId +
-            "' width='500px' height='360px'" +
-            " style='2px solid red'></canvas>",
-        });
-        oVBox.addItem(this.oCanvas);
-
-        this.oCanvas.addEventDelegate({
-          onAfterRendering: function () {
-            var snapShotCanvas = document.getElementById(snapId);
-            var oContext = snapShotCanvas.getContext("2d");
-            oContext.drawImage(
-              imageVal,
-              0,
-              0,
-              snapShotCanvas.width,
-              snapShotCanvas.height
-            );
-            player.srcObject.getTracks()[0].stop();
-          }.bind(this),
-        });
-        // var snapId = "snapshot-0";
-        // this.stringImg = document
-        //   .getElementById(snapId)
-        //   .toDataURL()
-        //   .replace("data:image/png;base64,", "");
-        // oVBox.removeItem(0);
-        // }
-      },
-
-      getPicture: function (oEvent) {
-        this.attachName = "";
-        this.pictureUrl = "";
-        var that = this;
-        if (!this.getPictureDialog) {
-          this.getPictureDialog = new Dialog({
-            id: "getPictureDialog",
-            title: "Click on capture to take photo",
-            beginButton: new sap.m.Button({
-              text: "Ok",
-              press: function () {
-                that.getPictureDialog.close();
-              },
-            }),
-            content: [
-              new sap.m.Label({
-                text: "Upload by URL",
-              }),
-              new sap.m.Input(this.createId("pictureURLId"), {
-                placeholder: "please enter name image here",
-                required: true,
-                change: this.getImgFromUrl.bind(this),
-              }),
-              new sap.m.Label({
-                text: "Upload by local File",
-              }),
-              new sap.ui.unified.FileUploader(
-                this.createId("fileUploaderDialog"),
-                {
-                  id: "fileUploader",
-                  uploadUrl: this.pictureUrl,
-                  uploadComplete: this.handleUploadComplete.bind(this),
-                  change: this.onChangeFileUploader.bind(this),
-                }
-              ),
-              new sap.m.Label({
-                text: "Take picture",
-              }),
-              new sap.m.Button({
-                text: "Take Picture",
-                press: that.takePhoto.bind(this),
-              }),
-              new sap.m.VBox(this.createId("wowDialog"), {
-                id: "wow",
-              }),
-            ],
-
-            endButton: new sap.m.Button({
-              text: "Cancel",
-              press: function () {
-                var oVBox = that.getView().byId("wowDialog");
-                oVBox.removeItem(0);
-                that.getPictureDialog.close();
-              },
-            }),
-          });
-          this.getView().addDependent(this.getPictureDialog);
-        }
-        this.getPictureDialog.open();
-      },
-
-      getImgFromUrl: function (oEvent) {
-        this.pictureUrl = oEvent.getSource().getValue();
-        if (!this._image) {
-          this._image = new sap.m.Image("imageName", {
-            src: this.pictureUrl,
-            height: "360px",
-          });
-        } else {
-          this._image.setSrc(this.pictureUrl);
-        }
-        var oVBox = this.getView().byId("wowDialog");
-        if (oVBox.getItems().length != 0) {
-          oVBox.removeItem(0);
-        }
-        oVBox.addItem(this._image);
-      },
-
-      _sendToSAP: function (oData) {
-        var oDataModel = this.getView().getModel();
-        var oVBox = this.getView().byId("wowDialog");
-        var oItem = oVBox.getItems()[0];
-
-        
-        this.stringImg = oItem.getSrc();
-        // var domParser = new DOMParser();
-        // var htmlDoc = domParser.parseFromString(
-        //   oItem.getProperty("content"),
-        //   "text/html"
-        // );
-
-        // var snapId = "snapshot-0";
-        // var stringImage = document
-        //   .getElementById(snapId)
-        //   .toDataURL()
-        //   .replace("data:image/png;base64,", "");
-
-        var payload = {
-          Id: oData.Id,
-          // Content: btoa(encodeURIComponent(stringImage)),
-          Content: this.stringImg,
-          Filename: oData.Id + " - " + oData.Name,
-          Filetype: "jpeg",
-        };
-        oVBox.removeItem(0);
-        oDataModel.create("/AnimalsAttachmentSet", payload, {
-          sucess: function () {
-            sap.m.MessageToast.show("Wow!! Picture updated to SAP system");
-          },
-          error: function (oError) {
-            var oSapMessage = JSON.parse(oError.responseText);
-            var msg = oSapMessage.error.message.value;
-            MessageBox.error(msg);
-          },
-        });
-      },
-
-      // handleUploadComplete: function (oEvent) {
-      //   var sResponse = oEvent.getParameter("response"),
-      //     iHttpStatusCode = parseInt(/\d{3}/.exec(sResponse)[0]),
-      //     sMessage;
-
-      //   if (sResponse) {
-      //     sMessage =
-      //       iHttpStatusCode === 200
-      //         ? sResponse + " (Upload Success)"
-      //         : sResponse + " (Upload Error)";
-      //     MessageToast.show(sMessage);
-      //   }
-      // },
-
-      // handleUploadPress: function () {
-      //   var oFileUploader = this.byId("fileUploaderDialog");
-      //   oFileUploader
-      //     .checkFileReadable()
-      //     .then(
-      //       function () {
-      //         oFileUploader.upload();
-      //       },
-      //       function (error) {
-      //         MessageToast.show(
-      //           "The file cannot be read. It may have changed."
-      //         );
-      //       }
-      //     )
-      //     .then(function () {
-      //       oFileUploader.clear();
-      //     });
-      // },
     });
   }
 );

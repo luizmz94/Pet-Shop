@@ -95,7 +95,6 @@ sap.ui.define(
             }.bind(this)
           );
 
-          debugger;
 
         // var orderHeadersPath =
         //   "/AnimalsSet('" + sAnimalId + "')/GetOrders";
@@ -158,7 +157,7 @@ sap.ui.define(
         var oModelAnimal = oView.getModel("Animal");
         oModelAnimal.setData(oCurrentAnimal);
 
-        if (!this.byId("openDialog")) {
+        if (!this.byId("openDialogAnimal")) {
           Fragment.load({
             id: oView.getId(),
             name: "petshop.zppetshopanimals.view.AnimalRegister",
@@ -168,7 +167,7 @@ sap.ui.define(
             oDialog.open();
           });
         } else {
-          this.byId("openDialog").open();
+          this.byId("openDialogAnimal").open();
         }
         // this.gbEditing = true;
       },
@@ -178,6 +177,10 @@ sap.ui.define(
         var oModel = this.getView().getModel();
 
         var oCurrentAnimal = oModelAnimal.getData();
+        oCurrentAnimal.Content = this.oImageEditorDialog
+            .getContent()[0]
+            .getImageEditor()
+            .getImagePngDataURL();
         var sUpdate = oModel.createKey("/AnimalsSet", {
           Id: oCurrentAnimal.Id,
         });
@@ -497,10 +500,8 @@ sap.ui.define(
         oModel.read(orderHeadersPath, {
           success: function (oData, oResponse) {
             var teste = oData.results;
-            debugger;
           }.bind(this),
           error: function (oError) {
-            debugger;
           }.bind(this),
         });
       },

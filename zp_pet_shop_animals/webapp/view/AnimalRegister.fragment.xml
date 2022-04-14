@@ -54,18 +54,8 @@
 				<Button
 					icon="sap-icon://picture"
 					text=""
-					press="getPicture"
+					press="loadUploadDialog"
 				/>
-				<!-- <Input value="{Animal>/Url}"/>
-				<Label text="AnimalPicture"/>
-				<u:FileUploader
-					id="fileUploader"
-					name="myFileUpload"
-					uploadUrl="{Animal>/Url}"
-					tooltip="Upload your file to the local server"
-					uploadComplete="handleUploadComplete"
-					change="onChangeFileUploader"
-				/> -->
 			</f:content>
 		</f:SimpleForm>
 	</Dialog>

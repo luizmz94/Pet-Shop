@@ -1,0 +1,78 @@
+<c:FragmentDefinition
+	xmlns="sap.m"
+	xmlns:c="sap.ui.core"
+>
+	<Dialog
+		id="uploadPicture"
+		title="Upload Picture"
+		resizable= "true"
+		draggable= "true"
+	>
+		<!-- <beginButton>
+			<Button
+				text="{i18n>save}"
+				type="Accept"
+				press=""
+			/>
+		</beginButton> -->
+		<endButton>
+			<Button
+				text="{i18n>close}"
+				press="closeUploadDialog"
+			/>
+		</endButton>
+		<Panel>
+			<VBox
+				class="sapUiTinyMargin"
+				renderType="Bare"
+			>
+				<Label text="Upload by URL"/>
+				<Input
+					id="InputUrl"
+					type="Url"
+					placeholder="Url"
+					value="{UploadPicture>/Url}"
+                    change="getImgFromUrl"
+				/>
+			</VBox>
+		</Panel>
+		<Panel>
+			<VBox
+				class="sapUiTinyMargin"
+				renderType="Bare"
+			>
+				<Label text="Take Picture"/>
+				<Button
+					text="Take Picture"
+					press="onTakePicture"
+				/>
+			</VBox>
+		</Panel>
+		<Panel>
+			<VBox
+				class="sapUiTinyMargin"
+				renderType="Bare"
+			>
+				<Label text="Upload by Attachment"/>
+				<UploadCollection
+					id="UploadCollection"
+					maximumFilenameLength="55"
+					maximumFileSize="10"
+					multiple="false"
+					sameFilenameAllowed="true"
+					instantUpload="false"
+					noDataDescription="Drop files or use the &quot;Add&quot; button to keep files ready for upload"
+					change="onChangeFileUploader"
+
+				/>
+
+			   <!-- fileDeleted="onFileDeleted"
+					filenameLengthExceed="onFilenameLengthExceed"
+					fileSizeExceed="onFileSizeExceed"
+					typeMissmatch="onTypeMissmatch"
+					uploadComplete="onUploadComplete"
+					beforeUploadStarts="onBeforeUploadStarts" -->
+			</VBox>
+		</Panel>
+	</Dialog>
+</c:FragmentDefinition>

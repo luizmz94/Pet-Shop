@@ -18,6 +18,13 @@ sap.ui.define(
         });
         return oModel;
       },
+
+      createUploadPictureModel: function () {
+        var oModel = new JSONModel({
+          Url: ""
+        });
+        return oModel;
+      },
     };
   }
 );
