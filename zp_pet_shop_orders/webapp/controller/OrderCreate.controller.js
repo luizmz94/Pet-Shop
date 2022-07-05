@@ -61,11 +61,25 @@ sap.ui.define(
           }
           this._pValueHelpDialog.then(function (oDialog) {
             // Create a filter for the binding
-            oDialog
-              .getBinding("items")
-              .filter([
-                new Filter("Name", FilterOperator.Contains, sInputValue),
-              ]);
+            oDialog.getBinding("items").filter([
+              // new Filter("Name", FilterOperator.Contains, sInputValue),
+
+              new Filter({
+                filters: [
+                  new sap.ui.model.Filter(
+                    "Name",
+                    FilterOperator.Contains,
+                    sInputValue
+                  ),
+                  new sap.ui.model.Filter(
+                    "Customername",
+                    FilterOperator.Contains,
+                    sInputValue
+                  ),
+                ],
+                and: false,
+              }),
+            ]);
             // Open ValueHelpDialog filtered by the input's value
             oDialog.open(sInputValue);
           });
@@ -73,7 +87,24 @@ sap.ui.define(
 
         onValueHelpSearch: function (oEvent) {
           var sValue = oEvent.getParameter("value");
-          var oFilter = new Filter("Name", FilterOperator.Contains, sValue);
+          var oFilter =
+            // new Filter("Name", FilterOperator.Contains, sValue);
+
+            new Filter({
+              filters: [
+                new sap.ui.model.Filter(
+                  "Name",
+                  FilterOperator.Contains,
+                  sValue
+                ),
+                new sap.ui.model.Filter(
+                  "Customername",
+                  FilterOperator.Contains,
+                  sValue
+                ),
+              ],
+              and: false,
+            });
 
           oEvent.getSource().getBinding("items").filter([oFilter]);
         },
@@ -157,6 +188,11 @@ sap.ui.define(
         },
 
         _onChangeQuantity: function (oEvent) {
+          var _oInput = oEvent.getSource();
+          var value = _oInput.getValue();
+          // val = val.replace(/[^\d]/g, '');
+          _oInput.setValue(value);
+
           var rowChanged = oEvent
             .getSource()
             .getBindingContext("servicesAndProducts")
@@ -164,10 +200,19 @@ sap.ui.define(
           rowChanged.Total = rowChanged.Quantity * rowChanged.Value;
         },
         _onChangeTotal: function (oEvent) {
+          // var _oInput = oEvent.getSource();
+          // var val = _oInput.getValue();
+          // // val = val.replace(/[^\d]/g, '');
+          // debugger;
+          // _oInput.setValue(val);
+
           var rowChanged = oEvent
             .getSource()
             .getBindingContext("servicesAndProducts")
             .getObject();
+
+          // this.byId("InputValue").setValue(rowChanged.Total / rowChanged.Quantity);
+
           rowChanged.Value = rowChanged.Total / rowChanged.Quantity;
         },
 
@@ -201,7 +246,6 @@ sap.ui.define(
 
         onBeforeRendering: function () {
           var tableOrderNew = this.byId("tableProducts");
-          debugger;
           if (tableOrderNew) {
             tableOrderNew.setModel(this.jModel, "servicesAndProducts");
           }
@@ -359,11 +403,6 @@ sap.ui.define(
           }
           return this._pMessagePopover;
         },
-
-
-
-
-
       }
     );
   }

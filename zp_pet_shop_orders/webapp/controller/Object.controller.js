@@ -6,8 +6,19 @@ sap.ui.define(
     "../model/formatter",
     "sap/m/MessageBox",
     "sap/ui/core/Fragment",
+    "sap/m/ColumnListItem",
+    "sap/m/Input",
   ],
-  function (BaseController, JSONModel, History, formatter, MessageBox, Fragment) {
+  function (
+    BaseController,
+    JSONModel,
+    History,
+    formatter,
+    MessageBox,
+    Fragment,
+    ColumnListItem,
+    Input
+  ) {
     "use strict";
 
     return BaseController.extend("petshop.zppetshoporders.controller.Object", {
@@ -35,11 +46,79 @@ sap.ui.define(
           .attachPatternMatched(this._onObjectMatched, this);
         this.setModel(oViewModel, "objectView");
 
+        this._data = {
+          Products: [],
+        };
 
+        this.jModel = new JSONModel(this._data);
+
+        this.oEditableTemplate = new ColumnListItem({
+          cells: [
+            new Input({
+              value: "{Name}",
+            }),
+            new Input({
+              value: "{Quantity}",
+              description: "{UoM}",
+            }),
+            new Input({
+              value: "{WeightMeasure}",
+              description: "{WeightUnit}",
+            }),
+            new Input({
+              value: "{Price}",
+              description: "{CurrencyCode}",
+            }),
+          ],
+        });
       },
       /* =========================================================== */
       /* event handlers                                              */
       /* =========================================================== */
+
+      onBeforeRendering: function () {
+        var tableOrderNew = this.byId("tableProducts");
+        if (tableOrderNew) {
+          tableOrderNew.setModel(this.jModel, "servicesAndProducts");
+        }
+      },
+
+      addRow: function (oArg) {
+        debugger;
+        this._data.Products.push({
+          Id: "",
+          Itemid: "",
+          Category: "",
+          Serviceproductid: "",
+          Description: "",
+          Quantity: "",
+          Unit: "",
+          Value: "",
+          Total: "",
+        });
+        this.jModel.refresh(); //which will add the new record
+
+        // var oViewModel = this.getModel("orderView");
+        // this.getModel("createOrderView").setProperty("/showFooter", true);
+      },
+
+      deleteRow: function (oEvent) {
+        var deleteRecord = oEvent
+          .getSource()
+          .getBindingContext("servicesAndProducts")
+          .getObject();
+        for (var i = 0; i < this._data.Products.length; i++) {
+          if (this._data.Products[i] == deleteRecord) {
+            //	pop this._data.Products[i]
+            this._data.Products.splice(i, 1); //removing 1 record from i th index.
+            this.jModel.refresh();
+            break; //quit the loop
+          }
+        }
+        if (this._data.Products.length == 0) {
+          this.getModel("createOrderView").setProperty("/showFooter", false);
+        }
+      },
 
       /**
        * Event handler  for navigating back.
@@ -97,6 +176,7 @@ sap.ui.define(
 
       _onBindingChange: function () {
         var oView = this.getView(),
+          oModel = oView.getModel(),
           oViewModel = this.getModel("objectView"),
           oElementBinding = oView.getElementBinding();
 
@@ -110,6 +190,28 @@ sap.ui.define(
           oOrder = oView.getBindingContext().getObject(),
           sOrderId = oOrder.Id,
           sOrderName = oOrder.Name;
+
+        var path = oElementBinding.sPath + "/GetItemsReport";
+
+        oModel.read(path, {
+          success: function (oData, oResponse) {
+            debugger;
+
+            this._data.Products = oData.results;
+            // this._data = {
+            //   Products: oData.results,
+            // };
+
+            this.jModel.refresh()
+            // this.jModel.setData({
+            //   Products: oData.results,
+            // });
+            // this.getOwnerComponent().setModel(oTableModel, "tableModel");
+          }.bind(this),
+          error: function (oError) {
+            //console.log("Error!");
+          },
+        });
 
         oViewModel.setProperty("/busy", false);
       },
@@ -137,10 +239,37 @@ sap.ui.define(
         }
       },
 
+      onAddItem: function () {
+        debugger;
+
+        var oSmartable = this.byId("OrderItemsSmartTable");
+        var oItem = oSmartable.getTable().getItems()[0];
+
+        var columnListItemNewLine = new sap.m.ColumnListItem();
+        var oContext = oItem.getBindingContext();
+        columnListItemNewLine.setBindingContext(oContext);
+
+        oSmartable.addItem(columnListItemNewLine);
+      },
+
+      _createNewLine: function (oEvent) {
+        var columnListItemNewLine = new sap.m.ColumnListItem({
+          type: sap.m.ListType.Inactive,
+          unread: false,
+          vAlign: "Middle",
+          cells: [
+            // add created controls to item
+            new sap.m.Input({ type: "Text", value: "Enter name" }),
+            new sap.m.Input({ type: "Text", value: "Enter description" }),
+            new sap.m.Input({ type: "Text", value: "Enter price" }),
+          ],
+        });
+        this._oTable.addItem(columnListItemNewLine);
+      },
+
       onToggled: function (oEvent) {
         var oViewModel = this.getModel("objectView");
       },
-
     });
   }
 );

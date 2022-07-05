@@ -423,10 +423,12 @@ sap.ui.define(
         var oCurrentAnimal = oModelAnimal.getData();
         oCurrentAnimal.Id = "1";
         oCurrentAnimal.Cpf = this.sCustomerCpf;
-        oCurrentAnimal.Content = this.oImageEditorDialog
-          .getContent()[0]
-          .getImageEditor()
-          .getImagePngDataURL();
+        if (this.oImageEditorDialog) {
+          oCurrentAnimal.Content = this.oImageEditorDialog
+            .getContent()[0]
+            .getImageEditor()
+            .getImagePngDataURL();
+        }
 
         // faltou o ID do animal
         if (!this.gbEditing) {
@@ -498,8 +500,12 @@ sap.ui.define(
         var oTable = this.getView().byId("tableAnimals");
         var modelData = oTable.getModel();
         var data = modelData.getProperty(sPath);
-
+        var oViewModel = this.getModel("detailView");
+        
         var oRouter = sap.ui.core.UIComponent.getRouterFor(this);
+
+        oViewModel.setProperty("/busy", true);
+
         oRouter.navTo("order", {
           animalId: data,
         });

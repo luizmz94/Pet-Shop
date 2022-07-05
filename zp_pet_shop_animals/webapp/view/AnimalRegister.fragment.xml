@@ -2,7 +2,7 @@
 	xmlns="sap.m"
 	xmlns:c="sap.ui.core"
 	xmlns:f="sap.ui.layout.form"
-	xmlns:u="sap.ui.unified"
+	xmlns:core="sap.ui.core"
 >
 	<Dialog
 		id="openDialogAnimal"
@@ -36,10 +36,24 @@
 					placeholder="{i18n>enterNameAnimal}"
 				/>
 				<Label text="{/#Animals/Species/@sap:label}"/>
-				<Input
+				<!-- <Input
 					value="{Animal>/Species}"
 					placeholder="{i18n>enterSpecies}"
-				/>
+				/> -->
+				<ComboBox
+					value="{Animal>/Species}"
+					items="{
+						path: '/AnimalsSpeciesSet',
+						sorter: {
+							path: 'Species'
+						}
+					}"
+				>
+					<core:Item
+						key="{Species}"
+						text="{Species}"
+					/>
+				</ComboBox>
 				<Label text="{/#Animals/Race/@sap:label}"/>
 				<Input
 					value="{Animal>/Race}"

@@ -4,13 +4,15 @@ sap.ui.define(
     "sap/ui/core/Fragment",
     "sap/m/MessageToast",
     "sap/m/MessageBox",
+    "sap/ui/commons/FileUploader",
+    "sap/ui/model/Binding",
   ],
 
   /**
    * @param {typeof sap.ui.core.mvc.Controller} Controller
    */
 
-  function (Controller, Fragment, MessageToast, MessageBox) {
+  function (Controller, Fragment, MessageToast, MessageBox, FileUploader) {
     "use strict";
 
     return Controller.extend(

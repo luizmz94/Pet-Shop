@@ -87,11 +87,12 @@
 						type="Navigation"
 						press=".onSelectionChange"
 						title="{Name}">
-						<!-- number="{
-							path: 'Cpf',
-							formatter: '.formatter.currencyValue'
-						}"
-						numberUnit="{UnitOfMeasure}"> -->
+						<attributes>
+							<ObjectAttribute
+								text="{Cpf}"
+							>
+							</ObjectAttribute>
+						</attributes>
 					</ObjectListItem>
 				</items>
 			</List>

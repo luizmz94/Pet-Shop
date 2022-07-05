@@ -53,6 +53,7 @@ sap.ui.define(
             ),
             tableNoDataText:
               this.getResourceBundle().getText("tableNoDataText"),
+            busy: false,
           });
           this.setModel(oViewModel, "worklistView");
 
@@ -111,7 +112,10 @@ sap.ui.define(
          */
         onPress: function (oEvent) {
           // The source is the list item that got pressed
+          var oViewModel = this.getModel("worklistView");
+          oViewModel.setProperty("/busy", true);
           this._showObject(oEvent.getSource());
+          oViewModel.setProperty("/busy", false);
         },
 
         /**
@@ -152,6 +156,28 @@ sap.ui.define(
         onRefresh: function () {
           var oTable = this.byId("table");
           oTable.getBinding("items").refresh();
+        },
+
+        onDelete: function (oEvent) {
+          var that = this;
+          var oModel = this.getView().getModel();
+          var oSmartTable = this.byId("LineItemsSmartTable");
+          var selectedPaths = oSmartTable.getTable().getSelectedContextPaths();
+
+          selectedPaths.forEach(deleteOrder);
+
+          function deleteOrder(order) {
+            oModel.remove(order, {
+              method: "DELETE",
+              success: function (oData, oResponse) {
+                oSmartTable.getTable().removeSelections(true);
+                // that.submitSuccess(oResponse);
+              },
+              error: function (oError) {
+                that.submitError(oError);
+              },
+            });
+          }
         },
 
         /* =========================================================== */

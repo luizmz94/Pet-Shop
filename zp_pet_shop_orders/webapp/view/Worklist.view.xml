@@ -11,6 +11,7 @@
 		id="page"
 		headerPinnable="false"
 		toggleHeaderOnTitleClick="false"
+		busy="{worklistView>/busy}"
 	>
 		<semantic:titleHeading>
 			<Title
@@ -48,7 +49,7 @@
 					id="LineItemsSmartTable"
 					entitySet="OrderHeadersReportSet"
 					smartFilterId="smartFilterBar"
-					tableType="ResponsiveTable"
+					tableType="Table"
 					useExportToExcel="true"
 					beforeExport="onBeforeExport"
 					useVariantManagement="true"

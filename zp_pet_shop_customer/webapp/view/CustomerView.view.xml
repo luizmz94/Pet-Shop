@@ -26,7 +26,6 @@
 									<smartFilterBar:ControlConfiguration
 										key="Cpf"
 										visibleInAdvancedArea="true"
-										
 									/>
 									<smartFilterBar:ControlConfiguration
 										key="Name"
@@ -42,49 +41,55 @@
 								</smartFilterBar:layoutData>
 							</smartFilterBar:SmartFilterBar>
 							<smartTable:SmartTable
-							id="LineItemsSmartTable"
-							entitySet="CustomersSet"
-							smartFilterId="smartFilterBar"
-							tableType="ResponsiveTable"
-							useExportToExcel="true"
-							beforeExport="onBeforeExport"
-							useVariantManagement="false"
-							useTablePersonalisation="false"
-							header="{i18n>header}"
-							showRowCount="true"
-							persistencyKey="SmartTableAnalytical_Explored"
-							enableAutoBinding="true"
-							showFullScreenButton="true"
-							class="sapUiResponsiveContentPadding"
-							enableAutoColumnWidth="true"
-							initiallyVisibleFields="Cpf,Name,Address,Telephone,Action"
-								
+								id="LineItemsSmartTable"
+								entitySet="CustomersSet"
+								smartFilterId="smartFilterBar"
+								tableType="ResponsiveTable"
+								useExportToExcel="true"
+								beforeExport="onBeforeExport"
+								useVariantManagement="false"
+								useTablePersonalisation="false"
+								header="{i18n>header}"
+								showRowCount="true"
+								persistencyKey="SmartTableAnalytical_Explored"
+								enableAutoBinding="true"
+								showFullScreenButton="true"
+								class="sapUiResponsiveContentPadding"
+								enableAutoColumnWidth="true"
+								initiallyVisibleFields="Cpf,Name,Address,Telephone,Action"
 							>
-							<Table id="Table" mode="MultiSelect">
-								<columns>
-									<Column width="80px">
-										<customData>
-											<core:CustomData
-												key="p13nData"
-												value='\{"columnKey": "Action", "sortProperty": "Action","filterProperty": "Action", "columnIndex":0}'
-											/>
-										</customData>
-										<Text text="{i18n>action}"/>
-									</Column>
-								</columns>
-								<items>
-									<ColumnListItem>
-										<cells>
-										<HBox justifyContent="End">
-											<Button icon="sap-icon://edit" press="handleEditStudent"/>
-											<Button icon="sap-icon://delete" press="handleDeleteStudent"/>
-										</HBox>
-										</cells>
-									</ColumnListItem>
-								</items>
-							</Table>
-
-
+								<Table
+									id="Table"
+									mode="MultiSelect"
+								>
+									<columns>
+										<Column width="80px">
+											<customData>
+												<core:CustomData
+													key="p13nData"
+													value='\{"columnKey": "Action", "sortProperty": "Action","filterProperty": "Action", "columnIndex":0}'
+												/>
+											</customData>
+											<Text text="{i18n>action}"/>
+										</Column>
+									</columns>
+									<items>
+										<ColumnListItem>
+											<cells>
+												<HBox justifyContent="End">
+													<Button
+														icon="sap-icon://edit"
+														press="handleEditStudent"
+													/>
+													<Button
+														icon="sap-icon://delete"
+														press="handleDeleteStudent"
+													/>
+												</HBox>
+											</cells>
+										</ColumnListItem>
+									</items>
+								</Table>
 								<smartTable:customToolbar>
 									<OverflowToolbar design="Transparent">
 										<ToolbarSpacer/>

@@ -78,7 +78,7 @@
 						<Toolbar>
 							<Button
 								icon="sap-icon://add"
-								text="{i18n>item}"
+								text="{i18n>	}"
 								press="addRow"
 							/>
 							<!-- <Button
@@ -200,6 +200,7 @@
 									</suggestionItems>
 								</Input>
 								<Input
+									id="InputValue"
 									value="{servicesAndProducts>Value}"
 									type="Number"
 									showClearIcon="true"

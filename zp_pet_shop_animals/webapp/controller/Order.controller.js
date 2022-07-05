@@ -95,7 +95,6 @@ sap.ui.define(
             }.bind(this)
           );
 
-
         // var orderHeadersPath =
         //   "/AnimalsSet('" + sAnimalId + "')/GetOrders";
         // var oSmartTable = this.getView().byId("orderHeadersTable");
@@ -177,10 +176,13 @@ sap.ui.define(
         var oModel = this.getView().getModel();
 
         var oCurrentAnimal = oModelAnimal.getData();
-        oCurrentAnimal.Content = this.oImageEditorDialog
+
+        if (this.oImageEditorDialog) {
+          oCurrentAnimal.Content = this.oImageEditorDialog
             .getContent()[0]
             .getImageEditor()
             .getImagePngDataURL();
+        }
         var sUpdate = oModel.createKey("/AnimalsSet", {
           Id: oCurrentAnimal.Id,
         });
@@ -261,7 +263,7 @@ sap.ui.define(
 
       _saveOrder: function (oEvent) {
         this.createOrderErro = false;
-        this.onClearMessages();
+        // this.onClearMessages();
 
         var oCurrentAnimal = oEvent.getSource().getBindingContext().getObject();
         var oOrderHeader = this.getView().getModel("OrderHeader").getData();
@@ -275,6 +277,7 @@ sap.ui.define(
 
         oModel.create("/OrderHeadersSet", oOrderHeader, {
           success: function (oData, oResponse) {
+            debugger;
             if (oResponse.statusCode == "201") {
               oModel.setDeferredGroups(
                 oModel.getDeferredGroups().concat(["myGroupId"])
@@ -301,6 +304,7 @@ sap.ui.define(
                 oModel.create("/OrderItemsSet", line, {
                   groupId: "myGroupId",
                   success: function (oData, oResponse) {
+                    debugger;
                     this._setMessageIcon();
                     if (
                       key == this._data.Products.length - 1 &&
@@ -501,8 +505,7 @@ sap.ui.define(
           success: function (oData, oResponse) {
             var teste = oData.results;
           }.bind(this),
-          error: function (oError) {
-          }.bind(this),
+          error: function (oError) {}.bind(this),
         });
       },
     });
