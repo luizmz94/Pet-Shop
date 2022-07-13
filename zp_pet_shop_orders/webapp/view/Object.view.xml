@@ -17,8 +17,8 @@
 	> -->
 	<semantic:SemanticPage
 		id="detailPage"
-		busy="{orderView>/busy}"
-		busyIndicatorDelay="{orderView>/delay}"
+		busy="{objectView>/busy}"
+		busyIndicatorDelay="{objectView>/delay}"
 		
 	>
 		<semantic:closeAction>
@@ -49,7 +49,7 @@
 				showTitleInHeaderContent="true"
 				selectedSection="historyPage"
 				upperCaseAnchorBar="false"
-				showFooter="{orderView>/showFooter}"
+				showFooter="{objectView>/showFooter}"
 			>
 				<headerTitle>
 					<ObjectPageDynamicHeaderTitle>
@@ -65,7 +65,7 @@
 								alignItems="Center"
 							>
 								<m:Avatar
-									src="https://www.petz.com.br/blog/wp-content/uploads/2019/04/quantos-anos-vive-um-gatinho.jpg"
+									src="{Content}"
 									class="sapUiTinyMarginEnd"
 								/>
 								<m:Title
@@ -100,7 +100,7 @@
 					>
 						<m:Avatar
 							class="sapUiSmallMarginEnd"
-							src="https://www.petz.com.br/blog/wp-content/uploads/2019/04/quantos-anos-vive-um-gatinho.jpg"
+							src="{Content}"
 							displaySize="L"
 						/>
 						<layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
@@ -196,9 +196,9 @@
 					</ObjectPageSection>
 				</sections>
 				<footer>
-					<m:OverflowToolbar>
+					<m:OverflowToolbar visible="true">
 						<m:Button
-							icon="{orderView>/messageIcon}"
+							icon="{objectView>/messageIcon}"
 							text="{=${message>/}.length}"
 							visible="{=${message>/}.length > 0}"
 							type="Emphasized"
@@ -214,15 +214,18 @@
 						<m:Button
 							type="Emphasized"
 							text="{i18n>save}"
-							press="_saveOrder"
+							press="onSave"
 						/>
-						<m:Button
+						<!-- <m:Button
 							text="{i18n>clear}"
 							press="_clearOrderTable"
-						/>
+						/> -->
 					</m:OverflowToolbar>
 				</footer>
+				
 			</ObjectPageLayout>
+			
 		</semantic:content>
+		
 	</semantic:SemanticPage>
 </mvc:View>

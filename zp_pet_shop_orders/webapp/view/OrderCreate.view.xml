@@ -234,7 +234,7 @@
 			<OverflowToolbar visible="{createOrderView>/showFooter}">
 				<content>
 					<Button
-						icon="{orderView>/messageIcon}"
+						icon="{createOrderView>/messageIcon}"
 						text="{=${message>/}.length}"
 						visible="{=${message>/}.length > 0}"
 						type="Emphasized"

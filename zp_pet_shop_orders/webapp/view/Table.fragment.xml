@@ -7,28 +7,36 @@
 	<Table
 		id="tableProducts"
 		items="{servicesAndProducts>/Products}"
+		growing="true"
+		growingThreshold="10"
 	>
 		<headerToolbar>
 			<Toolbar>
 				<Button
 					icon="sap-icon://edit"
 					text="{i18n>edit}"
-					press="edit"
+					press="onEdit"
+					visible="{objectView>/editButtonVisible}"
+				/>
+				<Button
+					icon="sap-icon://save"
+					text="{i18n>save}"
+					press="onSave"
+					visible="{objectView>/saveButtonVisible}"
 				/>
 				<Button
 					icon="sap-icon://add"
 					text="{i18n>item}"
 					press="addRow"
+					visible="{objectView>/addButtonVisible}"
 				/>
-				<!-- <Button
-													icon="sap-icon://display"
-													text="Row"
-													press="fetchRecords"
-												/> -->
 			</Toolbar>
 		</headerToolbar>
 		<columns>
 			<Column width="50px"/>
+			<!-- <Column width="75px">
+				<Text text="Id"/>
+			</Column> -->
 			<Column
 				minScreenWidth="Tablet"
 				demandPopin="true"
@@ -77,92 +85,87 @@
 						type="Reject"
 					/>
 					<!-- <Input value="{Category}"/> -->
-					<Input
+					<!-- <Text
+						id="ServiceproductidT"
+						text="{servicesAndProducts>Serviceproductid}"
+					/> -->
+					<Text
 						id="InputDescription"
-						value="{servicesAndProducts>Description}"
-						showClearIcon="true"
-						required="true"
-						showSuggestion="true"
-						suggestionItems="{
-							path: '/ZshLzSrvPrdSet',
-							templateShareable: false
+						text="{servicesAndProducts>Description}"
+					/>
+					<Text text="{
+						path: 'servicesAndProducts>Category',
+						formatter: '.formatter.category'
+					}"/>
+					<!-- <ObjectNumber number="{
+						path: 'servicesAndProducts>Quantity',
+						type: 'sap.ui.model.type.String',
+						formatOptions: {
+							showMeasure: false
+						}
+					}"/> -->
+
+					<Text text="{
+						path: 'servicesAndProducts>Quantity',
+						type: 'sap.ui.model.type.Float'
+
+					}"/>
+
+					<Text text="{servicesAndProducts>Unit}"/>
+					<!-- <ObjectNumber number="{
+						path: 'servicesAndProducts>Value',
+						type: 'sap.ui.model.type.String',
+						formatOptions: {
+							showMeasure: false
+						}
+					}"/> -->
+					<!-- <ObjectNumber
+						number="{
+							parts: [{
+								path: 'servicesAndProducts>Value'
+							}, {
+								path: 'servicesAndProducts>Value'
+							}],
+							type: 'sap.ui.model.type.Currency',
+							formatOptions: {
+								showMeasure: false
+							}
 						}"
-						change="_onChangeDescription"
-					>
-						<suggestionItems>
-							<core:ListItem
-								key="{Description}"
-								text="{Description}"
-								additionalText="{Value}"
-							/>
-						</suggestionItems>
-					</Input>
-					<ComboBox
-						id="multiComboBox"
-						customData:hasValue="true"
-						value=""
-						selectedKey="{servicesAndProducts>Category}"
-					>
-						<core:Item
-							key="SRV"
-							text="Serviço"
-						/>
-						<core:Item
-							key="PRT"
-							text="Produto"
-						/>
-					</ComboBox>
-					<Input
-						value="{servicesAndProducts>Quantity}"
-						change="_onChangeQuantity"
-						type="Number"
-						showClearIcon="true"
-						required="true"
-					/>
-					<Input
-						id="InputUnit"
-						value="{servicesAndProducts>Unit}"
-						showClearIcon="true"
-						required="true"
-						showSuggestion="true"
-						suggestionItems="{
-							path: '/HT006Set',
-							templateShareable: false
+						unit="BRL"
+					/> -->
+
+					<Text text="{
+						path: 'servicesAndProducts>Value',
+						type: 'sap.ui.model.type.Float'
+
+					}"/>
+
+					<!-- <ObjectNumber
+						number="{
+							parts: [{
+								path: 'servicesAndProducts>Total'
+							}, {
+								path: 'servicesAndProducts>Total'
+							}],
+							type: 'sap.ui.model.type.Currency',
+							formatOptions: {
+								showMeasure: false
+							}
 						}"
-					>
-						<suggestionItems>
-							<core:ListItem
-								key="{Msehi}"
-								text="{Msehi}"
-								additionalText="{Msehl}"
-							/>
-						</suggestionItems>
-					</Input>
-					<Input
-						id="InputValue"
-						value="{servicesAndProducts>Value}"
-						type="Number"
-						showClearIcon="true"
-						change="_onChangeQuantity"
-						required="true"
-					/>
-					<Input
-						value="{servicesAndProducts>Total}"
-						type="Number"
-						showClearIcon="true"
-						change="_onChangeTotal"
-						required="true"
-					/>
-					<!-- <Input value="{
-														parts: [{
-															path: 'servicesAndProducts>Value'
-														}],
-														type: 'sap.ui.model.type.Currency',
-														formatOptions: {
-															showMeasure: false
-														}
-													}"/> -->
-					<!-- <ObjectNumber number="{servicesAndProducts>Total}"/> -->
+						unit="BRL"
+					/> -->
+					<!-- <ObjectNumber number="{
+						path: 'servicesAndProducts>Total',
+						type: 'sap.ui.model.type.Number',
+						formatOptions: {
+							showMeasure: false
+						}
+					}"/> -->
+					<Text text="{
+						path: 'servicesAndProducts>Total',
+						type: 'sap.ui.model.type.Float'
+
+					}"/>
 				</cells>
 			</ColumnListItem>
 		</items>
