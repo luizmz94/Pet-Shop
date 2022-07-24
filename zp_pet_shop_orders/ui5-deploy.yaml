@@ -1,0 +1,23 @@
+# yaml-language-server: $schema=https://sap.github.io/ui5-tooling/schema/ui5.yaml.json
+
+specVersion: "2.5"
+metadata:
+  name: petshop.zppetshoporders
+type: application
+builder:
+  resources:
+    excludes:
+      - /test/**
+      - /localService/**
+  customTasks:
+    - name: deploy-to-abap
+      afterTask: generateCachebusterInfo
+      configuration:
+        target:
+          url: http://vm31.4hub.cloud:53100
+          client: "100"
+        app:
+          name: ZP_LZ_ORDERS
+          description: Pet Shop - Orders
+          package: ZFIORI_LZ
+          transport: S4HK901339

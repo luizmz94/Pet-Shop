@@ -9,7 +9,7 @@
 	xmlns:core="sap.ui.core"
 	xmlns:customData="http://schemas.sap.com/sapui5/extension/sap.ui.core.CustomData/1"
 	xmlns:smartTable="sap.ui.comp.smarttable"
-	xmlns:app="http://schemas.sap.com/sapui5/extension/sap.ui.core.CustomData/1"
+	xmlns:f="sap.f"
 >
 	<!-- <m:Page
 		showNavButton="true"
@@ -64,7 +64,7 @@
 								fitContainer="true"
 								alignItems="Center"
 							>
-								<m:Avatar
+								<f:Avatar
 									src="{Content}"
 									class="sapUiTinyMarginEnd"
 								/>
@@ -111,7 +111,7 @@
 						wrap="Wrap"
 						fitContainer="true"
 					>
-						<m:Avatar
+						<f:Avatar
 							class="sapUiSmallMarginEnd"
 							src="{Content}"
 							displaySize="L"
@@ -238,7 +238,7 @@
 													/>
 													<!-- <m:Input value="{Category}"/> -->
 													<m:Input
-														id="InputDescription"
+														id="InputDescriptionOrder"
 														value="{servicesAndProducts>Description}"
 														showClearIcon="true"
 														required="true"

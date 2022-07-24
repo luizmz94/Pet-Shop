@@ -15,16 +15,46 @@
 			src="resources/sap-ui-core.js"
 			data-sap-ui-theme="sap_fiori_3"
 			data-sap-ui-resourceroots='{
-            "sap.ui.demo.masterdetail": "."
+            "petshop.zppetshopanimals": "."
         }'
 			data-sap-ui-compatVersion="edge"
 			data-sap-ui-async="true"
 			data-sap-ui-preload="async"
+			data-sap-ui-frameOptions="trusted"
 			data-sap-ui-libs="sap.m">
 	</script>
 	<script id="locate-reuse-libs" src="./utils/locate-reuse-libs.js"
 			data-sap-ui-manifest-uri="./manifest.json"
 			data-sap-ui-componentName="petshop.zppetshopanimals">
+	</script>
+
+	<script>
+
+			sap.ui.getCore().attachInit(function () {
+				sap.ui.require(
+					[
+						// "sap/ui/demo/masterdetail/localService/mockserver",
+						"sap/m/Shell",
+						"sap/ui/core/ComponentContainer",
+					],
+					function (Shell, ComponentContainer) {
+						// set up test service for local testing
+						// TODO: remove this when switching to a real service
+						// mockserver.init();
+						// initialize the UI component
+						new Shell({
+							app: new ComponentContainer({
+								height: "100%",
+								name: "petshop.zppetshopanimals",
+								settings: {
+									id: "masterdetail",
+								},
+							}),
+						}).placeAt("content");
+					}
+				);
+			});
+
 	</script>
 </head>
 <body class="sapUiBody sapUiSizeCompact" id="content">

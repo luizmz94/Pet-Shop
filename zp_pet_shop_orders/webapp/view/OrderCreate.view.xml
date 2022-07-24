@@ -139,7 +139,7 @@
 								/>
 								<!-- <Input value="{Category}"/> -->
 								<Input
-									id="InputDescription"
+									id="InputDescriptionOrderCreate"
 									value="{servicesAndProducts>Description}"
 									showClearIcon="true"
 									required="true"

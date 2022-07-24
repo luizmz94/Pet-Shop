@@ -106,6 +106,20 @@ sap.ui.define(
           var oSapMessage = JSON.parse(oResponse.headers["sap-message"]);
           MessageBox.success(oSapMessage.message);
         },
+
+        ShowObject: function (oItem) {
+          this.getRouter().navTo("object", {
+            orderId: oItem
+              .getBindingContext()
+              .getPath()
+              .substring("/OrderHeadersReportSet".length),
+          });
+        },
+        ShowObjectById: function (OrderId) {
+          this.getRouter().navTo("object", {
+            orderId: "('"+ OrderId + "')",
+          });
+        },
       }
     );
   }

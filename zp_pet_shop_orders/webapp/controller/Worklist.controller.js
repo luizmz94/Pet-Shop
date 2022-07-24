@@ -114,7 +114,7 @@ sap.ui.define(
           // The source is the list item that got pressed
           var oViewModel = this.getModel("worklistView");
           oViewModel.setProperty("/busy", true);
-          this._showObject(oEvent.getSource());
+          this.ShowObject(oEvent.getSource());
           oViewModel.setProperty("/busy", false);
         },
 
@@ -189,14 +189,7 @@ sap.ui.define(
          * @param {sap.m.ObjectListItem} oItem selected Item
          * @private
          */
-        _showObject: function (oItem) {
-          this.getRouter().navTo("object", {
-            orderId: oItem
-              .getBindingContext()
-              .getPath()
-              .substring("/OrderHeadersReportSet".length),
-          });
-        },
+
 
         /**
          * Internal helper method to apply both filter and search state together on the list binding

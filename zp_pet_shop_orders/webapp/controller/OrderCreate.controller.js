@@ -344,6 +344,9 @@ sap.ui.define(
                 oModel.submitChanges({
                   groupId: "myGroupId",
                 });
+
+                this.ShowObjectById(oData.Id);
+
               }
             }.bind(this),
 

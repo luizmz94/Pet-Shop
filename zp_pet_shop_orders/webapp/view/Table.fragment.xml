@@ -18,12 +18,12 @@
 					press="onEdit"
 					visible="{objectView>/editButtonVisible}"
 				/>
-				<Button
+				<!-- <Button
 					icon="sap-icon://save"
 					text="{i18n>save}"
 					press="onSave"
 					visible="{objectView>/saveButtonVisible}"
-				/>
+				/> -->
 				<Button
 					icon="sap-icon://add"
 					text="{i18n>item}"
@@ -90,7 +90,6 @@
 						text="{servicesAndProducts>Serviceproductid}"
 					/> -->
 					<Text
-						id="InputDescription"
 						text="{servicesAndProducts>Description}"
 					/>
 					<Text text="{

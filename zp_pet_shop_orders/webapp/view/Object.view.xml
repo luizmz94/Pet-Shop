@@ -8,7 +8,8 @@
 	xmlns:semantic="sap.f.semantic"
 	xmlns:smartTable="sap.ui.comp.smarttable"
 	xmlns:customData="http://schemas.sap.com/sapui5/extension/sap.ui.core.CustomData/1"
-		xmlns:core="sap.ui.core"
+	xmlns:core="sap.ui.core"
+	xmlns:f="sap.f"
 >
 	<!-- <m:Page
 		showNavButton="true"
@@ -19,7 +20,6 @@
 		id="detailPage"
 		busy="{objectView>/busy}"
 		busyIndicatorDelay="{objectView>/delay}"
-		
 	>
 		<semantic:closeAction>
 			<semantic:CloseAction
@@ -27,7 +27,7 @@
 				press=".onNavBack"
 			/>
 		</semantic:closeAction>
-		<semantic:fullScreenAction>
+		<!-- <semantic:fullScreenAction>
 			<semantic:FullScreenAction
 				id="enterFullScreen"
 				visible="{= !${device>/system/phone} &amp;&amp; !${appView>/actionButtonsInfo/midColumn/fullScreen}}"
@@ -40,7 +40,7 @@
 				visible="{= !${device>/system/phone} &amp;&amp; ${appView>/actionButtonsInfo/midColumn/fullScreen}}"
 				press=".toggleFullScreen"
 			/>
-		</semantic:exitFullScreenAction>
+		</semantic:exitFullScreenAction> -->
 		<semantic:content>
 			<ObjectPageLayout
 				id="ObjectPageLayout"
@@ -64,7 +64,7 @@
 								fitContainer="true"
 								alignItems="Center"
 							>
-								<m:Avatar
+								<f:Avatar
 									src="{Content}"
 									class="sapUiTinyMarginEnd"
 								/>
@@ -98,7 +98,7 @@
 						wrap="Wrap"
 						fitContainer="true"
 					>
-						<m:Avatar
+						<f:Avatar
 							class="sapUiSmallMarginEnd"
 							src="{Content}"
 							displaySize="L"
@@ -147,20 +147,10 @@
 								titleUppercase="false"
 							>
 								<blocks>
-
-
-													<core:Fragment
-						fragmentName="petshop.zppetshoporders.view.Table"
-						type="XML"
-					/>
-
-
-
-
-
-
-
-								
+									<core:Fragment
+										fragmentName="petshop.zppetshoporders.view.Table"
+										type="XML"
+									/>
 									<!-- <smartTable:SmartTable
 										id="OrderItemsSmartTable"
 										entitySet="OrderItemsReportSet"
@@ -212,20 +202,19 @@
 						<m:ToolbarSpacer/>
 						<m:ToolbarSpacer/>
 						<m:Button
+							text="{i18n>cancel}"
+							press="onCancel"
+							visible="{objectView>/cancelButtonVisible}"
+						/>
+						<m:Button
 							type="Emphasized"
 							text="{i18n>save}"
 							press="onSave"
+							visible="{objectView>/saveButtonVisible}"
 						/>
-						<!-- <m:Button
-							text="{i18n>clear}"
-							press="_clearOrderTable"
-						/> -->
 					</m:OverflowToolbar>
 				</footer>
-				
 			</ObjectPageLayout>
-			
 		</semantic:content>
-		
 	</semantic:SemanticPage>
 </mvc:View>

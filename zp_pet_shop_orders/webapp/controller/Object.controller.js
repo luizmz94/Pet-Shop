@@ -42,6 +42,7 @@ sap.ui.define(
        * Called when the worklist controller is instantiated.
        * @public
        */
+
       onInit: function () {
         // Model used to manipulate control states. The chosen values make sure,
         // detail page shows busy indication immediately so there is no break in
@@ -50,12 +51,13 @@ sap.ui.define(
           busy: true,
           delay: 0,
           editButtonVisible: true,
+          cancelButtonVisible: false,
           saveButtonVisible: false,
           addButtonVisible: false,
           showFooter: false,
           messageIcon: "sap-icon://message-success",
         });
-        
+
         this.getRouter()
           .getRoute("object")
           .attachPatternMatched(this._onObjectMatched, this);
@@ -69,109 +71,121 @@ sap.ui.define(
 
         this.oTable = this.byId("tableProducts");
         this.oTable.setModel(this.jModel);
-        this.oReadOnlyTemplate = this.oTable.getBindingInfo("items").template;
+        if (!this.oReadOnlyTemplate) {
+          this.oReadOnlyTemplate = this.oTable.getBindingInfo("items").template;
+        }
         // this.rebindTable(this.oReadOnlyTemplate, "Navigation");
 
         var that = this;
-        this.oEditableTemplate = new ColumnListItem({
-          cells: [
-            new Button({
-              icon: "sap-icon://delete",
-              press: that.deleteRow.bind(this),
-              type: "Reject",
-            }),
-            // new Input({
-            //   id: "Serviceproductid",
-            //   value: "{servicesAndProducts>Serviceproductid}",
-            //   required: true,
-            //   showValueHelp: true,
-            //   valueHelpRequest: that.onValueHelpRequest.bind(that),
-            // }),
+        if (!this.oEditableTemplate) {
+          this.oEditableTemplate = new ColumnListItem({
+            cells: [
+              new Button({
+                icon: "sap-icon://delete",
+                press: that.deleteRow.bind(this),
+                type: "Reject",
+              }),
+              // new Input({
+              //   id: "Serviceproductid",
+              //   value: "{servicesAndProducts>Serviceproductid}",
+              //   required: true,
+              //   showValueHelp: true,
+              //   valueHelpRequest: that.onValueHelpRequest.bind(that),
+              // }),
 
-            // new Text({
-            //   id: "InputDescription",
-            //   text: "{servicesAndProducts>Description}",
-            // }),
+              // new Text({
+              //   id: "InputDescription",
+              //   text: "{servicesAndProducts>Description}",
+              // }),
 
-            new Input({
-              id: "InputDescription",
-              value: "{servicesAndProducts>Description}",
-              required: true,
-              showValueHelp: true,
-              valueHelpRequest: that.onValueHelpRequest.bind(that),
-            }),
+              new Input({
+                // id: this.getView().getId(),
+                value: "{servicesAndProducts>Description}",
+                required: true,
+                showValueHelp: true,
+                valueHelpRequest: that.onValueHelpRequest.bind(that),
+              }),
 
-            // new Text({
-            //   id: "InputCategory",
-            //   text: {
-            //     path: "servicesAndProducts>Category",
-            //     formatter: that.formatter.category.bind(that),
-            //   },
-            // }),
+              // new Text({
+              //   id: "InputCategory",
+              //   text: {
+              //     path: "servicesAndProducts>Category",
+              //     formatter: that.formatter.category.bind(that),
+              //   },
+              // }),
 
-            new sap.m.ComboBox({
-              id: "multiComboBox",
-              value: "",
-              selectedKey: "{servicesAndProducts>Category}",
-              items: [
-                new sap.ui.core.Item({ key: "SRV", text: "Serviço" }),
-                new sap.ui.core.Item({ key: "PRT", text: "Produto" }),
-              ],
-            }),
+              new sap.m.ComboBox({
+                // id: "multiComboBox",
+                value: "",
+                selectedKey: "{servicesAndProducts>Category}",
+                items: [
+                  new sap.ui.core.Item({ key: "SRV", text: "Serviço" }),
+                  new sap.ui.core.Item({ key: "PRT", text: "Produto" }),
+                ],
+              }),
 
-            new Input({
-              id: "inputQuantity",
-              value: "{servicesAndProducts>Quantity}",
-              change: that._onChangeQuantity.bind(that),
-              type: "Number",
-              showClearIcon: true,
-              required: true,
-            }),
+              new Input({
+                // id: "inputQuantity",
+                value: "{servicesAndProducts>Quantity}",
+                change: that._onChangeQuantity.bind(that),
+                type: "Number",
+                showClearIcon: true,
+                required: true,
+              }),
 
-            new Input({
-              id: "InputUnit",
-              value: "{servicesAndProducts>Unit}",
-              // showClearIcon: true,
-              // required: true,
-              showSuggestion: true,
-              suggestionItems: {
-                path: "/HT006Set",
-                templateShareable: false,
-                template: new sap.ui.core.ListItem({
-                  id: "suggestUnit",
-                  text: "{/HT006Set/Msehi}",
-                  key: "{/HT006Set/Msehi}",
-                  additionalText: "{/HT006Set/Msehl}",
-                }),
-              },
-            }),
-            new Input({
-              id: "InputValue",
-              value: "{servicesAndProducts>Value}",
-              type: "Number",
-              change: that._onChangeQuantity.bind(that),
-              showClearIcon: true,
-              required: true,
-            }),
+              new Input({
+                // id: "InputUnit",
+                value: "{servicesAndProducts>Unit}",
+                // showClearIcon: true,
+                // required: true,
+                showSuggestion: true,
+                suggestionItems: {
+                  path: "/HT006Set",
+                  templateShareable: false,
+                  template: new sap.ui.core.ListItem({
+                    // id: "suggestUnit",
+                    text: "{/HT006Set/Msehi}",
+                    key: "{/HT006Set/Msehi}",
+                    additionalText: "{/HT006Set/Msehl}",
+                  }),
+                },
+              }),
+              new Input({
+                // id: "InputValue",
+                value: "{servicesAndProducts>Value}",
+                type: "Number",
+                change: that._onChangeQuantity.bind(that),
+                showClearIcon: true,
+                required: true,
+              }),
 
-            new Input({
-              id: "InputTotal",
-              value: "{servicesAndProducts>Total}",
-              type: "Number",
-              change: that._onChangeTotal.bind(that),
-              showClearIcon: true,
-              required: true,
-            }),
-          ],
-        });
-
+              new Input({
+                // id: "InputTotal",
+                value: "{servicesAndProducts>Total}",
+                type: "Number",
+                change: that._onChangeTotal.bind(that),
+                showClearIcon: true,
+                required: true,
+              }),
+            ],
+          });
+        }
         var oMessageManager;
         oMessageManager = sap.ui.getCore().getMessageManager();
         this.getView().setModel(oMessageManager.getMessageModel(), "message");
 
         // activate automatic message generation for complete view
         oMessageManager.registerObject(this.getView(), true);
+      },
 
+      destroy: function () {
+        // this._oErrorHandler.destroy();
+        // if (this.oRouteHandler) {
+        //   this.oRouteHandler.destroy();
+        // }
+        // call the base component's destroy function
+        sap.ui.getCore().getMessageManager().removeAllMessages();
+        // sap.ui.core.UIComponent.prototype.destroy.apply(this, arguments);
       },
       /* =========================================================== */
       /* event handlers                                              */
@@ -189,7 +203,8 @@ sap.ui.define(
         this.rebindTable(this.oEditableTemplate, "Edit");
         var oViewModel = this.getModel("objectView");
         oViewModel.setProperty("/editButtonVisible", false);
-        oViewModel.setProperty("/saveButtonVisible", false);
+        oViewModel.setProperty("/cancelButtonVisible", true);
+        oViewModel.setProperty("/saveButtonVisible", true);
         oViewModel.setProperty("/addButtonVisible", true);
         oViewModel.setProperty("/showFooter", true);
       },
@@ -200,33 +215,45 @@ sap.ui.define(
         var oViewModel = this.getModel("objectView");
         oViewModel.setProperty("/editButtonVisible", true);
         oViewModel.setProperty("/addButtonVisible", false);
+        oViewModel.setProperty("/cancelButtonVisible", false);
         oViewModel.setProperty("/saveButtonVisible", false);
-
 
         var payload = {
           Key: "1",
           Json: JSON.stringify(this._data.Products),
         };
-        debugger;
         var oModel = this.getView().getModel();
         oModel.create("/OrderItemsJsonSet", payload, {
           success: function (oData, oResponse) {
-            debugger;
-
             this._bindView(this.getView().getBindingContext().getPath());
-
-            // this._setMessageIcon();
-            // var msg = this.getResourceBundle().getText("createOrderSucess");
-            // MessageBox.success(msg);
           }.bind(this),
           error: function (oError) {
-            debugger;
-            // this._setMessageIcon();
-            // var oSapMessage = JSON.parse(oError.responseText);
-            // var msg = oSapMessage.error.message.value;
-            // MessageBox.error(msg);
+            this.submitError(oError);
           }.bind(this),
         });
+      },
+
+      onCancel: function () {
+        var oModel = this.getView().getModel();
+        var path = this.getView().getElementBinding().sPath + "/GetItemsReport";
+
+        oModel.read(path, {
+          success: function (oData, oResponse) {
+            this._data.Products = oData.results;
+            this.jModel.refresh();
+          }.bind(this),
+          error: function (oError) {},
+        });
+
+        this.editMode = false;
+        this.rebindTable(this.oReadOnlyTemplate, "Navigation");
+        var oViewModel = this.getModel("objectView");
+        oViewModel.setProperty("/editButtonVisible", true);
+        oViewModel.setProperty("/addButtonVisible", false);
+        oViewModel.setProperty("/cancelButtonVisible", false);
+        oViewModel.setProperty("/saveButtonVisible", false);
+
+        this.getModel("objectView").setProperty("/showFooter", false);
       },
 
       rebindTable: function (oTemplate, sKeyboardMode) {
@@ -267,21 +294,7 @@ sap.ui.define(
           .getSource()
           .getBindingContext("servicesAndProducts")
           .getObject();
-        debugger;
-
-        // var that = this;
-        // this.oTable.getItems().forEach(function (item) {
-        //   debugger;
-        //   var itemData = item.oBindingContexts.servicesAndProducts.getObject();
-
-        //   if (rowChanged.Itemid === itemData.Itemid) {
-        //     itemData.Total = itemData.Quantity * itemData.Value;
-        //   }
-        //   that.jModel.refresh();
-        // });
-
         rowChanged.Total = rowChanged.Quantity * rowChanged.Value;
-        // this.jModel.refresh();
       },
 
       _onChangeTotal: function (oEvent) {
@@ -312,19 +325,22 @@ sap.ui.define(
         // }
 
         var oModel = this.getView().getModel();
-        var sDelete = oModel.createKey("/OrderItemsSet", {
-          Id: deleteRecord.Id,
-          Itemid: deleteRecord.Itemid
-        });
 
-        oModel.remove(sDelete, {
-          success: function (oData, oResponse) {
-          }.bind(this),
-          error: function (oError) {
-            debugger;
-          }.bind(this),
-        });
+        if (deleteRecord.Itemid.length !== 4) {
+          return;
+        } else {
+          var sDelete = oModel.createKey("/OrderItemsSet", {
+            Id: deleteRecord.Id,
+            Itemid: deleteRecord.Itemid,
+          });
 
+          oModel.remove(sDelete, {
+            success: function (oData, oResponse) {}.bind(this),
+            error: function (oError) {
+              this.submitError(oError);
+            }.bind(this),
+          });
+        }
       },
 
       /**
@@ -334,12 +350,24 @@ sap.ui.define(
        * @public
        */
       onNavBack: function () {
-        var sPreviousHash = History.getInstance().getPreviousHash();
-        if (sPreviousHash !== undefined) {
-          history.go(-1);
-        } else {
-          this.getRouter().navTo("worklist", {}, true);
-        }
+        var oViewModel = this.getModel("objectView");
+
+        oViewModel.setProperty("/editButtonVisible", true);
+        oViewModel.setProperty("/saveButtonVisible", false);
+        oViewModel.setProperty("/addButtonVisible", false);
+
+        this.rebindTable(this.oReadOnlyTemplate, "Navigation");
+
+        oViewModel.setProperty("/showFooter", false);
+        sap.ui.getCore().getMessageManager().removeAllMessages();
+        
+        // var sPreviousHash = History.getInstance().getPreviousHash();
+        // if (sPreviousHash !== undefined) {
+        //   history.go(-1);
+        // } else {
+        //   this.getRouter().navTo("worklist", {}, true);
+        // }
+        this.getRouter().navTo("worklist", {}, true);
       },
 
       /* =========================================================== */
@@ -404,9 +432,7 @@ sap.ui.define(
             this._data.Products = oData.results;
             this.jModel.refresh();
           }.bind(this),
-          error: function (oError) {
-            debugger;
-          },
+          error: function (oError) {},
         });
         oViewModel.setProperty("/busy", false);
       },
@@ -529,7 +555,6 @@ sap.ui.define(
         });
       },
 
-
       onMessagePopoverPress: function (oEvent) {
         var oSourceControl = oEvent.getSource();
         this._getMessagePopover().then(function (oMessagePopover) {
@@ -564,7 +589,6 @@ sap.ui.define(
           this.getModel("objectView").setProperty("/showFooter", false);
         }
       },
-
     });
   }
 );

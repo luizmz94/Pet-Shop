@@ -277,7 +277,6 @@ sap.ui.define(
 
         oModel.create("/OrderHeadersSet", oOrderHeader, {
           success: function (oData, oResponse) {
-            debugger;
             if (oResponse.statusCode == "201") {
               oModel.setDeferredGroups(
                 oModel.getDeferredGroups().concat(["myGroupId"])
@@ -304,7 +303,6 @@ sap.ui.define(
                 oModel.create("/OrderItemsSet", line, {
                   groupId: "myGroupId",
                   success: function (oData, oResponse) {
-                    debugger;
                     this._setMessageIcon();
                     if (
                       key == this._data.Products.length - 1 &&
